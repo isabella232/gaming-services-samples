@@ -15,11 +15,6 @@ public class ZoinkiesApplication {
   public static void main(String[] args) {
     SpringApplication.run(ZoinkiesApplication.class, args);
 
-    /*
-    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-    context.scan("com.google.maps.gaming.zoinkies");
-    context.refresh();*/
-
     FirestoreOptions firestoreOptions =
         FirestoreOptions.getDefaultInstance().toBuilder()
             .setProjectId("musk-samples")

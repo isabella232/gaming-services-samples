@@ -9,7 +9,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.google.maps.gaming.zoinkies.playablelocations.PLLatLng;
+import com.google.maps.gaming.zoinkies.models.BattleData;
+import com.google.maps.gaming.zoinkies.models.BattleSummaryData;
+import com.google.maps.gaming.zoinkies.models.EnergyData;
+import com.google.maps.gaming.zoinkies.models.Item;
+import com.google.maps.gaming.zoinkies.models.PlayerData;
+import com.google.maps.gaming.zoinkies.models.RewardsData;
+import com.google.maps.gaming.zoinkies.models.SpawnLocation;
+import com.google.maps.gaming.zoinkies.models.WorldData;
+import com.google.maps.gaming.zoinkies.models.WorldDataRequest;
+import com.google.maps.gaming.zoinkies.models.playablelocations.PLLatLng;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -26,13 +35,13 @@ public class TestRestServices {
   @Autowired
   private MockMvc mockMvc;
   @Autowired
-  private GameUtils GameService;
+  private com.google.maps.gaming.zoinkies.services.GameService GameService;
   @Autowired
-  private PlayerService PlayerService;
+  private com.google.maps.gaming.zoinkies.services.PlayerService PlayerService;
 
   private String Id = "1234e91f-ce9c-4fa9-ac52-0f7079ce1234";
 
-  //@Test
+  @Test
   public void TestReferenceDataRead() throws Exception {
     this.mockMvc.perform(get("/references")).andDo(print()).andExpect(status().isOk());
   }
@@ -41,7 +50,7 @@ public class TestRestServices {
    * Tests Create, Read, Update, and Delete for World Data
    * @throws Exception
    */
-  //@Test
+  @Test
   public void TestWorldDataCRUD() throws Exception {
     // 1 Create
     System.out.println("Creating world " + Id);
@@ -49,9 +58,6 @@ public class TestRestServices {
     // 2 Read
     System.out.println("Reading world " + Id);
     GetWorldData();
-    // 3 Update
-    //System.out.println("Updating world 123");
-    //CreatePlayerData("Toto");
     // 4 Delete
     System.out.println("Deleting world " + Id);
     DeleteWorldData();
@@ -75,21 +81,22 @@ public class TestRestServices {
     // Search for a chest in our spawn locations
     WorldData data = GetWorldData();
     SpawnLocation location = null;
-    for (String placeId:data.getLocations().keySet()) {
-      if (data.getLocations().get(placeId).object_type_id.equals(GameConstants.ENERGY_STATION)) {
-        location = data.getLocations().get(placeId);
+    for (String locationId:data.getLocations().keySet()) {
+      if (data.getLocations().get(locationId).object_type_id.equals(GameConstants.ENERGY_STATION)) {
+        location = data.getLocations().get(locationId);
         break;
       }
     }
     EnergyData energy = GetEnergyData(location.id);
-    Assert.isTrue(energy.getAmountRestored() == 75, "Restore amount is incorrect.");
+    Assert.isTrue(energy.getAmountRestored() == 75,
+        "Restore amount is incorrect.");
 
     // Cleanup
     DeleteWorldData();
     DeletePlayerData();
   }
 
-  //@Test
+  @Test
   public void TestGeneralBattlePlayerWinsGame() throws Exception {
     // 0 - Delete User and World data in case of leftovers from previous failures
     DeleteWorldData();
@@ -102,27 +109,30 @@ public class TestRestServices {
     // Battle minions - search for a minion
     WorldData data = GetWorldData();
     SpawnLocation location = null;
-    for (String placeId:data.getLocations().keySet()) {
-      if (data.getLocations().get(placeId).object_type_id.equals(GameConstants.TOWER)) {
-        location = data.getLocations().get(placeId);
+    for (String locationId:data.getLocations().keySet()) {
+      if (data.getLocations().get(locationId).object_type_id.equals(GameConstants.TOWER)) {
+        location = data.getLocations().get(locationId);
         break;
       }
     }
 
     // Add enough freed leader so we are short of one to win the game
     PlayerData PlayerData = PlayerService.GetPlayerData(Id);
-    PlayerData.addInventoryItem(new Item(GameConstants.FREED_LEADERS,GameConstants.FREED_LEADERS_TO_WIN-1));
+    PlayerData.addInventoryItem(new Item(GameConstants.FREED_LEADERS,
+        GameConstants.FREED_LEADERS_TO_WIN-1));
     PlayerData.addInventoryItem(new Item(GameConstants.DIAMOND_KEY,5));
     PlayerService.UpdatePlayerData(Id,PlayerData);
 
     BattleData battleData = GetBattleData(location.id);
     System.out.println(battleData);
-    Assert.isTrue(battleData.getOpponentTypeId().equals(GameConstants.GENERAL), "The opponent should be general.");
+    Assert.isTrue(battleData.getOpponentTypeId().equals(GameConstants.GENERAL),
+        "The opponent should be general.");
 
     Boolean winner = true; // Player
     BattleSummaryData BattleSummaryData = GetBattleSummaryData(location.id, winner);
     System.out.println(BattleSummaryData);
-    Assert.isTrue(BattleSummaryData.winner == winner, "The opponent should be the player.");
+    Assert.isTrue(BattleSummaryData.winner == winner,
+        "The opponent should be the player.");
 
     Item key = null;
     for (Item item: BattleSummaryData.rewards.getItems()) {
@@ -132,7 +142,8 @@ public class TestRestServices {
       }
     }
 
-    Assert.isTrue(key != null && key.getQuantity()==1, "The player should have freed one leader.");
+    Assert.isTrue(key != null && key.getQuantity()==1,
+        "The player should have freed one leader.");
     Assert.isTrue(BattleSummaryData.wonTheGame, "The player should have won the game.");
 
     // Cleanup
@@ -140,7 +151,7 @@ public class TestRestServices {
     DeletePlayerData();
   }
 
-  //@Test
+  @Test
   public void TestMinionBattleMinionWins() throws Exception {
     // 0 - Delete User and World data in case of leftovers from previous failures
     DeleteWorldData();
@@ -153,9 +164,9 @@ public class TestRestServices {
     // Battle minions - search for a minion
     WorldData data = GetWorldData();
     SpawnLocation location = null;
-    for (String placeId:data.getLocations().keySet()) {
-      if (data.getLocations().get(placeId).object_type_id.equals(GameConstants.MINION)) {
-        location = data.getLocations().get(placeId);
+    for (String locationId:data.getLocations().keySet()) {
+      if (data.getLocations().get(locationId).object_type_id.equals(GameConstants.MINION)) {
+        location = data.getLocations().get(locationId);
         break;
       }
     }
@@ -166,12 +177,14 @@ public class TestRestServices {
 
     BattleData battleData = GetBattleData(location.id);
     System.out.println(battleData);
-    Assert.isTrue(battleData.getOpponentTypeId().equals(GameConstants.MINION), "The opponent should be minion.");
+    Assert.isTrue(battleData.getOpponentTypeId().equals(GameConstants.MINION),
+        "The opponent should be minion.");
 
     Boolean winner = false; // Minion
     BattleSummaryData BattleSummaryData = GetBattleSummaryData(location.id, winner);
     System.out.println(BattleSummaryData);
-    Assert.isTrue(BattleSummaryData.winner == winner, "The opponent should be minion.");
+    Assert.isTrue(BattleSummaryData.winner == winner,
+        "The opponent should be minion.");
     List<Item> items = BattleSummaryData.rewards.getItems();
 
     Item key = null;
@@ -181,14 +194,15 @@ public class TestRestServices {
         break;
       }
     }
-    Assert.isTrue(key != null && key.getQuantity()==-1, "The player should have lost one gold key.");
+    Assert.isTrue(key != null && key.getQuantity()==-1,
+        "The player should have lost one gold key.");
 
     // Cleanup
     DeleteWorldData();
     DeletePlayerData();
   }
 
-  //@Test
+  @Test
   public void TestMinionBattleMinionLoses() throws Exception {
     // 0 - Delete User and World data in case of leftovers from previous failures
     DeleteWorldData();
@@ -201,20 +215,22 @@ public class TestRestServices {
     // Battle minions - search for a minion
     WorldData data = GetWorldData();
     SpawnLocation location = null;
-    for (String placeId:data.getLocations().keySet()) {
-      if (data.getLocations().get(placeId).object_type_id.equals(GameConstants.MINION)) {
-        location = data.getLocations().get(placeId);
+    for (String locationId:data.getLocations().keySet()) {
+      if (data.getLocations().get(locationId).object_type_id.equals(GameConstants.MINION)) {
+        location = data.getLocations().get(locationId);
         break;
       }
     }
     BattleData battleData = GetBattleData(location.id);
     System.out.println(battleData);
-    Assert.isTrue(battleData.getOpponentTypeId().equals(GameConstants.MINION), "The opponent should be minion.");
+    Assert.isTrue(battleData.getOpponentTypeId().equals(GameConstants.MINION),
+        "The opponent should be minion.");
 
     Boolean winner = true; // Player
     BattleSummaryData BattleSummaryData = GetBattleSummaryData(location.id, winner);
     System.out.println(BattleSummaryData);
-    Assert.isTrue(BattleSummaryData.winner == winner, "The opponent should be minion.");
+    Assert.isTrue(BattleSummaryData.winner == winner,
+        "The opponent should be minion.");
 
     Item key = null;
     for (Item item: BattleSummaryData.rewards.getItems()) {
@@ -223,17 +239,12 @@ public class TestRestServices {
         break;
       }
     }
-    Assert.isTrue(key != null && key.getQuantity()==1, "The player should have won one gold key.");
+    Assert.isTrue(key != null && key.getQuantity()==1,
+        "The player should have won one gold key.");
 
     // Cleanup
     DeleteWorldData();
     DeletePlayerData();
-  }
-
-  //@Test
-  public void TestTowerBattle() throws Exception {
-
-
   }
 
   @Test
@@ -255,15 +266,15 @@ public class TestRestServices {
     // Search for a chest in our spawn locations
     WorldData data = GetWorldData();
     SpawnLocation chest = null;
-    for (String placeId:data.getLocations().keySet()) {
-      if (data.getLocations().get(placeId).object_type_id.equals(GameConstants.CHEST)) {
-        chest = data.getLocations().get(placeId);
+    for (String locationId:data.getLocations().keySet()) {
+      if (data.getLocations().get(locationId).object_type_id.equals(GameConstants.CHEST)) {
+        chest = data.getLocations().get(locationId);
         break;
       }
     }
 
     if (chest != null) {
-      System.out.println("Trying to activate Chest at placeId: " + chest.id);
+      System.out.println("Trying to activate Chest at locationId: " + chest.id);
       RewardsData rewards = GetChestRewards(chest.id);
       Boolean haveKey = false;
       // Search for a diamond key
@@ -276,7 +287,7 @@ public class TestRestServices {
       Assert.isTrue(haveKey, "Diamond Key not found in chest rewards!");
 
       // Try to open the chest a 2nd time
-      System.out.println("Trying to activate Chest at placeId: " + chest.id + " a 2nd time");
+      System.out.println("Trying to activate Chest at locationId: " + chest.id + " a 2nd time");
       GetRespawingChest(chest.id);
 
     } else {
@@ -313,14 +324,14 @@ public class TestRestServices {
     WorldData data = GetWorldData();
     // Search for a chest in our spawn locations
     SpawnLocation chest = null;
-    for (String placeId:data.getLocations().keySet()) {
-      if (data.getLocations().get(placeId).object_type_id.equals(GameConstants.CHEST)) {
-        chest = data.getLocations().get(placeId);
+    for (String locationId:data.getLocations().keySet()) {
+      if (data.getLocations().get(locationId).object_type_id.equals(GameConstants.CHEST)) {
+        chest = data.getLocations().get(locationId);
         break;
       }
     }
     if (chest != null) {
-      System.out.println("Trying to activate Chest at placeId: " + chest.id);
+      System.out.println("Trying to activate Chest at locationId: " + chest.id);
       RewardsData rewards = GetChestRewards(chest.id);
       Boolean haveKey = false;
       // Search for a diamond key
@@ -360,7 +371,7 @@ public class TestRestServices {
    *
    * @throws Exception
    */
-  //@Test
+  @Test
   public void TestPlayerDataCRUD() throws Exception{
     // 1 Create
     System.out.println("Creating record John Doe");
@@ -386,8 +397,10 @@ public class TestRestServices {
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.registerModule(new JavaTimeModule());
 
-    MvcResult result = this.mockMvc.perform(get("/worlds/{id}",Id)).andDo(print()).andExpect(status().isOk()).andReturn();
-    WorldData data = objectMapper.readValue(result.getResponse().getContentAsString(), WorldData.class);
+    MvcResult result = this.mockMvc.perform(get("/worlds/{id}",Id)).andDo(print())
+        .andExpect(status().isOk()).andReturn();
+    WorldData data = objectMapper.readValue(result.getResponse().getContentAsString(),
+        WorldData.class);
 
     return data;
   }
@@ -411,16 +424,17 @@ public class TestRestServices {
    * @throws Exception
    */
   private void DeleteWorldData() throws Exception {
-    this.mockMvc.perform(delete("/worlds/{id}",Id)).andDo(print()).andExpect(status().isOk());
+    this.mockMvc.perform(delete("/worlds/{id}",Id)).andDo(print()).andExpect(status()
+        .isOk());
   }
 
   /**
    *
    * @throws Exception
    */
-  private void GetRespawingChest(String placeId) throws Exception {
+  private void GetRespawingChest(String locationId) throws Exception {
 
-    this.mockMvc.perform(post("/chests/{id}/{placeId}",Id,placeId))
+    this.mockMvc.perform(post("/chests/{id}/{locationId}",Id,locationId))
         .andDo(print())
         .andExpect(status()
             .isNoContent());
@@ -430,9 +444,10 @@ public class TestRestServices {
    *
    * @throws Exception
    */
-  private BattleData GetBattleData(String placeId) throws Exception {
+  private BattleData GetBattleData(String locationId) throws Exception {
 
-    MvcResult results = this.mockMvc.perform(post("/battle/{id}/{placeId}",Id,placeId))
+    MvcResult results = this.mockMvc.perform(post("/battle/{id}/{locationId}",Id,
+        locationId))
         .andDo(print())
         .andExpect(status()
             .isOk())
@@ -440,26 +455,30 @@ public class TestRestServices {
 
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.registerModule(new JavaTimeModule());
-    BattleData data = objectMapper.readValue(results.getResponse().getContentAsString(), BattleData.class);
+    BattleData data = objectMapper.readValue(results.getResponse().getContentAsString(),
+        BattleData.class);
 
     return data;
   }
 
   /**
    * Invokes the battlesummmary REST Api
-   * @param placeId
+   * @param locationId
    * @return
    * @throws Exception
    */
-  private BattleSummaryData GetBattleSummaryData(String placeId, Boolean winnerIs) throws Exception {
-    MvcResult results = this.mockMvc.perform(post("/battlesummary/{id}/{placeId}",Id,placeId).param("winner",winnerIs.toString()))
+  private BattleSummaryData GetBattleSummaryData(String locationId, Boolean winnerIs)
+      throws Exception {
+    MvcResult results = this.mockMvc.perform(post("/battlesummary/{id}/{locationId}",
+        Id,locationId).param("winner",winnerIs.toString()))
         .andDo(print())
         .andExpect(status()
             .isOk())
         .andReturn();
 
     ObjectMapper objectMapper = new ObjectMapper();
-    BattleSummaryData data = objectMapper.readValue(results.getResponse().getContentAsString(), BattleSummaryData.class);
+    BattleSummaryData data = objectMapper.readValue(results.getResponse().getContentAsString(),
+        BattleSummaryData.class);
     return data;
   }
 
@@ -467,9 +486,10 @@ public class TestRestServices {
    *
    * @throws Exception
    */
-  private EnergyData GetEnergyData(String placeId) throws Exception {
+  private EnergyData GetEnergyData(String locationId) throws Exception {
 
-    MvcResult results = this.mockMvc.perform(post("/energystation/{id}/{placeId}",Id,placeId))
+    MvcResult results = this.mockMvc.perform(post("/energystation/{id}/{locationId}",
+        Id,locationId))
         .andDo(print())
         .andExpect(status()
             .isOk())
@@ -477,7 +497,8 @@ public class TestRestServices {
 
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.registerModule(new JavaTimeModule());
-    EnergyData data = objectMapper.readValue(results.getResponse().getContentAsString(), EnergyData.class);
+    EnergyData data = objectMapper.readValue(results.getResponse().getContentAsString(),
+        EnergyData.class);
 
     return data;
   }
@@ -486,9 +507,10 @@ public class TestRestServices {
    *
    * @throws Exception
    */
-  private RewardsData GetChestRewards(String placeId) throws Exception {
+  private RewardsData GetChestRewards(String locationId) throws Exception {
 
-    MvcResult results = this.mockMvc.perform(post("/chests/{id}/{placeId}",Id,placeId))
+    MvcResult results = this.mockMvc.perform(post("/chests/{id}/{locationId}",
+        Id,locationId))
         .andDo(print())
         .andExpect(status()
             .isOk())
@@ -496,7 +518,8 @@ public class TestRestServices {
 
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.registerModule(new JavaTimeModule());
-    RewardsData data = objectMapper.readValue(results.getResponse().getContentAsString(), RewardsData.class);
+    RewardsData data = objectMapper.readValue(results.getResponse().getContentAsString(),
+        RewardsData.class);
 
     return data;
   }
@@ -507,12 +530,14 @@ public class TestRestServices {
    * @throws Exception
    */
   private PlayerData GetPlayerData(String newName) throws Exception {
-    MvcResult results = this.mockMvc.perform(get("/users/{id}",Id)).andDo(print()).andExpect(status().isOk())
+    MvcResult results = this.mockMvc.perform(get("/users/{id}",Id)).andDo(print()).
+        andExpect(status().isOk())
         .andExpect(content().string(containsString(newName))).andReturn();
 
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.registerModule(new JavaTimeModule());
-    PlayerData data = objectMapper.readValue(results.getResponse().getContentAsString(), PlayerData.class);
+    PlayerData data = objectMapper.readValue(results.getResponse().getContentAsString(),
+        PlayerData.class);
     return data;
   }
 
@@ -534,7 +559,8 @@ public class TestRestServices {
    * @throws Exception
    */
   private void DeletePlayerData() throws Exception {
-    this.mockMvc.perform(delete("/users/{id}",Id)).andDo(print()).andExpect(status().isOk());
+    this.mockMvc.perform(delete("/users/{id}",Id)).andDo(print()).andExpect(status()
+        .isOk());
   }
 
   /**
