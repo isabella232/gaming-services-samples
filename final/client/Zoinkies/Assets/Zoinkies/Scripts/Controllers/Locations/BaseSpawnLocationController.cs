@@ -15,18 +15,16 @@ namespace Google.Maps.Demos.Zoinkies {
 
     protected bool IsLoading = false;
     protected SpawnLocation location;
+    protected string LocationId;
 
-    protected string PlaceId;
-
-    public void Init(string PlaceId) {
-
+    public void Init(string LocationId) {
       if (IsTesting) {
         location = GetTestingLocation();
-        this.PlaceId = location.id;
+        this.LocationId = location.id;
       }
       else {
-        this.PlaceId = PlaceId;
-        location = WorldService.GetInstance().GetSpawnLocation(PlaceId);
+        this.LocationId = LocationId;
+        location = WorldService.GetInstance().GetSpawnLocation(LocationId);
       }
 
       UIManager = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UIManager>();
@@ -44,12 +42,10 @@ namespace Google.Maps.Demos.Zoinkies {
 
     protected virtual void StartImpl() {
       Assert.IsNotNull(Model);
-
-      Init(name); // The name property is equal to the placeId TODO - fragile - call Init at instantiation time
     }
 
     protected virtual void UpdateImpl() {
-      if (PlaceId != null && WorldService.GetInstance().IsRespawning(PlaceId)) {
+      if (LocationId != null && WorldService.GetInstance().IsRespawning(LocationId)) {
         RespawingState();
       }
     }
@@ -63,10 +59,8 @@ namespace Google.Maps.Demos.Zoinkies {
     }
 
     protected virtual void ActionState() {
-      Debug.Log("OnClicked+++ ActioningState " + this.PlaceId);
-      Init(name); // The name property is equal to the placeId TODO - fragile - call Init at instantiation time
+      Debug.Log("OnClicked+++ ActioningState " + this.LocationId);
     }
-
 
     public void OnClicked() {
 
@@ -85,7 +79,6 @@ namespace Google.Maps.Demos.Zoinkies {
                                         "\nYou need to be within 250 meters! \nYou are "
                                         + dist.ToString("N0") + " meters away.");
         }
-
       }
     }
 

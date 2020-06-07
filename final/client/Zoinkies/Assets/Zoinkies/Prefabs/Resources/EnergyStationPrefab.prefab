@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2970362043365588484}
   - component: {fileID: 608104657839157975}
+  - component: {fileID: 6200158612907047813}
+  - component: {fileID: 2476042500914160534}
   m_Layer: 0
   m_Name: EnergyStationPrefab
   m_TagString: Untagged
@@ -47,6 +49,51 @@ MonoBehaviour:
   UIManager: {fileID: 0}
   ServerManager: {fileID: 0}
   Model: {fileID: 2736100514358246229}
+  IsTesting: 0
+  LocationId: 
+  type: 
+--- !u!114 &6200158612907047813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4215809517584009528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95d3e4302f5a44e5b86cb3e3852d9e6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnClicked:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 608104657839157975}
+        m_MethodName: OnClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  activeCamera: {fileID: 0}
+--- !u!65 &2476042500914160534
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4215809517584009528}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 7, y: 11.119865, z: 7}
+  m_Center: {x: 0, y: 6, z: 0}
 --- !u!1001 &7667509094722097393
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -62,7 +109,7 @@ PrefabInstance:
     - target: {fileID: 8776314829032659383, guid: 74fc736caf10ab64dbc48fe8dfc4c179,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -12.07
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8776314829032659383, guid: 74fc736caf10ab64dbc48fe8dfc4c179,
         type: 3}
@@ -114,6 +161,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3226109214233467643, guid: 74fc736caf10ab64dbc48fe8dfc4c179,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 544995285, guid: 74fc736caf10ab64dbc48fe8dfc4c179, type: 3}
       propertyPath: OnClicked.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -124,6 +176,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 544995284, guid: 74fc736caf10ab64dbc48fe8dfc4c179, type: 3}
+    - {fileID: 544995285, guid: 74fc736caf10ab64dbc48fe8dfc4c179, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 74fc736caf10ab64dbc48fe8dfc4c179, type: 3}
 --- !u!1 &2736100514358246229 stripped
 GameObject:

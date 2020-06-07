@@ -17,9 +17,9 @@ namespace Google.Maps.Demos.Zoinkies {
             // Testing - pick first energy station from world
             List<SpawnLocation> s =
                 new List<SpawnLocation>(WorldService.GetInstance().GetEnergyStations());
-            PlaceId = s.ElementAt(0).id;
+            LocationId = s.ElementAt(0).id;
 
-            if (String.IsNullOrEmpty(PlaceId)) {
+            if (String.IsNullOrEmpty(LocationId)) {
                 Debug.LogError("Incorrect PlaceId!");
                 UIManager.OnShowLoadingView(false);
                 return;
@@ -27,7 +27,7 @@ namespace Google.Maps.Demos.Zoinkies {
 
             // Check if this station is active?
             // If not show a floating popup with timeout information
-            if (WorldService.GetInstance().IsRespawning(PlaceId)) {
+            if (WorldService.GetInstance().IsRespawning(LocationId)) {
 
                 DateTime t = DateTime.Parse(location.respawn_time);
                 TimeSpan timeLeft = t.Subtract(DateTime.Now);
@@ -38,7 +38,7 @@ namespace Google.Maps.Demos.Zoinkies {
 
             try {
                 IsLoading = true;
-                StartCoroutine(ServerManager.PostRechargingStation(PlaceId, OnSuccess, OnError));
+                StartCoroutine(ServerManager.PostRechargingStation(LocationId, OnSuccess, OnError));
             }
             catch (System.Exception e) {
                 Debug.LogError("Failed to open chest! " + e.ToString());
@@ -54,7 +54,7 @@ namespace Google.Maps.Demos.Zoinkies {
                 return;
             }
 
-            WorldService.GetInstance().StartRespawn(PlaceId);
+            WorldService.GetInstance().StartRespawn(LocationId);
 
             // Init the player's data
             PlayerService.GetInstance().IncreaseEnergyLevel(data.amountRestored);

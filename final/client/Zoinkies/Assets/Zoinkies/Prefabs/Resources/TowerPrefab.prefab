@@ -9,39 +9,10 @@ BoxCollider:
   m_GameObject: {fileID: 7508932387161937935}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 10.003989, y: 39.582523, z: 10.003989}
   m_Center: {x: 0, y: 19.791262, z: 0}
---- !u!114 &6713407935841485242
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7508932387161937935}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95d3e4302f5a44e5b86cb3e3852d9e6c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OnClicked:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3357790077561047532}
-        m_MethodName: OnClicked
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  activeCamera: {fileID: 0}
 --- !u!1 &7545396027991771348
 GameObject:
   m_ObjectHideFlags: 0
@@ -52,6 +23,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5560016695558774955}
   - component: {fileID: 3357790077561047532}
+  - component: {fileID: 4598293911708702129}
+  - component: {fileID: 6036930344182318603}
   m_Layer: 0
   m_Name: TowerPrefab
   m_TagString: Untagged
@@ -90,6 +63,50 @@ MonoBehaviour:
   ServerManager: {fileID: 0}
   Model: {fileID: 7508932387161937935}
   IsTesting: 0
+  LocationId: 
+  type: 
+--- !u!114 &4598293911708702129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7545396027991771348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95d3e4302f5a44e5b86cb3e3852d9e6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnClicked:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3357790077561047532}
+        m_MethodName: OnClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  activeCamera: {fileID: 0}
+--- !u!65 &6036930344182318603
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7545396027991771348}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 25, y: 200, z: 25}
+  m_Center: {x: 0, y: 100, z: 0}
 --- !u!1001 &7903651962426933150
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -105,7 +122,7 @@ PrefabInstance:
     - target: {fileID: 3729304252882277762, guid: 61166c996291d4745ace526ba215a783,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -63
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3729304252882277762, guid: 61166c996291d4745ace526ba215a783,
         type: 3}

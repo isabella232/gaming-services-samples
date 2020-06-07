@@ -119,10 +119,11 @@ public class WorldService {
       // If the location is not already in the database, create it
       // Otherwise add it to the combined response
       for (PLLocation plloc:response.locationsPerGameObjectType.get("0").locations) {
-        if (data != null && data.getLocations() != null
-            && !data.getLocations().containsKey(plloc.getName())) {
 
-          String locationId = plloc.getName().replace("/","_");
+        String locationId = plloc.getName().replace("/","_");
+
+        if (data != null && data.getLocations() != null
+            && !data.getLocations().containsKey(locationId)) {
           // spawn a new location
           data.getLocations().put(locationId, GameService.CreateRandomSpawnLocation(plloc));
           updateNeeded = true;

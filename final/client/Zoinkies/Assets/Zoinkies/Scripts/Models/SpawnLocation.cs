@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace Google.Maps.Demos.Zoinkies {
 
@@ -55,6 +56,13 @@ namespace Google.Maps.Demos.Zoinkies {
             this.respawn_time = respawn_time;
             this.number_of_keys_to_activate = number_of_keys_to_activate;
             this.snappedPoint = snappedPoint;
+        }
+
+        public override string ToString() {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Id: " + id + "  object_type_id " + object_type_id );
+
+            return sb.ToString();
         }
 
         /*

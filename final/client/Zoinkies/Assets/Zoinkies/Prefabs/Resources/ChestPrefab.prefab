@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3663938625859668600}
   - component: {fileID: 8265281277073680861}
+  - component: {fileID: 3527989857820045638}
+  - component: {fileID: 7999931676270350798}
   m_Layer: 0
   m_Name: ChestPrefab
   m_TagString: Untagged
@@ -47,7 +49,52 @@ MonoBehaviour:
   UIManager: {fileID: 0}
   ServerManager: {fileID: 0}
   Model: {fileID: 294073600791689129}
+  IsTesting: 0
+  LocationId: 
+  type: 
   Animator: {fileID: 3427890670970167905}
+--- !u!114 &3527989857820045638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3528272380507031558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95d3e4302f5a44e5b86cb3e3852d9e6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnClicked:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8265281277073680861}
+        m_MethodName: OnClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  activeCamera: {fileID: 0}
+--- !u!65 &7999931676270350798
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3528272380507031558}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 14.335161, y: 10.137033, z: 10}
+  m_Center: {x: -0.0489645, y: 5.1158113, z: 0}
 --- !u!1001 &4797700569026599310
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -115,6 +162,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8749722890709805268, guid: 8808fae4996ba624b970ab0c9021cf19,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1733608676854990399, guid: 8808fae4996ba624b970ab0c9021cf19,
         type: 3}
       propertyPath: m_Enabled
@@ -130,13 +182,9 @@ PrefabInstance:
       propertyPath: OnClicked.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: OnClicked
       objectReference: {fileID: 0}
-    - target: {fileID: 8749722890709805268, guid: 8808fae4996ba624b970ab0c9021cf19,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4714454879562279065, guid: 8808fae4996ba624b970ab0c9021cf19, type: 3}
+    - {fileID: 1733608676854990399, guid: 8808fae4996ba624b970ab0c9021cf19, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8808fae4996ba624b970ab0c9021cf19, type: 3}
 --- !u!1 &294073600791689129 stripped
 GameObject:

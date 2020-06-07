@@ -12,16 +12,16 @@ namespace Google.Maps.Demos.Zoinkies {
 
       base.ActionState();
 
-      if (string.IsNullOrEmpty(PlaceId)) {
+      if (string.IsNullOrEmpty(LocationId)) {
         Debug.LogError("Incorrect PlaceId!");
         return;
       }
 
       // Check if this station is active?
       // If not show a floating popup with timeout information
-      location = WorldService.GetInstance().GetSpawnLocation(PlaceId);
+      location = WorldService.GetInstance().GetSpawnLocation(LocationId);
 
-      if (WorldService.GetInstance().IsRespawning(PlaceId)) {
+      if (WorldService.GetInstance().IsRespawning(LocationId)) {
         var t = DateTime.Parse(location.respawn_time);
         var timeLeft = t.Subtract(DateTime.Now);
 
@@ -42,7 +42,7 @@ namespace Google.Maps.Demos.Zoinkies {
 
         try {
           IsLoading = true;
-          StartCoroutine(ServerManager.PostBattleData(PlaceId, OnBattleSuccess, OnError));
+          StartCoroutine(ServerManager.PostBattleData(LocationId, OnBattleSuccess, OnError));
         }
         catch (System.Exception e) {
           Debug.LogError("Failed to free the leader in this tower! " + e);
@@ -76,7 +76,7 @@ namespace Google.Maps.Demos.Zoinkies {
       IsLoading = true;
       // Notify the server about battle results - Player->1  NPC->0
       StartCoroutine(
-        ServerManager.PostBattleSummary(PlaceId, Winner, OnBattleSummarySuccess, OnError));
+        ServerManager.PostBattleSummary(LocationId, Winner, OnBattleSummarySuccess, OnError));
     }
 
     private void OnBattleSummarySuccess(BattleSummaryData data) {

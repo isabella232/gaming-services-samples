@@ -32,7 +32,7 @@ namespace Google.Maps.Demos.Zoinkies {
 
             base.ActionState();
 
-            if (String.IsNullOrEmpty(PlaceId)) {
+            if (String.IsNullOrEmpty(LocationId)) {
                 Debug.LogError("Incorrect PlaceId!");
                 UIManager.OnShowLoadingView(false);
                 return;
@@ -40,9 +40,9 @@ namespace Google.Maps.Demos.Zoinkies {
 
             // Check if this station is active?
             // If not show a floating popup with timeout information
-            location = WorldService.GetInstance().GetSpawnLocation(PlaceId);
+            location = WorldService.GetInstance().GetSpawnLocation(LocationId);
 
-            if (WorldService.GetInstance().IsRespawning(PlaceId)) {
+            if (WorldService.GetInstance().IsRespawning(LocationId)) {
                 DateTime t = DateTime.Parse(location.respawn_time);
                 TimeSpan timeLeft = t.Subtract(DateTime.Now);
 
@@ -54,7 +54,7 @@ namespace Google.Maps.Demos.Zoinkies {
 
             try {
                 IsLoading = true;
-                StartCoroutine(ServerManager.PostBattleData(PlaceId, OnBattleSuccess, OnError));
+                StartCoroutine(ServerManager.PostBattleData(LocationId, OnBattleSuccess, OnError));
             }
             catch (System.Exception e) {
                 Debug.LogError("Failed to open chest! " + e.ToString());
@@ -81,7 +81,7 @@ namespace Google.Maps.Demos.Zoinkies {
             UIManager.OnShowLoadingView(true);
 
             // Notify the server about battle results - Player->1  NPC->0
-            StartCoroutine(ServerManager.PostBattleSummary(this.PlaceId, Winner,
+            StartCoroutine(ServerManager.PostBattleSummary(this.LocationId, Winner,
                 OnBattleSummarySuccess, OnError));
         }
 
@@ -92,7 +92,7 @@ namespace Google.Maps.Demos.Zoinkies {
             UIManager.OnShowLoadingView(false);
 
             // Start respawning
-            WorldService.GetInstance().StartRespawn(PlaceId);
+            WorldService.GetInstance().StartRespawn(LocationId);
 
             if (data.winner) {
                 if (data.wonTheGame) {

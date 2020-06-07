@@ -28,7 +28,7 @@ namespace Google.Maps.Demos.Zoinkies {
 
             base.ActionState();
 
-            if (String.IsNullOrEmpty(PlaceId)) {
+            if (String.IsNullOrEmpty(LocationId)) {
                 Debug.LogError("Incorrect PlaceId!");
                 return;
             }
@@ -36,9 +36,9 @@ namespace Google.Maps.Demos.Zoinkies {
 
             // Check if this chest is active?
             // If not show a floating popup with timeout information
-            location = WorldService.GetInstance().GetSpawnLocation(PlaceId);
+            location = WorldService.GetInstance().GetSpawnLocation(LocationId);
 
-            if (WorldService.GetInstance().IsRespawning(PlaceId)) {
+            if (WorldService.GetInstance().IsRespawning(LocationId)) {
 
                 UIManager.OnShowLoadingView(false);
 
@@ -58,7 +58,7 @@ namespace Google.Maps.Demos.Zoinkies {
 
                 try {
                     IsLoading = true;
-                    StartCoroutine(ServerManager.PostChest(PlaceId, OnSuccess, OnError));
+                    StartCoroutine(ServerManager.PostChest(LocationId, OnSuccess, OnError));
                 }
                 catch (System.Exception e) {
                     Debug.LogError("Failed to open chest! " + e.ToString());
@@ -97,7 +97,7 @@ namespace Google.Maps.Demos.Zoinkies {
             // Preemptively update the player's data
             PlayerService.GetInstance().AddToInventory(data.items);
             // Preemptively start respawning
-            WorldService.GetInstance().StartRespawn(PlaceId);
+            WorldService.GetInstance().StartRespawn(LocationId);
 
             UIManager.OnShowLoadingView(false);
 

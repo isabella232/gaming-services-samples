@@ -1,0 +1,258 @@
+
+{"references":[
+  {
+    "name":"War Chest",
+    "id":"CHEST",
+    "type": "GEO_PROP",
+    "description":"A War Chest brought from Zoinkies outer space",
+    "attackScore":0,
+    "defenseScore":0,
+    "respawnDuration":"PT5M",
+    "cooldown":null,
+    "prefab":"ChestPrefab"
+  },
+  {
+    "name":"Tower",
+    "id":"TOWER",
+    "type": "GEO_PROP",
+    "description":"A Tower holding a local leader. Open the tower, defeat the guardian, free the prisoner.",
+    "attackScore":0,
+    "defenseScore":0,
+    "respawnDuration":null,
+    "cooldown":null,
+    "prefab":"TowerPrefab"
+  },
+  {
+    "name":"Gold Key",
+    "id":"GOLD_KEY",
+    "type": "QUEST_ITEM",
+    "description":"A Gold key to open a war chest (you may need more than one).",
+    "attackScore":0,
+    "defenseScore":0,
+    "respawnDuration":null,
+    "cooldown":null,
+    "prefab":"GoldKeyPrefab"
+  },
+  {
+    "name":"Diamond Key",
+    "id":"DIAMOND_KEY",
+    "type": "QUEST_ITEM",
+    "description":"A Diamond key to open a Tower (you may need more than one).",
+    "attackScore":0,
+    "defenseScore":0,
+    "respawnDuration":null,
+    "cooldown":null,
+    "prefab":"DiamondKeyPrefab"
+  },
+  {
+    "name":"Zoinkies Minion",
+    "id":"MINION",
+    "type": "NPC",
+    "description":"Zoinkies minions are as strong as they are nasty. Don't underestimate them!",
+    "attackScore":5,
+    "defenseScore":5,
+    "respawnDuration":"PT15M",
+    "cooldown":"PT3S",
+    "prefab":"MinionPrefab"
+  },
+  {
+    "name":"Zoinkies General",
+    "id":"GENERAL",
+    "type": "NPC",
+    "description":"Zoinkies generals are formidable foes. They won't give up easily. Come prepared!",
+    "attackScore":10,
+    "defenseScore":10,
+    "respawnDuration":null,
+    "cooldown":"PT2S",
+    "prefab":"GeneralPrefab"
+  },
+  {
+    "name":"Energy Station",
+    "id":"ENERGY_STATION",
+    "type": "GEO_PROP",
+    "description":"A place to restore your energy when you feel down.",
+    "attackScore":0,
+    "defenseScore":0,
+    "respawnDuration":"PT15M",
+    "cooldown":null,
+    "prefab":"EnergyStationPrefab"
+  },
+  {
+    "name":"Terran",
+    "id":"CHARACTER_TYPE_1",
+    "type": "AVATAR",
+    "description":"Those terrans are weak but, oh boy, they are tenacious!",
+    "attackScore":0,
+    "defenseScore":0,
+    "respawnDuration":null,
+    "cooldown":"PT4S",
+    "prefab":"CharacterType1Prefab"
+  },
+  {
+    "name":"Martian Elfe",
+    "id":"CHARACTER_TYPE_2",
+    "type": "AVATAR",
+    "description":"Martian Elves are fast but weak.",
+    "attackScore":0,
+    "defenseScore":0,
+    "respawnDuration":null,
+    "cooldown":"PT2S",
+    "prefab":"CharacterType2Prefab"
+  },
+  {
+    "name":"Aurorean",
+    "id":"CHARACTER_TYPE_3",
+    "type": "AVATAR",
+    "description":"Growing on a high g planet makes Auroreans strong.",
+    "attackScore":0,
+    "defenseScore":0,
+    "respawnDuration":null,
+    "cooldown":"PT4S",
+    "prefab":"CharacterType3Prefab"
+  },
+  {
+    "name":"Robot",
+    "id":"CHARACTER_TYPE_4",
+    "type": "AVATAR",
+    "description":"Robots are strong and ready for all tasks.",
+    "attackScore":0,
+    "defenseScore":0,
+    "respawnDuration":null,
+    "cooldown":"PT4S",
+    "prefab":"CharacterType4Prefab"
+  },
+  {
+    "name":"BODY_ARMOR_TYPE_1",
+    "id":"BODY_ARMOR_TYPE_1",
+    "type": "BODY_ARMOR",
+    "description":"BODY_ARMOR_TYPE_1",
+    "attackScore":0,
+    "defenseScore":5,
+    "respawnDuration":null,
+    "cooldown":null,
+    "prefab":"BodyArmorType1Prefab"
+  },
+  {
+    "name":"BODY_ARMOR_TYPE_2",
+    "id":"BODY_ARMOR_TYPE_2",
+    "type": "BODY_ARMOR",
+    "description":"BODY_ARMOR_TYPE_2",
+    "attackScore":0,
+    "defenseScore":7,
+    "respawnDuration":null,
+    "cooldown":null,
+    "prefab":"BodyArmorType2Prefab"
+  },
+  {
+    "name":"BODY_ARMOR_TYPE_3",
+    "id":"BODY_ARMOR_TYPE_3",
+    "type": "BODY_ARMOR",
+    "description":"BODY_ARMOR_TYPE_3",
+    "attackScore":0,
+    "defenseScore":10,
+    "respawnDuration":null,
+    "cooldown":null,
+    "prefab":"BodyArmorType3Prefab"
+  },
+  {
+    "name":"HELMET_TYPE_1",
+    "id":"HELMET_TYPE_1",
+    "type": "HELMET",
+    "description":"HELMET_TYPE_1",
+    "attackScore":0,
+    "defenseScore":1,
+    "respawnDuration":null,
+    "cooldown":null,
+    "prefab":"HelmetType1Prefab"
+  },
+  {
+    "name":"HELMET_TYPE_2",
+    "id":"HELMET_TYPE_2",
+    "type": "HELMET",
+    "description":"HELMET_TYPE_2",
+    "attackScore":0,
+    "defenseScore":2,
+    "respawnDuration":null,
+    "cooldown":null,
+    "prefab":"HelmetType2Prefab"
+  },
+  {
+    "name":"HELMET_TYPE_3",
+    "id":"HELMET_TYPE_3",
+    "type": "HELMET",
+    "description":"HELMET_TYPE_3",
+    "attackScore":0,
+    "defenseScore":3,
+    "respawnDuration":null,
+    "cooldown":null,
+    "prefab":"HelmetType3Prefab"
+  },
+  {
+    "name":"SHIELD_TYPE_1",
+    "id":"SHIELD_TYPE_1",
+    "type": "SHIELD",
+    "description":"SHIELD_TYPE_1",
+    "attackScore":0,
+    "defenseScore":2,
+    "respawnDuration":null,
+    "cooldown":null,
+    "prefab":"ShieldType1Prefab"
+  },
+  {
+    "name":"SHIELD_TYPE_2",
+    "id":"SHIELD_TYPE_2",
+    "type": "SHIELD",
+    "description":"SHIELD_TYPE_2",
+    "attackScore":0,
+    "defenseScore":4,
+    "respawnDuration":null,
+    "cooldown":null,
+    "prefab":"ShieldType2Prefab"
+  },
+  {
+    "name":"SHIELD_TYPE_3",
+    "id":"SHIELD_TYPE_3",
+    "type": "SHIELD",
+    "description":"SHIELD_TYPE_3",
+    "attackScore":0,
+    "defenseScore":8,
+    "respawnDuration":null,
+    "cooldown":null,
+    "prefab":"ShieldType3Prefab"
+  },
+  {
+    "name":"WEAPON_TYPE_1",
+    "id":"WEAPON_TYPE_1",
+    "type": "WEAPON",
+    "description":"WEAPON_TYPE_1",
+    "attackScore":7,
+    "defenseScore":0,
+    "respawnDuration":null,
+    "cooldown":"PT3S",
+    "prefab":"WeaponType1Prefab"
+  },
+  {
+    "name":"WEAPON_TYPE_2",
+    "id":"WEAPON_TYPE_2",
+    "type": "WEAPON",
+    "description":"WEAPON_TYPE_2",
+    "attackScore":15,
+    "defenseScore":0,
+    "respawnDuration":null,
+    "cooldown":"PT2S",
+    "prefab":"WeaponType2Prefab"
+  },
+  {
+    "name":"WEAPON_TYPE_3",
+    "id":"WEAPON_TYPE_3",
+    "type": "WEAPON",
+    "description":"WEAPON_TYPE_3",
+    "attackScore":20,
+    "defenseScore":0,
+    "respawnDuration":null,
+    "cooldown":"PT1S",
+    "prefab":"WeaponType3Prefab"
+  }
+]
+}
+

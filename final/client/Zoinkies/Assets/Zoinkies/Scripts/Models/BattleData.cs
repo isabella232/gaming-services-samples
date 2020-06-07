@@ -4,7 +4,7 @@
   /// Model that keeps track of battle instructions at start.
   /// </summary>
   public class BattleData {
-    public string placeId { get; set; }
+    public string id { get; set; }
     public string opponentTypeId { get; set; }
     public bool playerStarts { get; set; } // 1-Player 0-Opponent
     public int maxAttackScoreBonus{ get; set; }
@@ -13,7 +13,7 @@
     public string cooldown{ get; set; }
 
     public override string ToString() {
-      return "{Id: " + placeId +
+      return "{Id: " + id +
              " OpponentTypeId: " + opponentTypeId +
              " PlayerStarts: " + playerStarts +
              " MaxAttackScoreBonus: " + maxAttackScoreBonus +

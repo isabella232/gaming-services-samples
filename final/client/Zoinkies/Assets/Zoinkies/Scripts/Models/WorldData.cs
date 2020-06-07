@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Google.Maps.Demos.Zoinkies {
 
@@ -22,6 +23,17 @@ namespace Google.Maps.Demos.Zoinkies {
             currentServerTime = DateTime.UtcNow.ToString();
         }
 
+        public override string ToString() {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Locations: \n");
+            foreach (SpawnLocation loc in locations.Values) {
+                sb.Append(loc.ToString() + " \t");
+            }
+
+            sb.Append("----------------------");
+
+            return sb.ToString();
+        }
 
         /*
         public void CopyAttributes(WorldData newData) {

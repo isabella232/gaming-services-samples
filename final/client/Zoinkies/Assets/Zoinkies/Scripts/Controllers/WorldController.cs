@@ -56,28 +56,6 @@ namespace Google.Maps.Demos.Zoinkies {
     /// </summary>
     public Transform PlayableLocationsContainer;
 
-    /*
-    /// <summary>
-    /// Convenient container to hold all chests for quick access.
-    /// </summary>
-    public Transform ChestsContainer;
-
-    /// <summary>
-    /// Convenient container to hold all energy stations for quick access.
-    /// </summary>
-    public Transform EnergyRestoreContainer;
-
-    /// <summary>
-    /// Convenient container to hold all towers for quick access.
-    /// </summary>
-    public Transform TowersContainer;
-
-    /// <summary>
-    /// Convenient container to hold all minions for quick access.
-    /// </summary>
-    public Transform MinionsContainer;
-    */
-
     /// <summary>
     /// Tower prefab
     /// </summary>
@@ -237,11 +215,6 @@ namespace Google.Maps.Demos.Zoinkies {
       Assert.IsNotNull(mainCamera);
       Assert.IsNotNull(battleCamera);
       Assert.IsNotNull(PlayableLocationsContainer);
-      /*
-      Assert.IsNotNull(EnergyRestoreContainer);
-      Assert.IsNotNull(TowersContainer);
-      Assert.IsNotNull(MinionsContainer);
-      */
       Assert.IsNotNull(ServerManager);
       Assert.IsNotNull(Avatar);
       base.Start();
@@ -269,18 +242,16 @@ namespace Google.Maps.Demos.Zoinkies {
 
 
     public override void LoadMap() {
-
       // LoadMap is called from Dynamic updater
       // Get our new GPS coordinates and use these to load the map
       // We don't need to update the floating origin all the time.
       StartCoroutine(GetGPSLocation(OnLocationServicesEvalComplete));
-
-      //base.LoadMap();
     }
 
     /// <summary>
     ///   Sets the lat lng to our current position is the GPS is enabled
-    ///   Otherwise use the default position, which is currently the Googleplex in Mountain View, CA
+    ///   Otherwise use the default position, which is currently the Googleplex
+    /// in Mountain View, CA
     /// </summary>
     protected IEnumerator GetGPSLocation(Action<LocationInfo> onInitComplete) {
       Assert.IsNotNull(onInitComplete);
@@ -472,6 +443,11 @@ namespace Google.Maps.Demos.Zoinkies {
             // The reference to placeId allows us to find the associated data
             // through WorldService
             go.name = loc.id;
+
+            BaseSpawnLocationController sl = go.GetComponent<BaseSpawnLocationController>();
+            Assert.IsNotNull(sl);
+            sl.Init(loc.id);
+
             SpawnedGameObjects.Add(loc.id, go);
             numberOfObjectsCreated++;
           }
@@ -562,14 +538,6 @@ namespace Google.Maps.Demos.Zoinkies {
       battleCamera.enabled = true;
     }
 
-    /*
-    public void OnHitMe() {
-      PlayerService.GetInstance().DecreaseEnergyLevel(20);
-      SyncData();
-      Debug.Log("New energy level: " + PlayerService.GetInstance().GetEnergyLevel().ToString("N0"));
-    }
-    */
-
     public void OnMapLoadStart() {
       // We've moved enough to restart a new map
 
@@ -581,7 +549,6 @@ namespace Google.Maps.Demos.Zoinkies {
     }
 
     private void OnWorldDataLoaded(WorldData wd) {
-
       // Init the playerservice with the new batch of data
       WorldService.GetInstance().Init(wd);
 
@@ -597,6 +564,8 @@ namespace Google.Maps.Demos.Zoinkies {
         SpawnedGameObjects.Remove(k);
         deletedEntries++;
       }
+
+      Debug.Log("Deleted " + deletedEntries);
 
       // Add all new locations
       CreateNewLocations(wd);
@@ -641,8 +610,8 @@ namespace Google.Maps.Demos.Zoinkies {
     ///   Adds a Squasher MonoBehaviour to the supplied GameObject.
     /// </summary>
     /// <remarks>
-    ///   The Squasher MonoBehaviour reduced the vertical scale of the GameObject's transform when a
-    ///   certain object is nearby.
+    ///   The Squasher MonoBehaviour reduced the vertical scale of the GameObject's transform
+    ///   when a building object is nearby.
     /// </remarks>
     /// <param name="go">The GameObject to which to add the Squasher behaviour.</param>
     private void AddSquasher(GameObject go) {
