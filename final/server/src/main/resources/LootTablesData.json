@@ -1,0 +1,10 @@
+{"chestLootTable":
+  [
+    {
+      "id":"GOLD_KEY",
+      "weight": 0.2,
+      "minQuantity": 1,
+      "maxQuantity": 1
+    }
+  ]
+}

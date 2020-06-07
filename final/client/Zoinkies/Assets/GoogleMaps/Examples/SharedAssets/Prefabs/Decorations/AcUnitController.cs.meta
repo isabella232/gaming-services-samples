@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: a84234f6e91d742b886acf5d8c8f2ba8
+labels:
+- gvh
+- gvh_version-0.0.0
+- gvhp_exportpath-GoogleMaps/Examples/SharedAssets/Prefabs/Decorations/AcUnitController.cs
+timeCreated: 1498695320
+licenseType: Pro
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon:
+    instanceID: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:
