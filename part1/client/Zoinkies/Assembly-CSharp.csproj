@@ -181,11 +181,9 @@
     <Compile Include="Assets\Zoinkies\Scripts\UI\LoadingDialog.cs" />
     <Compile Include="Assets\Zoinkies\Scripts\UI\MapHUDView.cs" />
     <Compile Include="Assets\Zoinkies\Scripts\UI\MessageDialog.cs" />
-    <Compile Include="Assets\Zoinkies\Scripts\UI\SpawnedItemGO.cs" />
     <Compile Include="Assets\Zoinkies\Scripts\UI\SplashView.cs" />
     <Compile Include="Assets\Zoinkies\Scripts\Utils\FaceCamera.cs" />
     <Compile Include="Assets\Zoinkies\Scripts\Utils\Flash.cs" />
-    <Compile Include="Assets\Zoinkies\Scripts\Utils\FogEffect.cs" />
     <Compile Include="Assets\Zoinkies\Scripts\Utils\ShakeScreen.cs" />
     <Compile Include="Assets\Zoinkies\Scripts\Utils\SmoothFollowCamera.cs" />
     <Compile Include="Assets\Zoinkies\Scripts\Utils\TouchInteractivity.cs" />

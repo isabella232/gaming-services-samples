@@ -1,3 +1,18 @@
+/**
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.google.maps.gaming.zoinkies;
 
 public class GameConstants {
@@ -6,7 +21,6 @@ public class GameConstants {
 
   public static final int FREED_LEADERS_TO_WIN = 3;
 
-  //public static final int DEFAULT_ENERGY_STATION_REFILL = 100;
   public static final int MAX_ATTACK_BONUS_MINION = 5;
   public static final int MAX_ATTACK_BONUS_GENERAL = 15;
   public static final int MAX_DEFENSE_BONUS_MINION = 5;
@@ -14,24 +28,12 @@ public class GameConstants {
   public static final int DEFAULT_MINION_ENERGY_LEVEL = 100;
   public static final int DEFAULT_GENERAL_ENERGY_LEVEL = 200;
 
-  // Game reference data - TODO move these to enums?
+  // Game reference data
   // Characters
   public static final String CHARACTER_TYPE_1 = "CHARACTER_TYPE_1"; // Terran
   public static final String CHARACTER_TYPE_2 = "CHARACTER_TYPE_2"; // Martian Elfe
   public static final String CHARACTER_TYPE_3 = "CHARACTER_TYPE_3"; // Aurorean
   public static final String CHARACTER_TYPE_4 = "CHARACTER_TYPE_4"; // Robot
-
-  // Object types - TODO move these to enums?
-  /*public static final String GEO_PROPS = "GEO_PROP";
-  public static final String AVATARS = "AVATAR";
-  public static final String QUEST_ITEMS = "QUEST_ITEM";
-  public static final String NPCS = "NPC";
-  public static final String WEAPONS = "WEAPON";
-  public static final String BODYARMORS = "BODY_ARMOR";
-  public static final String HELMETS = "HELMET";
-  public static final String SHIELDS = "SHIELD";
-
-   */
 
   // Game objects
   public static final String FREED_LEADERS = "FREED_LEADERS";

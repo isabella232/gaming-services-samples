@@ -1,4 +1,20 @@
-﻿namespace Google.Maps.Demos.Zoinkies {
+﻿/**
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+namespace Google.Maps.Demos.Zoinkies {
 
   public class GameConstants {
     public static string DEFAULT_PLAYER_NAME = "Jordyen";
@@ -6,14 +22,14 @@
     public static string PLAYER_ID = "PLAYER_ID";
     public static string FTUE_COMPLETE = "FTUE_COMPLETE";
 
-    // Game reference data - TODO move these to enums?
+    // Game reference data
     // Characters
     public static string CHARACTER_TYPE_1 = "CHARACTER_TYPE_1"; // Human (male)
     public static string CHARACTER_TYPE_2 = "CHARACTER_TYPE_2"; // Elfe (female)
     public static string CHARACTER_TYPE_3 = "CHARACTER_TYPE_3"; // Dwarf (male)
     public static string CHARACTER_TYPE_4 = "CHARACTER_TYPE_4"; // Gobelin (female)
 
-    // Object types - TODO move these to enums?
+    // Object types
     public static string GEO_PROPS = "GEO_PROP";
     public static string AVATARS = "AVATAR";
     public static string QUEST_ITEMS = "QUEST_ITEM";

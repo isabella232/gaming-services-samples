@@ -1,4 +1,20 @@
-﻿using System;
+﻿/**
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+using System;
 using System.Collections;
 using System.Xml;
 
@@ -9,38 +25,38 @@ using Random = UnityEngine.Random;
 
 namespace Google.Maps.Demos.Zoinkies {
 
-public enum BATTLE_STATES {
-    WAITING_FOR_PLAYER,
-    PLAYER_ATTACKING,
-    NPC_ATTACKING,
-    NPC_COOLDOWN,
-    PLAYER_COOLDOWN,
-    READY_SET_GO
-}
+    public enum BATTLE_STATES {
+        WAITING_FOR_PLAYER,
+        PLAYER_ATTACKING,
+        NPC_ATTACKING,
+        NPC_COOLDOWN,
+        PLAYER_COOLDOWN,
+        READY_SET_GO
+    }
 
-/// <summary>
-//
-// States:
-// Setup
-//    Battle details for NPC and Human
-//    Who starts => NPC starts attacking right away or is in cooldown
-// Waiting for Player
-// Player attacks
-//    Compute damage
-//    Miss or hit animations
-//    Init of stats
-// Player in cooldown
-//    Attack button disabled
-// NPC attacks
-//    Compute damage
-//    Miss or hit animations
-//    Init of stats
-// NPC in cooldown
-//    Can't shoot
-// NPC or Player energy has reached 0
-//    Battle ends
-// NPC defeated => Victory dialog
-// Player defeated => Defeat dialog
+    /// <summary>
+    //
+    // States:
+    // Setup
+    //    Battle details for NPC and Human
+    //    Who starts => NPC starts attacking right away or is in cooldown
+    // Waiting for Player
+    // Player attacks
+    //    Compute damage
+    //    Miss or hit animations
+    //    Init of stats
+    // Player in cooldown
+    //    Attack button disabled
+    // NPC attacks
+    //    Compute damage
+    //    Miss or hit animations
+    //    Init of stats
+    // NPC in cooldown
+    //    Can't shoot
+    // NPC or Player energy has reached 0
+    //    Battle ends
+    // NPC defeated => Victory dialog
+    // Player defeated => Defeat dialog
     /// </summary>
     public class BattleView : BaseView {
         // Battle UI
@@ -131,7 +147,8 @@ public enum BATTLE_STATES {
             ReferenceItem NPCBaseStats =
                 ReferenceService.GetItem(battleData.opponentTypeId);
             if (NPCBaseStats == null) {
-                throw new System.Exception("Invalid opponent type! Found " + battleData.opponentTypeId);
+                throw new System.Exception("Invalid opponent type! Found "
+                                           + battleData.opponentTypeId);
             }
 
             NPCCooldown = XmlConvert.ToTimeSpan(NPCBaseStats.cooldown);
@@ -248,7 +265,8 @@ public enum BATTLE_STATES {
                             int def = PlayerBaseDefenseScore;
                             int dmg = ComputeDamage(att, def);
 
-                            Debug.Log("NPC att: " + att + " Player def: " + def + " => dmg: " +
+                            Debug.Log("NPC att: " + att + " Player def: "
+                                      + def + " => dmg: " +
                                       dmg);
                             if (dmg > 0) {
                                 Debug.Log("NPC deals " + dmg);
@@ -280,7 +298,8 @@ public enum BATTLE_STATES {
                                       Random.Range(0, this.battleData.maxAttackScoreBonus);
                             int dmg = ComputeDamage(att, NPCDefenseScore);
 
-                            Debug.Log("Player att: " + att + " NPC def: " + def + " => dmg: " +
+                            Debug.Log("Player att: " + att + " NPC def: "
+                                      + def + " => dmg: " +
                                       dmg);
                             if (dmg > 0) {
                                 Debug.Log("Player deals " + dmg);
@@ -330,7 +349,8 @@ public enum BATTLE_STATES {
                 winner = false;
             }
             else {
-                throw new System.Exception("Hmmm, something is not right... a draw maybe?");
+                throw new System.Exception(
+                    "Hmmm, something is not right... a draw maybe?");
             }
 
             yield return new WaitForSeconds(1.5f);
