@@ -40,7 +40,7 @@ public class PlayableLocationsService {
       "https://playablelocations.googleapis.com/v3:samplePlayableLocations";
   private final int S2_CELL_LEVEL = 11;
   private final int S2_CELL_MAX_LEVEL = 14;
-  private final String API_KEY = "AIzaSyAZc7i2gq-bv-xYy2Ou2eNDPDUxf5bIQEo";
+  private final String API_KEY = "<YOUR API KEY HERE>"; // TODO Remove before publishing
   private final int GAME_OBJECT_TYPE_SPAWN_LOCATIONS = 0;
 
   /**
@@ -60,20 +60,24 @@ public class PlayableLocationsService {
 
     // Build query
     PLRequest req = new PLRequest();
-    req.areaFilter = new PLAreaFilter();
+    req.setAreaFilter(new PLAreaFilter());
     if (criteria == null) {
-      req.criteria = GetPLDefaultCriteria();
+      req.setCriteria(GetPLDefaultCriteria());
     } else {
-      req.criteria = criteria;
+      req.setCriteria(criteria);
     }
 
+    // Configure a region coverer, which will help us get all overlapping S2 cells on the
+    // given Lat Lng rectangle
     S2RegionCoverer rc = new S2RegionCoverer();
     rc.setMinLevel(this.S2_CELL_LEVEL);
     rc.setMaxLevel(this.S2_CELL_MAX_LEVEL);
 
+    // Get the two opposite corners in degrees.
     S2LatLng lo = S2LatLng.fromDegrees(loLatLng.getLatitude(),loLatLng.getLongitude());
     S2LatLng hi = S2LatLng.fromDegrees(hiLatLng.getLatitude(),hiLatLng.getLongitude());
 
+    // Define the Lat Lng Rectangle
     S2LatLngRect r = new S2LatLngRect(lo,hi);
 
     // Get all cells that are covering the provided area
@@ -81,8 +85,8 @@ public class PlayableLocationsService {
 
     PLResponse combinedResponse = new PLResponse();
     String objectType = Integer.toString(GAME_OBJECT_TYPE_SPAWN_LOCATIONS);
-    combinedResponse.locationsPerGameObjectType = new HashMap<String, PLLocations>();
-    combinedResponse.locationsPerGameObjectType.put(objectType,new PLLocations());
+    combinedResponse.setLocationsPerGameObjectType(new HashMap<String, PLLocations>());
+    combinedResponse.getLocationsPerGameObjectType().put(objectType,new PLLocations());
 
     List<PLLocation> combinedLocations = new ArrayList<>();
     ObjectMapper objectMapper = new ObjectMapper();
@@ -90,7 +94,7 @@ public class PlayableLocationsService {
     // For each overlapping cell, query playable locations API and merge results into
     // a combined response.
     for (S2CellId id:cu.cellIds()){
-      req.areaFilter.setS2CellId(Long.toUnsignedString(id.id()));
+      req.getAreaFilter().setS2CellId(Long.toUnsignedString(id.id()));
 
       String reqJson = objectMapper.writeValueAsString(req);
       System.out.println(reqJson);
@@ -100,16 +104,13 @@ public class PlayableLocationsService {
       assertNotNull(plResponse);
 
       PLResponse response = objectMapper.readValue(plResponse,PLResponse.class);
-      System.out.println("response size" +
-          response.locationsPerGameObjectType.get(objectType).locations.length +
-          " ttl " + response.ttl);
-      combinedResponse.ttl = response.ttl;
+      combinedResponse.setTtl(response.getTtl());
       combinedLocations.addAll(Arrays.asList(
-          response.locationsPerGameObjectType.get(objectType).locations));
+          response.getLocationsPerGameObjectType().get(objectType).getLocations()));
     }
 
-    combinedResponse.locationsPerGameObjectType.get(objectType).locations =
-        combinedLocations.toArray(new PLLocation[0]);
+    combinedResponse.getLocationsPerGameObjectType().get(objectType).setLocations(
+        combinedLocations.toArray(new PLLocation[0]));
     return combinedResponse;
   }
 
