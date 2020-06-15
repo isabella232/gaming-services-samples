@@ -32,6 +32,7 @@ import com.google.maps.gaming.zoinkies.models.playablelocations.PLLocation;
 import com.google.maps.gaming.zoinkies.models.playablelocations.PLLocations;
 import com.google.maps.gaming.zoinkies.models.playablelocations.PLRequest;
 import com.google.maps.gaming.zoinkies.models.playablelocations.PLResponse;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -51,11 +52,26 @@ import org.springframework.web.client.RestTemplate;
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class PlayableLocationsService {
 
+  /**
+   * The url to the playable location API
+   */
   private final String PLAYABLE_LOCATION_URL =
       "https://playablelocations.googleapis.com/v3:samplePlayableLocations";
+  /**
+   * Min S2Cell level required when processing cells covering the lat lng rectangle
+   */
   private final int S2_CELL_LEVEL = 11;
+  /**
+   * Max S2Cell level required when processing cells covering the lat lng rectangle
+   */
   private final int S2_CELL_MAX_LEVEL = 14;
-  private final String API_KEY = "AIzaSyAZc7i2gq-bv-xYy2Ou2eNDPDUxf5bIQEo"; // TODO Remove before publishing
+  /**
+   * API key providing access to PlayableLocation API
+   */
+  private final String API_KEY = "AIzaSyAZc7i2gq-bv-xYy2Ou2eNDPDUxf5bIQEo";
+  /**
+   * Default parameters for object type when querying playable locations API
+   */
   private final int GAME_OBJECT_TYPE_SPAWN_LOCATIONS = 0;
 
   /**
@@ -63,10 +79,10 @@ public class PlayableLocationsService {
    * identified by the given north east and south west corners.
    * The search area is potentially way larger from the queried area.
    *
-   * @return
+   * @return A Playable Location Response
    */
   public PLResponse RequestPlayableLocations(PLLatLng loLatLng, PLLatLng hiLatLng,
-      PLCriteria[] criteria) throws Exception {
+      PLCriteria[] criteria, HashMap<String, String> PLCache) throws Exception {
 
     RestTemplate restTemplate = new RestTemplate();
     HttpHeaders headers = new HttpHeaders();
@@ -109,6 +125,19 @@ public class PlayableLocationsService {
     // For each overlapping cell, query playable locations API and merge results into
     // a combined response.
     for (S2CellId id:cu.cellIds()){
+
+      // Have we already queried this cell?
+      if (PLCache != null && PLCache.containsKey(id)) {
+        // Check TTL
+        Duration duration = Duration.parse(PLCache.get(id));
+        if (duration.getSeconds() > 0) {
+          // Yes and the playable locations in that cell haven't expired yet
+          // Move to next cell.
+          continue;
+        }
+      }
+
+
       req.getAreaFilter().setS2CellId(Long.toUnsignedString(id.id()));
 
       String reqJson = objectMapper.writeValueAsString(req);
@@ -120,8 +149,22 @@ public class PlayableLocationsService {
 
       PLResponse response = objectMapper.readValue(plResponse,PLResponse.class);
       combinedResponse.setTtl(response.getTtl());
-      combinedLocations.addAll(Arrays.asList(
-          response.getLocationsPerGameObjectType().get(objectType).getLocations()));
+
+      // Tag all locations with the initial S2Cell Id
+      for (PLLocation loc: response.getLocationsPerGameObjectType().get(objectType).getLocations()){
+        loc.setS2CellId(req.getAreaFilter().getS2CellId());
+      }
+
+      List locations = Arrays.asList(
+          response.getLocationsPerGameObjectType().get(objectType).getLocations());
+
+      combinedLocations.addAll(locations);
+
+      // Update the cache
+      if (PLCache != null && !PLCache.containsKey(req.getAreaFilter().getS2CellId())
+          && response.getTtl() != null && !response.getTtl().isEmpty()) {
+        PLCache.put(req.getAreaFilter().getS2CellId(),"PT" + response.getTtl());
+      }
     }
 
     combinedResponse.getLocationsPerGameObjectType().get(objectType).setLocations(
@@ -132,7 +175,7 @@ public class PlayableLocationsService {
   /**
    * Provides a default criteria for the playable locations request.
    *
-   * @return
+   * @return an array of Playable Location Criteria
    */
   private PLCriteria[] GetPLDefaultCriteria() {
     PLCriteria[] plc = new PLCriteria[1];

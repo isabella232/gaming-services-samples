@@ -20,7 +20,6 @@ import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.WriteResult;
 import com.google.maps.gaming.zoinkies.models.PlayerData;
 import java.util.concurrent.ExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +27,9 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+/**
+ * This class handles the interactions with Firestore to CRUD player stats and inventory.
+ */
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class PlayerService {
@@ -39,8 +41,8 @@ public class PlayerService {
    * If it doesn't exist, create one
    * Otherwise return the current user data in the response
    *
-   * @param Id
-   * @return
+   * @param Id The User Id
+   * @return A Player Data record
    * @throws ExecutionException
    * @throws InterruptedException
    */
@@ -67,7 +69,6 @@ public class PlayerService {
       String id = documentReference.getId();
       if (id.equals(Id)) {
         // Remove the player's data
-        System.out.println("removing user id: " + id);
         try {
           documentReference.delete().get();
         } catch (InterruptedException | ExecutionException e) {
@@ -88,10 +89,9 @@ public class PlayerService {
    */
   public PlayerData UpdatePlayerData(String Id, PlayerData newData)
       throws ExecutionException, InterruptedException {
-
     ApiFuture<DocumentSnapshot> documentSnapshotApiFuture =
         this.firestore.document("users/" + Id).get();
-    WriteResult writeResult = this.firestore.document("users/"+Id).set(newData).get();
+    this.firestore.document("users/"+Id).set(newData).get();
     newData = GetPlayerData(Id);
     return newData;
   }

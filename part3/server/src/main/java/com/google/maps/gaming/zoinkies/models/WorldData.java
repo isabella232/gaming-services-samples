@@ -23,6 +23,13 @@ import java.util.HashMap;
  *
  */
 public class WorldData {
+  /**
+   * Used to remember which S2Cells have been queried to playable locations API
+   * and their TTL.
+   * When the TTL has reached zero, we remove the entry from this cache so that it is queried again
+   * next time.
+   */
+  private HashMap<String, String> S2CellsTTL;
 
   /**
    * A collection of locations identified by their location id (the unique name provided for each
@@ -37,6 +44,7 @@ public class WorldData {
   private String CurrentServerTime;
 
   public WorldData() {
+    S2CellsTTL = new HashMap<>();
     Locations = new HashMap<>();
     CurrentServerTime = Instant.now().toString();
   }
@@ -56,5 +64,13 @@ public class WorldData {
 
   public void setCurrentServerTime(String currentServerTime) {
     CurrentServerTime = currentServerTime;
+  }
+
+  public HashMap<String, String> getS2CellsTTL() {
+    return S2CellsTTL;
+  }
+
+  public void setS2CellsTTL(HashMap<String, String> s2CellsTTL) {
+    S2CellsTTL = s2CellsTTL;
   }
 }

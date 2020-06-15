@@ -51,19 +51,16 @@ public class WorldDataController {
 
   /**
    * Returns the data associated to the player identified by the given id.
-   * @param Id
-   * @return
+   * @param Id The User Id
+   * @return The World Data
    */
   @GetMapping("/worlds/{id}")
   public ResponseEntity<WorldData> GetWorld(@PathVariable("id") String Id) {
-
     // The provided Id must be valid
     if (Id == null || Id.isEmpty()) {
       return ResponseEntity.badRequest().build();
     }
-
     WorldData data = null;
-
     // Check if this record already exist
     try {
       data = WorldService.GetWorldData(Id);
@@ -74,7 +71,6 @@ public class WorldDataController {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-
     return ResponseEntity.ok(data);
   }
 
@@ -83,13 +79,13 @@ public class WorldDataController {
    * The call provides all extra parameters for the upcoming battle.
    * More specifically who starts, and any bonuses that the NPC might have.
    *
-   * @param Id
-   * @param LocationId
-   * @return
+   * @param Id The User Id
+   * @param LocationId The location Id
+   * @return The Battle Data
    */
   @PostMapping(path = "/battle/{id}/{locationId}", produces = "application/json")
-  public ResponseEntity<BattleData> PostBattle(@PathVariable("id") String Id, @PathVariable("locationId") String LocationId) {
-
+  public ResponseEntity<BattleData> PostBattle(@PathVariable("id") String Id,
+      @PathVariable("locationId") String LocationId) {
     // The provided Id must be valid
     if (Id == null || Id.isEmpty() || LocationId == null || LocationId.isEmpty()) {
       return ResponseEntity.badRequest().build();
@@ -107,15 +103,23 @@ public class WorldDataController {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-
     return ResponseEntity.ok(data);
   }
 
+  /**
+   * This entry point is triggered by the client at the end of a battle.
+   * The call generates the outcome of the battle depending on the provided winner data.
+   * Note that in a production environment, there would be additional checks here
+   * to validate the legitimacy of the battle.
+   * @param Id The User Id
+   * @param LocationId The Location Id
+   * @param Winner Winner information: 1-Player wins 0-NPC wins
+   * @return A Battle Summary Data with the rewards/penalties for winning/losing.
+   */
   @PostMapping(path = "/battlesummary/{id}/{locationId}", produces = "application/json")
   public ResponseEntity<BattleSummaryData> PostBattleSummary(@PathVariable("id") String Id,
       @PathVariable("locationId") String LocationId,
       @RequestParam(name = "winner") String Winner) {
-
     // The provided Id must be valid
     if (Id == null || Id.isEmpty() || LocationId == null || LocationId.isEmpty()) {
       return ResponseEntity.badRequest().build();
@@ -130,7 +134,6 @@ public class WorldDataController {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-
     return ResponseEntity.ok(data);
   }
 
@@ -139,11 +142,12 @@ public class WorldDataController {
    * and puts the station in respawning state.
    * @param Id
    * @param LocationId
-   * @return EnergyData that indicates how much energy is restored. Returns 204 if the station is inactive or respawning.
+   * @return EnergyData that indicates how much energy is restored.
+   * Returns 204 if the station is inactive or respawning.
    */
   @PostMapping(path = "/energystation/{id}/{locationId}", produces = "application/json")
-  public ResponseEntity<EnergyData> PostEnergyRestore(@PathVariable("id") String Id, @PathVariable("locationId") String LocationId) {
-
+  public ResponseEntity<EnergyData> PostEnergyRestore(@PathVariable("id") String Id,
+      @PathVariable("locationId") String LocationId) {
     // The provided Id must be valid
     if (Id == null || Id.isEmpty() || LocationId == null || LocationId.isEmpty()) {
       return ResponseEntity.badRequest().build();
@@ -158,18 +162,24 @@ public class WorldDataController {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-
     return ResponseEntity.ok(data);
   }
 
+  /**
+   * This entry point handles the access to the chest resource.
+   * A chest rewards items if it can be unlocked.
+   *
+   * @param Id
+   * @param LocationId
+   * @return A Rewards Data
+   */
   @PostMapping(path = "/chests/{id}/{locationId}", produces = "application/json")
-  public ResponseEntity<RewardsData> PostChestRewards(@PathVariable("id") String Id, @PathVariable("locationId") String LocationId) {
-
+  public ResponseEntity<RewardsData> PostChestRewards(@PathVariable("id") String Id,
+      @PathVariable("locationId") String LocationId) {
     // The provided Id must be valid
     if (Id == null || Id.isEmpty() || LocationId == null || LocationId.isEmpty()) {
       return ResponseEntity.badRequest().build();
     }
-
     RewardsData data = null;
     try {
       data = GameService.GetChestRewards(Id,LocationId);
@@ -189,17 +199,15 @@ public class WorldDataController {
   /**
    * Returns the data associated to the player identified by the given id.
    * @param Id
-   * @return
+   * @return A World Data
    */
   @PostMapping(path = "/worlds/{id}", consumes = "application/json", produces = "application/json")
   public ResponseEntity<WorldData> GetSpawnLocations(@PathVariable("id") String Id,
       @RequestBody WorldDataRequest WorldDataRequest){
-
     // The provided Id must be valid
     if (Id == null || Id.isEmpty()) {
       return ResponseEntity.badRequest().build();
     }
-
     WorldData data = null;
     try {
       data = WorldService.GetSpawnLocations(Id,WorldDataRequest);
@@ -207,7 +215,6 @@ public class WorldDataController {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-
     return ResponseEntity.ok(data);
   }
   /**
@@ -217,14 +224,11 @@ public class WorldDataController {
    */
   @DeleteMapping("/worlds/{id}")
   public ResponseEntity<String> DeleteWorld(@PathVariable("id") String Id) {
-
     // The provided Id must be valid
     if (Id == null || Id.isEmpty()) {
       return ResponseEntity.badRequest().build();
     }
-
     WorldService.RemoveWorldData(Id);
-
     return new ResponseEntity<>(Id, HttpStatus.OK);
   }
 }

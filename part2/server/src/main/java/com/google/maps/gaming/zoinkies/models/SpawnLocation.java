@@ -55,6 +55,10 @@ public class SpawnLocation {
    * The Latitude Location of this game location.
    */
   private PLLatLng snappedPoint;
+  /**
+   * The S2CellId from which this location was created.
+   */
+  private String S2CellId;
 
   public SpawnLocation() {}
 
@@ -139,5 +143,13 @@ public class SpawnLocation {
   public void setSnappedPoint(
       PLLatLng snappedPoint) {
     this.snappedPoint = snappedPoint;
+  }
+
+  public String getS2CellId() {
+    return S2CellId;
+  }
+
+  public void setS2CellId(String s2CellId) {
+    S2CellId = s2CellId;
   }
 }

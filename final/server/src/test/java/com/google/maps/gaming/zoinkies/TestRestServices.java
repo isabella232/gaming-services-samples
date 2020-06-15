@@ -34,7 +34,9 @@ import com.google.maps.gaming.zoinkies.models.SpawnLocation;
 import com.google.maps.gaming.zoinkies.models.WorldData;
 import com.google.maps.gaming.zoinkies.models.WorldDataRequest;
 import com.google.maps.gaming.zoinkies.models.playablelocations.PLLatLng;
+import java.time.Duration;
 import java.util.List;
+import javax.validation.constraints.AssertTrue;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +61,41 @@ public class TestRestServices {
   @Test
   public void TestReferenceDataRead() throws Exception {
     this.mockMvc.perform(get("/references")).andDo(print()).andExpect(status().isOk());
+  }
+
+  @Test
+  public void TestDataCache() throws Exception {
+    DeleteWorldData();
+
+    System.out.println("Creating world " + Id);
+    CreateWorldData();
+
+    System.out.println("Check cache " + Id);
+    CheckDataCache();
+
+    System.out.println("Deleting world " + Id);
+    DeleteWorldData();
+
+  }
+
+  private void CheckDataCache() throws Exception {
+    WorldData data = GetWorldData();
+    Assert.isTrue(data.getS2CellsTTL().size() > 0,
+        "There should be a few cell ids in this list.");
+
+    // Loop over all spawn locations and confirm that they have a cellId assigned
+    for (SpawnLocation sl: data.getLocations().values()) {
+      Assert.isTrue(sl.getS2CellId() != null && !sl.getS2CellId().isEmpty(),
+          "Spawn locations must have an associated s2 cellid");
+      // Check that the S2Cell Id of this location is in the cache
+      Assert.isTrue(data.getS2CellsTTL().containsKey(sl.getS2CellId()),
+          "The S2CellId of the spawn location must be in the cache!");
+      // Check that the ttl for this location is positive
+      Duration duration = Duration.parse(data.getS2CellsTTL().get(sl.getS2CellId()));
+      //Duration.ofSeconds();
+      Assert.isTrue(duration.getSeconds() > 0,
+          "TTL must be positive for this location");
+    }
   }
 
   /**
@@ -97,7 +134,8 @@ public class TestRestServices {
     WorldData data = GetWorldData();
     SpawnLocation location = null;
     for (String locationId:data.getLocations().keySet()) {
-      if (data.getLocations().get(locationId).getObject_type_id().equals(GameConstants.ENERGY_STATION)) {
+      if (data.getLocations().get(locationId).getObject_type_id()
+          .equals(GameConstants.ENERGY_STATION)) {
         location = data.getLocations().get(locationId);
         break;
       }
@@ -159,7 +197,8 @@ public class TestRestServices {
 
     Assert.isTrue(key != null && key.getQuantity()==1,
         "The player should have freed one leader.");
-    Assert.isTrue(BattleSummaryData.getWonTheGame(), "The player should have won the game.");
+    Assert.isTrue(BattleSummaryData.getWonTheGame(),
+        "The player should have won the game.");
 
     // Cleanup
     DeleteWorldData();
@@ -588,6 +627,5 @@ public class TestRestServices {
     request.setSouthwest(new PLLatLng(48.8446743,2.2488194));
     return request;
   }
-
   // endregion
 }

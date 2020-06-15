@@ -28,6 +28,9 @@ public class PLLocation {
   private PLLatLng snappedPoint;
   private String[] types;
 
+  // Reference to the parent S2CellId used for housekeeping
+  private String S2CellId;
+
   public String getName() {
     return name;
   }
@@ -75,5 +78,13 @@ public class PLLocation {
 
   public void setTypes(String[] types) {
     this.types = types;
+  }
+
+  public String getS2CellId() {
+    return S2CellId;
+  }
+
+  public void setS2CellId(String s2CellId) {
+    S2CellId = s2CellId;
   }
 }

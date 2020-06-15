@@ -23,6 +23,7 @@ import com.google.maps.gaming.zoinkies.models.playablelocations.PLFilter;
 import com.google.maps.gaming.zoinkies.models.playablelocations.PLLatLng;
 import com.google.maps.gaming.zoinkies.models.playablelocations.PLResponse;
 import com.google.maps.gaming.zoinkies.services.PlayableLocationsService;
+import java.util.HashMap;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -45,13 +46,15 @@ public class TestPlayableLocations {
     PLLatLng hi = new PLLatLng(37.2797796, -122.02596153);
     PLLatLng lo = new PLLatLng(37.2618133,-122.0485384);
 
-    PLResponse response = PlayableLocationsService.RequestPlayableLocations(lo,hi,GetPLDefaultCriteria());
+    PLResponse response = PlayableLocationsService.RequestPlayableLocations(lo,hi,
+        GetPLDefaultCriteria(), new HashMap<>());
     assertThat(response).isNotNull();
     assertThat(response.getLocationsPerGameObjectType()).isNotNull();
     assertThat(response.getLocationsPerGameObjectType().size()).isEqualTo(1);
     assertThat(response.getLocationsPerGameObjectType().get("0")).isNotNull();
     assertThat(response.getLocationsPerGameObjectType().get("0").getLocations()).isNotNull();
-    assertThat(response.getLocationsPerGameObjectType().get("0").getLocations().length).isEqualTo(14);
+    assertThat(response.getLocationsPerGameObjectType().get("0")
+        .getLocations().length).isEqualTo(14);
   }
 
   private PLCriteria[] GetPLDefaultCriteria() {

@@ -198,7 +198,7 @@ public class PlayerData {
 
   /**
    * Returns all items of a given type
-   * @param type
+   * @param type The type of item
    * @return
    */
   public List<Item> getInventoryItems(String type) {
@@ -215,6 +215,13 @@ public class PlayerData {
     return items;
   }
 
+  /**
+   * Checks if the item identified by the given id is in the player's inventory.
+   *
+   * @param itemId
+   * @return A boolean
+   * @throws Exception
+   */
   public Boolean hasInventoryItem(String itemId) throws Exception {
     if (itemId == null || itemId.isEmpty()) {
       throw new Exception("Invalid item id received!");
@@ -224,6 +231,11 @@ public class PlayerData {
     return (items.size()>0);
   }
 
+  /**
+   * Adds the sub collection of items to the inventory.
+   * @param items a collection of items.
+   * @throws Exception
+   */
   public void addAllInventoryItems(Collection<Item> items) throws Exception {
 
     for (Item item:items) {
@@ -231,6 +243,12 @@ public class PlayerData {
     }
   }
 
+  /**
+   * Adds the given item to the inventory.
+   * If items of this type already exist in the inventory, we update the quantity.
+   * @param item The item to add to the inventory.
+   * @throws Exception
+   */
   public void addInventoryItem(Item item) throws Exception {
     if (item == null) {
       throw new Exception("Invalid item received!");
@@ -245,6 +263,12 @@ public class PlayerData {
     }
   }
 
+  /**
+   * Removes the given item from the inventory.
+   *
+   * @param item
+   * @throws Exception
+   */
   public void removeInventoryItem(Item item) throws Exception {
     if (item == null) {
       throw new Exception("Invalid item received!");

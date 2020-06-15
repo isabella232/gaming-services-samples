@@ -38,12 +38,10 @@ public class ReferenceDataController {
    */
   @GetMapping("/references")
   public ResponseEntity<ReferenceData> GetReferences() {
-
     ReferenceData data = GameService.getReferenceData();
     if (data == null) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-
     return ResponseEntity.ok(data);
   }
 }
