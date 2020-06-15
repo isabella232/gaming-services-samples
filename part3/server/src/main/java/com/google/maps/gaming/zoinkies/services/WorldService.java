@@ -149,7 +149,6 @@ public class WorldService {
             && data.getS2CellsTTL().containsKey(S2CellId)) {
 
           Duration duration = Duration.parse(data.getS2CellsTTL().get(S2CellId));
-          System.out.println("TTL : " + duration.getSeconds());
           if (duration.getSeconds() <= 0) {
             // Update this location from the world as it has expired
             SpawnLocation sl = GameService.CreateRandomSpawnLocation(plloc);
@@ -160,45 +159,6 @@ public class WorldService {
         }
       }
     }
-
-      /*
-    // If the world does not exist for this user, generate it entirely.
-    if (!document.exists()) {
-      updateNeeded = true;
-      for (PLLocation plloc:response.getLocationsPerGameObjectType().get("0").getLocations()) {
-        String locationId = plloc.getName().replace("/","_");
-        data.getLocations().put(locationId, GameService.CreateRandomSpawnLocation(plloc));
-      }
-    }
-    else {
-      // If the world document is found, synchronize playable locations with existing spawn locations.
-      // Randomly generate items for this zone for each placeId not already in the database
-
-      //document.get("locations");
-      //data = document.toObject(WorldData.class);
-
-      // Have we already loaded this S2 Cell?
-      // If yes, has it expired?
-      // If yes, reload
-      //if (data.getS2CellsTTL().containsKey())
-
-      // Loop over all found locations
-      // If the location is not already in the database, create it
-      // Otherwise add it to the combined response
-      for (PLLocation plloc:response.getLocationsPerGameObjectType().get("0").getLocations()) {
-
-        String locationId = plloc.getName().replace("/","_");
-
-        if (data != null && data.getLocations() != null
-            && !data.getLocations().containsKey(locationId)) {
-          // spawn a new location
-          data.getLocations().put(locationId, GameService.CreateRandomSpawnLocation(plloc));
-          updateNeeded = true;
-        }
-      }
-    }
-
-       */
 
     // Check if any respawning locations need to be unlocked
     for (SpawnLocation location:data.getLocations().values()) {
