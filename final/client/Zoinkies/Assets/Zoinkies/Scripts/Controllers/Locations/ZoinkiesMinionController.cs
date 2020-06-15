@@ -20,7 +20,12 @@ using UnityEngine;
 
 namespace Google.Maps.Demos.Zoinkies {
 
-    public class ZoinkiesMinionController : BaseSpawnLocationController //, IZoinkiesController
+    /// <summary>
+    /// This controller class handles a minion battle.
+    /// It responds to the touch event and sets the battle initialization.
+    ///
+    /// </summary>
+    public class ZoinkiesMinionController : BaseSpawnLocationController
     {
         protected override void UpdateImpl() {
             base.UpdateImpl();

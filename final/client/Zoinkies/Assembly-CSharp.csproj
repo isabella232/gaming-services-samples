@@ -212,7 +212,7 @@
     <None Include="Assets\GoogleMaps\Examples\03_MapsStyling\Shaders\BaseMapSeamless.shader" />
     <None Include="Assets\GoogleMaps\Examples\04_Advanced\MoreStyling\Materials\WorldspaceTextured\BuildingWorldspaceTextured.shader" />
     <None Include="Assets\GoogleMaps\Examples\SharedAssets\Shaders\UIOverlay.shader" />
-    <None Include="Assets\GoogleMaps\Materials\BaseMapColorUnlit.shader" />
+    <None Include="Assets\GoogleMaps\Materials\Resources\BaseMapColorUnlit.shader" />
     <None Include="Assets\GoogleMaps\Examples\03_MapsStyling\Shaders\NoiseBlendedStandardMaterial.shader" />
     <None Include="Assets\GoogleMaps\Examples\03_MapsStyling\Shaders\StandardCustomShader.shader" />
     <None Include="Assets\GoogleMaps\Plugins\Google.Maps.xml" />
@@ -220,13 +220,13 @@
     <None Include="Assets\GoogleMaps\Examples\04_Advanced\MoreStyling\Materials\NineSlicing\BuildingWall.shader" />
     <None Include="Assets\GoogleMaps\Examples\03_MapsStyling\Shaders\noise.cginc" />
     <None Include="Assets\GoogleMaps\Examples\SharedAssets\Shaders\ScrollingTextureShader.shader" />
-    <None Include="Assets\GoogleMaps\Materials\BaseMapTextured.shader" />
-    <None Include="Assets\GoogleMaps\Materials\BaseMapColor.shader" />
+    <None Include="Assets\GoogleMaps\Materials\Resources\BaseMapTextured.shader" />
+    <None Include="Assets\GoogleMaps\Materials\Resources\BaseMapColor.shader" />
     <None Include="Assets\GoogleMaps\Examples\SharedAssets\Shaders\ColorWithSpecularLod.shader" />
     <None Include="Assets\GoogleMaps\Examples\03_MapsStyling\Shaders\ModeledStructures.shader" />
     <None Include="Assets\GoogleMaps\Materials\GoogleMapsShaderLib.cginc" />
-    <None Include="Assets\GoogleMaps\Materials\MuskStandard.shader" />
-    <None Include="Assets\GoogleMaps\Materials\BaseMapTexturedUnlit.shader" />
+    <None Include="Assets\GoogleMaps\Materials\Resources\MuskStandard.shader" />
+    <None Include="Assets\GoogleMaps\Materials\Resources\BaseMapTexturedUnlit.shader" />
     <None Include="Assets\GoogleMaps\Examples\04_Advanced\MoreStyling\Materials\WorldspaceTextured\BaseMapWorldspaceTexturedWater.shader" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>/Users/boselli/Dev/gaming-services-sample/final/client/Zoinkies/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>

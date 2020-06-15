@@ -40,17 +40,17 @@ namespace Google.Maps.Demos.Zoinkies {
     /// <param name="onError"></param>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
-    public IEnumerator PostBattleSummary(String placeId,
+    public IEnumerator PostBattleSummary(String locationId,
       bool Winner,
       Action<BattleSummaryData> onSuccess,
       Action<string> onError) {
 
-      if (string.IsNullOrEmpty(placeId))
-        throw new System.Exception("Invalid Place Id!");
+      if (string.IsNullOrEmpty(locationId))
+        throw new System.Exception("Invalid location Id!");
 
       using (UnityWebRequest webRequest =
         new UnityWebRequest(
-          SERVER_URL + "/battlesummary/" + GetUserId() + "/" + placeId + "?winner=" + Winner,
+          SERVER_URL + "/battlesummary/" + GetUserId() + "/" + locationId + "?winner=" + Winner,
           "POST")) {
 
         webRequest.downloadHandler = new DownloadHandlerBuffer();

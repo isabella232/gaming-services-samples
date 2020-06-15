@@ -55,7 +55,7 @@ public class PlayableLocationsService {
       "https://playablelocations.googleapis.com/v3:samplePlayableLocations";
   private final int S2_CELL_LEVEL = 11;
   private final int S2_CELL_MAX_LEVEL = 14;
-  private final String API_KEY = "<YOUR API KEY HERE>"; // TODO Remove before publishing
+  private final String API_KEY = "AIzaSyAZc7i2gq-bv-xYy2Ou2eNDPDUxf5bIQEo"; // TODO Remove before publishing
   private final int GAME_OBJECT_TYPE_SPAWN_LOCATIONS = 0;
 
   /**

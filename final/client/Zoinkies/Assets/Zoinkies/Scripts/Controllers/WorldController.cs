@@ -184,6 +184,9 @@ namespace Google.Maps.Demos.Zoinkies {
 
     private bool WorldDataIsLoading;
 
+    private float LOCATION_PING = 10f; // 10 seconds
+    private float CurrentTimer = 0f;
+
     #endregion
 
     private void CheckStartConditions() {
@@ -220,6 +223,8 @@ namespace Google.Maps.Demos.Zoinkies {
         StartupCheckList.Remove(PLAYER_DATA_INITIALIZED);
         CheckStartConditions();
       }, OnError));
+
+      this.LoadOnStart = false;
     }
 
     /// <summary>
@@ -236,8 +241,32 @@ namespace Google.Maps.Demos.Zoinkies {
 
       SpawnedGameObjects = new Dictionary<string, GameObject>();
 
-      // Load Initial Map
-      LoadMap();
+      // Load Initial Map - get current location
+      //LoadMap();
+
+      //StartCoroutine(GetGPSLocation(OnLocationServicesEvalComplete));
+    }
+
+    void Update() {
+
+      if (GameStarted) {
+        CurrentTimer += Time.deltaTime;
+        if (Input.location.status == LocationServiceStatus.Running &&
+            CurrentTimer > LOCATION_PING) {
+
+          LocationInfo locInfo = Input.location.lastData;
+          // Compare distance from current location to floating origin
+          // If distance is greater than 500 meters, let's reinitialize the floating origin.
+          Vector3 locInfoPos =
+            MapsService.Coords.FromLatLngToVector3(new LatLng(locInfo.latitude, locInfo.longitude));
+          float dist = Vector3.Distance(locInfoPos, Vector3.zero);
+          if ( dist > 1000f) {
+            OnLocationServicesEvalComplete(locInfo);
+          }
+          Debug.Log("Pinged loc services. Dist =" + dist + " meters.");
+          CurrentTimer = 0f;
+        }
+      }
     }
 
     /// <summary>
@@ -260,7 +289,14 @@ namespace Google.Maps.Demos.Zoinkies {
       // LoadMap is called from Dynamic updater
       // Get our new GPS coordinates and use these to load the map
       // We don't need to update the floating origin all the time.
-      StartCoroutine(GetGPSLocation(OnLocationServicesEvalComplete));
+      //StartCoroutine(GetGPSLocation(OnLocationServicesEvalComplete));
+
+      if (GameStarted) {
+        base.LoadMap();
+      }
+      else {
+        StartCoroutine(GetGPSLocation(OnLocationServicesEvalComplete));
+      }
     }
 
     /// <summary>
@@ -274,9 +310,10 @@ namespace Google.Maps.Demos.Zoinkies {
       // Invalidate the previous position
       hasGPSLocation = false;
       var locInfo = new LocationInfo();
+      Debug.Log("Location services enabled " + Input.location.isEnabledByUser);
 
       if (Input.location.isEnabledByUser) {
-        Debug.Log("Location services enabled");
+
 
         // Start service before querying location
         Input.location.Start();
@@ -509,29 +546,31 @@ namespace Google.Maps.Demos.Zoinkies {
       }, s => { Debug.LogError(s); }));
     }
 
-    /// <summary>
-    /// Stops the GPS location service when the app is disabled (to save battery)
-    /// </summary>
-    private void OnDisable() {
-      if (Input.location.status == LocationServiceStatus.Running)
-        Input.location.Stop();
-    }
-
     private void OnLocationServicesEvalComplete(LocationInfo locInfo) {
+      Debug.Log("OnLocationServicesEvalComplete+++ " + hasGPSLocation);
       if (hasGPSLocation) // aka we were able to get a valid GPS location
       {
         LatLng = new LatLng(locInfo.latitude, locInfo.longitude);
-        if (!FloatingOriginIsSet) {
-          // Reset the floating origin
-          InitFloatingOrigin();
-          FloatingOriginIsSet = true;
-        }
+        MapsService.MoveFloatingOrigin(LatLng);
+        this.Avatar.transform.position = MapsService.Coords.FromLatLngToVector3(LatLng);
       }
-
       base.LoadMap();
-      //UpdateWorldData(LatLng, MaxDistance);
+      Debug.Log("OnLocationServicesEvalComplete---");
     }
 
+    void OnApplicationFocus(bool hasFocus) {
+      Debug.Log("OnApplicationFocus+++");
+      if (!GameStarted)
+        return;
+
+      if(hasFocus){
+        StartCoroutine(GetGPSLocation(OnLocationServicesEvalComplete));
+      }
+      else if (Input.location.status == LocationServiceStatus.Running) {
+          Input.location.Stop();
+      }
+      Debug.Log("OnApplicationFocus---");
+    }
     public void OnShowWorld() {
       Debug.Log("OnShowWorld+++");
       Avatar.gameObject.SetActive(true);

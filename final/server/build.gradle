@@ -23,7 +23,7 @@ targetCompatibility = '1.8'
 
 repositories {
     maven {
-        url 'https://maven-central.storage.googleapis.com'             // Google's mirror of Maven Central
+        url 'https://maven-central.storage.googleapis.com' // Google's mirror of Maven Central
     }
     jcenter()
     mavenCentral()
@@ -51,7 +51,7 @@ dependencies {
 
 appengine {  // App Engine tasks configuration
     deploy {   // deploy configuration
-        projectId = System.getenv('GOOGLE_CLOUD_PROJECT')
+        projectId = "musk-samples"//System.getenv('GOOGLE_CLOUD_PROJECT')
         version = '1'
     }
 }

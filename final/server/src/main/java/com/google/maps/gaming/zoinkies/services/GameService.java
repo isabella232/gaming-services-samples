@@ -338,7 +338,7 @@ public class GameService {
       if (ri == null)
         throw new Exception("Reference item " + GameConstants.DIAMOND_KEY + " not found!");
 
-      // Consume gold keys
+      // Consume diamond keys
       // If pre-reqs not met, return custom 20X code
       List<Item> items = playerData.getInventoryItems(GameConstants.DIAMOND_KEY);
       if (items.size() > 0 && items.get(0).getQuantity() >= location.getNumber_of_keys_to_activate()) {

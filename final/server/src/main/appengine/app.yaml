@@ -11,7 +11,6 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-# [START gae_flex_quickstart_yaml]
 runtime: java11
 instance_class: F1
 
@@ -20,4 +19,3 @@ entrypoint: java -noverify -jar zoinkies-0.0.1-SNAPSHOT.jar
 # Explicitly set the memory limit and maximum heap size for the Spring Boot app
 env_variables:
   JAVA_TOOL_OPTIONS: "-XX:MaxRAM=256m -XX:ActiveProcessorCount=2 -Xmx32m"
-# [END gae_java11_helloworld_yaml]
