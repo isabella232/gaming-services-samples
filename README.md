@@ -70,3 +70,14 @@ https://cloud.google.com/source-repositories/docs/authentication#authenticate-us
 ./gradlew bootJar
 ./gradlew appengineDeploy
 ```
+
+1. Make sure that the client points to your public SERVER URL
+In the final module under the client folder:
+Locate and update the ServerManager.cs file.
+Update the SERVER URL to point to your URL.
+
+``` shell
+public class ServerManager : MonoBehaviour {
+  //private const string SERVER_URL = "http://localhost:8080";
+  private const string SERVER_URL = "https://<YOUR PROJECT ID HERE>.wl.r.appspot.com";
+```

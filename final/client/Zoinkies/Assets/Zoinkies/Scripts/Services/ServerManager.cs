@@ -26,8 +26,8 @@ namespace Google.Maps.Demos.Zoinkies {
   /// Server manager that makes all REST API calls to the game server.
   /// </summary>
   public class ServerManager : MonoBehaviour {
-    private const string SERVER_URL = "http://localhost:8080";
-    //private const string SERVER_URL = "https://musk-samples.wl.r.appspot.com";
+    //private const string SERVER_URL = "http://localhost:8080";
+    private const string SERVER_URL = "https://<YOUR PROJECT ID HERE>.wl.r.appspot.com";
 
     /// <summary>
     /// Sends battle results to the server.
