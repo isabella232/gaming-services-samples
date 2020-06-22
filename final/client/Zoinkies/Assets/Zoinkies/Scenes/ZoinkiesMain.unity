@@ -1659,17 +1659,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 6627469161123496814, guid: cdbfc364d789640cda8954a5eb28192a,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 8ac170b20b98d47d3bffffe02b27557a,
-        type: 3}
-    - target: {fileID: 6627469161123496814, guid: cdbfc364d789640cda8954a5eb28192a,
-        type: 3}
-      propertyPath: m_PreserveAspect
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3519962901856596367, guid: cdbfc364d789640cda8954a5eb28192a,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -1729,6 +1718,17 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 235.88452
+      objectReference: {fileID: 0}
+    - target: {fileID: 6627469161123496814, guid: cdbfc364d789640cda8954a5eb28192a,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 8ac170b20b98d47d3bffffe02b27557a,
+        type: 3}
+    - target: {fileID: 6627469161123496814, guid: cdbfc364d789640cda8954a5eb28192a,
+        type: 3}
+      propertyPath: m_PreserveAspect
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cdbfc364d789640cda8954a5eb28192a, type: 3}
@@ -3698,7 +3698,7 @@ MonoBehaviour:
   m_Script: {fileID: -576295101, guid: 322c8874b7f0401c8c1211fe39d44d90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApiKey: 
+  ApiKey: AIzaSyAZc7i2gq-bv-xYy2Ou2eNDPDUxf5bIQEo
   SemanticTileApiAddress: vectortile.googleapis.com
   NetworkPoolSize: 100
   NetworkTimeoutSeconds: 10
@@ -5697,9 +5697,17 @@ MonoBehaviour:
   Avatar: {fileID: 911836972}
   GroundMaterial: {fileID: 2100000, guid: e26f3c2db36ea4723a8205107707b348, type: 2}
   RoadsMaterial: {fileID: 2100000, guid: ceb4338130bd1463aa6ab221de4ab1d9, type: 2}
-  BuildingsWallMaterial: {fileID: 2100000, guid: 1cd3d9ed895b04316a116421d9b86a2e,
-    type: 2}
-  BuildingsRoofMaterial: {fileID: 2100000, guid: d9618f3bc1401483fa865b32ddb752af,
+  BuildingsWallMaterials:
+  - {fileID: 2100000, guid: 507a51e2ea6a84e0491781a46396bbc2, type: 2}
+  - {fileID: 2100000, guid: 571679345a15d422dbc3ca574d7379ef, type: 2}
+  - {fileID: 2100000, guid: ee120d3f900fe4a6cbd60063a6ed5a21, type: 2}
+  - {fileID: 2100000, guid: 3f229d323ad6344bd83e7c4e59130c09, type: 2}
+  BuildingsRoofMaterials:
+  - {fileID: 2100000, guid: 2921dabbfe9004e99b03ae32b9f56a28, type: 2}
+  - {fileID: 2100000, guid: af5d726f715ac425b9c002f94a596dc0, type: 2}
+  - {fileID: 2100000, guid: ad28fdf24e4764f0691523c25b6035e5, type: 2}
+  - {fileID: 2100000, guid: 91dfddacd00ed4c4381edd5b17a8e40b, type: 2}
+  ModeledBuildingsMaterial: {fileID: 2100000, guid: 1cd3d9ed895b04316a116421d9b86a2e,
     type: 2}
   SquashNear: 100
   SquashFar: 250
@@ -8014,17 +8022,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 6627469161123496814, guid: cdbfc364d789640cda8954a5eb28192a,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 8ac170b20b98d47d3bffffe02b27557a,
-        type: 3}
-    - target: {fileID: 6627469161123496814, guid: cdbfc364d789640cda8954a5eb28192a,
-        type: 3}
-      propertyPath: m_PreserveAspect
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3519962901856596367, guid: cdbfc364d789640cda8954a5eb28192a,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -8084,6 +8081,17 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 235.88452
+      objectReference: {fileID: 0}
+    - target: {fileID: 6627469161123496814, guid: cdbfc364d789640cda8954a5eb28192a,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 8ac170b20b98d47d3bffffe02b27557a,
+        type: 3}
+    - target: {fileID: 6627469161123496814, guid: cdbfc364d789640cda8954a5eb28192a,
+        type: 3}
+      propertyPath: m_PreserveAspect
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cdbfc364d789640cda8954a5eb28192a, type: 3}

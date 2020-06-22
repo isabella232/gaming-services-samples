@@ -17,7 +17,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Google.Maps;
 using Google.Maps.Coord;
 using Google.Maps.Examples;
 using Google.Maps.Examples.Shared;
@@ -26,6 +25,7 @@ using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Events;
+using Random = UnityEngine.Random;
 
 namespace Google.Maps.Demos.Zoinkies {
 
@@ -107,14 +107,19 @@ namespace Google.Maps.Demos.Zoinkies {
     public Material RoadsMaterial;
 
     /// <summary>
-    /// Reference to building walls material
+    /// Reference to list of building walls materials
     /// </summary>
-    public Material BuildingsWallMaterial;
+    public List<Material> BuildingsWallMaterials;
 
     /// <summary>
-    /// Reference to building roof material
+    /// Reference to list of building roof materials
     /// </summary>
-    public Material BuildingsRoofMaterial;
+    public List<Material> BuildingsRoofMaterials;
+
+    /// <summary>
+    /// Reference to material for modeled structures
+    /// </summary>
+    public Material ModeledBuildingsMaterial;
 
     /// <summary>
     ///   Distance inside which buildings will be completely squashed (<see cref="MaximumSquash" />)
@@ -182,13 +187,27 @@ namespace Google.Maps.Demos.Zoinkies {
     /// </summary>
     private bool GameStarted;
 
+    /// <summary>
+    /// Indicates if we have a pending request to get world data.
+    /// Used for optimization.
+    /// </summary>
     private bool WorldDataIsLoading;
 
+    /// <summary>
+    /// Frequency at which we check our device location (to save battery).
+    /// </summary>
     private float LOCATION_PING = 10f; // 10 seconds
+
+    /// <summary>
+    /// Current value of ping location timer.
+    /// </summary>
     private float CurrentTimer = 0f;
 
     #endregion
 
+    /// <summary>
+    /// Checks if start conditions are met. Dispatches a game ready event if they are.
+    /// </summary>
     private void CheckStartConditions() {
       if (StartupCheckList.Count == 0 && !GameStarted) {
         GameReady?.Invoke();
@@ -241,10 +260,11 @@ namespace Google.Maps.Demos.Zoinkies {
 
       SpawnedGameObjects = new Dictionary<string, GameObject>();
 
-      // Load Initial Map - get current location
-      //LoadMap();
-
-      //StartCoroutine(GetGPSLocation(OnLocationServicesEvalComplete));
+      if (BuildingsRoofMaterials.Count == 0
+          || BuildingsWallMaterials.Count == 0
+          || BuildingsRoofMaterials.Count != BuildingsWallMaterials.Count) {
+        throw new System.Exception("We expect at least one wall and one roof material.");
+      }
     }
 
     void Update() {
@@ -284,12 +304,10 @@ namespace Google.Maps.Demos.Zoinkies {
       }
     }
 
-
     public override void LoadMap() {
       // LoadMap is called from Dynamic updater
       // Get our new GPS coordinates and use these to load the map
       // We don't need to update the floating origin all the time.
-      //StartCoroutine(GetGPSLocation(OnLocationServicesEvalComplete));
 
       if (GameStarted) {
         base.LoadMap();
@@ -313,7 +331,6 @@ namespace Google.Maps.Demos.Zoinkies {
       Debug.Log("Location services enabled " + Input.location.isEnabledByUser);
 
       if (Input.location.isEnabledByUser) {
-
 
         // Start service before querying location
         Input.location.Start();
@@ -372,13 +389,8 @@ namespace Google.Maps.Demos.Zoinkies {
       Material waterMaterial = ExampleDefaults.DefaultGameObjectOptions.RegionStyle.FillMaterial;
       waterMaterial.color = new Color(0.4274509804f, 0.7725490196f, 0.8941176471f);
 
-      ZoinkiesStylesOptions.ExtrudedStructureStyle = new ExtrudedStructureStyle.Builder {
-        RoofMaterial = BuildingsRoofMaterial,
-        WallMaterial = BuildingsWallMaterial
-      }.Build();
-
       ZoinkiesStylesOptions.ModeledStructureStyle = new ModeledStructureStyle.Builder {
-        Material = BuildingsWallMaterial
+        Material = ModeledBuildingsMaterial
       }.Build();
 
       ZoinkiesStylesOptions.RegionStyle = new RegionStyle.Builder {
@@ -409,6 +421,25 @@ namespace Google.Maps.Demos.Zoinkies {
       base.InitEventListeners();
 
       if (MapsService == null) return;
+      // Apply a pre-creation listener that picks a random style for extruded buildings
+      MapsService.Events.ExtrudedStructureEvents.WillCreate.AddListener(
+        e => {
+          int i = Random.Range(0, BuildingsRoofMaterials.Count);
+          e.Style = new ExtrudedStructureStyle.Builder {
+            RoofMaterial = BuildingsRoofMaterials[i],
+            WallMaterial = BuildingsWallMaterials[i]
+          }.Build();
+        });
+
+      // Apply a pre-creation listener that picks a random style for modeled buildings
+      // In this game, modeled buildings are plain and unicolor.
+      MapsService.Events.ModeledStructureEvents.WillCreate.AddListener(
+        e => {
+          int i = Random.Range(0, BuildingsRoofMaterials.Count);
+          e.Style = new ModeledStructureStyle.Builder {
+            Material = BuildingsRoofMaterials[i]
+          }.Build();
+        });
 
       // Apply a post-creation listener that adds the squashing MonoBehaviour to each building.
       MapsService.Events.ExtrudedStructureEvents.DidCreate.AddListener(
@@ -417,6 +448,12 @@ namespace Google.Maps.Demos.Zoinkies {
       // Apply a post-creation listener that adds the squashing MonoBehaviour to each building.
       MapsService.Events.ModeledStructureEvents.DidCreate.AddListener(
         e => { AddSquasher(e.GameObject); });
+
+      // Apply a post-creation listener that move road segments up to prevent  .
+      MapsService.Events.SegmentEvents.DidCreate.AddListener(
+        e => {
+          // Move y position up by a notch;
+        });
 
       MapsService.Events.MapEvents.Loaded.AddListener(arg0 => {
         StartupCheckList.Remove(MAP_INITIALIZED);

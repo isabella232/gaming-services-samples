@@ -51,7 +51,7 @@ dependencies {
 
 appengine {  // App Engine tasks configuration
     deploy {   // deploy configuration
-        projectId = "YOUR GCP PROJECT ID HERE"
+        projectId = "musk-samples"
         version = '1'
     }
 }
