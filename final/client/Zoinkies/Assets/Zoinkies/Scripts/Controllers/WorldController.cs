@@ -452,7 +452,8 @@ namespace Google.Maps.Demos.Zoinkies {
       // Apply a post-creation listener that move road segments up to prevent  .
       MapsService.Events.SegmentEvents.DidCreate.AddListener(
         e => {
-          // Move y position up by a notch;
+          // Move y position up to prevent z-fighting with water areas;
+          e.GameObject.transform.position += new Vector3(0f, 0.01f, 0f);
         });
 
       MapsService.Events.MapEvents.Loaded.AddListener(arg0 => {
