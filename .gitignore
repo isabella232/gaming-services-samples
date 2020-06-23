@@ -11,6 +11,7 @@
 /final/client/Zoinkies/Temp
 /final/client/Zoinkies/bin
 /final/client/Zoinkies/obj
+/final/client/Zoinkies/Logs
 
 /part1/client/Zoinkies/.idea/
 /part1/client/Zoinkies/Assets/Plugins.meta
@@ -19,6 +20,7 @@
 /part1/client/Zoinkies/Temp
 /part1/client/Zoinkies/bin
 /part1/client/Zoinkies/obj
+/part1/client/Zoinkies/Logs
 
 /part3/client/Zoinkies/.idea/
 /part3/client/Zoinkies/Assets/Plugins.meta
@@ -27,3 +29,4 @@
 /part3/client/Zoinkies/Temp
 /part3/client/Zoinkies/bin
 /part3/client/Zoinkies/obj
+/part3/client/Zoinkies/Logs
