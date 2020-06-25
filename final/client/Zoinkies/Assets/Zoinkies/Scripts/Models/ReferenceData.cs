@@ -17,37 +17,39 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Google.Maps.Demos.Zoinkies {
-
-/// <summary>
-/// Keeps track of reference data for the game.
-///
-/// Types of reference data:
-/// - Location Objects
-/// - Collectibles
-/// - Weapons
-/// - Armors
-/// - Characters
-/// </summary>
-  public class ReferenceData {
-
+namespace Google.Maps.Demos.Zoinkies
+{
     /// <summary>
-    /// List of all references used in the game.
+    ///     Keeps track of reference data for the game.
+    ///     Types of reference data:
+    ///     - Location Objects
+    ///     - Collectibles
+    ///     - Weapons
+    ///     - Armors
+    ///     - Characters
     /// </summary>
-    public List<ReferenceItem> references { get; set; }
+    public class ReferenceData
+    {
+        public ReferenceData()
+        {
+            references = new List<ReferenceItem>();
+        }
 
-    public ReferenceData() {
-      references = new List<ReferenceItem>();
+        /// <summary>
+        ///     List of all references used in the game.
+        /// </summary>
+        public List<ReferenceItem> references { get; set; }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (ReferenceItem ri in references)
+            {
+                sb.Append(ri);
+                sb.Append("\n");
+            }
+
+            return sb.ToString();
+        }
     }
-
-    public override string ToString() {
-      var sb = new StringBuilder();
-      foreach (ReferenceItem ri in references) {
-        sb.Append(ri);
-        sb.Append("\n");
-      }
-
-      return sb.ToString();
-    }
-  }
 }

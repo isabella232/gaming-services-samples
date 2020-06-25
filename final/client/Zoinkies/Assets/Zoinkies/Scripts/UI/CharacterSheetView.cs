@@ -13,78 +13,92 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Google.Maps.Demos.Zoinkies {
-
+namespace Google.Maps.Demos.Zoinkies
+{
     /// <summary>
-    /// This class handles the character sheet logic.
+    ///     This class handles the character sheet logic.
     /// </summary>
-    public class CharacterSheetView : BaseView {
-
+    public class CharacterSheetView : BaseView
+    {
         /// <summary>
-        /// Character types selector
-        /// </summary>
-        public MicroInventoryController Portraits;
-        /// <summary>
-        /// Weapon selector
-        /// </summary>
-        public MicroInventoryController Weapons;
-        /// <summary>
-        /// Armor selector
-        /// </summary>
-        public MicroInventoryController BodyArmors;
-        /// <summary>
-        /// Helmet selector
-        /// </summary>
-        public MicroInventoryController Helmets;
-        /// <summary>
-        /// Shield selector
-        /// </summary>
-        public MicroInventoryController Shields;
-        /// <summary>
-        /// Gold Keys
-        /// </summary>
-        public Text GoldKeyQuantity;
-        /// <summary>
-        /// Diamond Keys
-        /// </summary>
-        public Text DiamondKeyQuantity;
-        /// <summary>
-        /// Defense score
-        /// </summary>
-        public Text DefenseIconScore;
-        /// <summary>
-        /// Attack score
+        ///     Attack score
         /// </summary>
         public Text AttackIconScore;
-        /// <summary>
-        /// Freed leaders
-        /// </summary>
-        public Text FreedLeadersQuantity;
-        /// <summary>
-        /// Health
-        /// </summary>
-        public Scrollbar Lives;
-        /// <summary>
-        /// Avatar name
-        /// </summary>
-        public InputField AvatarName;
-        /// <summary>
-        /// Reference to player service
-        /// </summary>
-        private PlayerService service = PlayerService.GetInstance();
 
         /// <summary>
-        /// Checks if we are in FTUE. Completes FTUE.
-        ///
+        ///     Avatar name
         /// </summary>
-        void OnEnable() {
+        public InputField AvatarName;
+
+        /// <summary>
+        ///     Armor selector
+        /// </summary>
+        public MicroInventoryController BodyArmors;
+
+        /// <summary>
+        ///     Defense score
+        /// </summary>
+        public Text DefenseIconScore;
+
+        /// <summary>
+        ///     Diamond Keys
+        /// </summary>
+        public Text DiamondKeyQuantity;
+
+        /// <summary>
+        ///     Freed leaders
+        /// </summary>
+        public Text FreedLeadersQuantity;
+
+        /// <summary>
+        ///     Gold Keys
+        /// </summary>
+        public Text GoldKeyQuantity;
+
+        /// <summary>
+        ///     Helmet selector
+        /// </summary>
+        public MicroInventoryController Helmets;
+
+        /// <summary>
+        ///     Health
+        /// </summary>
+        public Scrollbar Lives;
+
+        /// <summary>
+        ///     Character types selector
+        /// </summary>
+        public MicroInventoryController Portraits;
+
+        /// <summary>
+        ///     Reference to player service
+        /// </summary>
+        private readonly PlayerService service = PlayerService.GetInstance();
+
+        /// <summary>
+        ///     Shield selector
+        /// </summary>
+        public MicroInventoryController Shields;
+
+        /// <summary>
+        ///     Weapon selector
+        /// </summary>
+        public MicroInventoryController Weapons;
+
+        /// <summary>
+        ///     Checks if we are in FTUE. Completes FTUE.
+        /// </summary>
+        private void OnEnable()
+        {
             // FTUE complete as soon as players reaches this view - basic example
-            if (!PlayerPrefs.HasKey(GameConstants.FTUE_COMPLETE)) {
+            if (!PlayerPrefs.HasKey(GameConstants.FTUE_COMPLETE))
+            {
                 PlayerPrefs.SetInt(GameConstants.FTUE_COMPLETE, 1);
             }
 
@@ -92,16 +106,17 @@ namespace Google.Maps.Demos.Zoinkies {
         }
 
         /// <summary>
-        /// Initializes player stats and inventory from player data.
+        ///     Initializes player stats and inventory from player data.
         /// </summary>
         /// <returns></returns>
-        public IEnumerator Init() {
-
+        public IEnumerator Init()
+        {
             yield return new WaitUntil(() => service.IsInitialized);
 
             AvatarName.text = service.AvatarName;
 
-            if (service.GetMaxEnergyLevel() != 0) {
+            if (service.GetMaxEnergyLevel() != 0)
+            {
                 Lives.size = (float) service.GetEnergyLevel() / service.GetMaxEnergyLevel();
             }
 
@@ -112,32 +127,37 @@ namespace Google.Maps.Demos.Zoinkies {
             FreedLeadersQuantity.text = service.GetNumberOfFreedLeaders().ToString("N0");
 
             Portraits.InitItems(new List<Item>(service.GetAvatars()), service.AvatarType);
-            Portraits.SelectionChanged += id => {
+            Portraits.SelectionChanged += id =>
+            {
                 Debug.Log("Character type changed");
                 service.AvatarType = id;
             };
 
             Weapons.InitItems(new List<Item>(service.GetWeapons()), service.EquippedWeapon);
-            Weapons.SelectionChanged += id => {
+            Weapons.SelectionChanged += id =>
+            {
                 Debug.Log("Weapon type changed");
                 service.EquippedWeapon = id;
                 AttackIconScore.text = service.GetAttackScore().ToString("N0");
             };
             BodyArmors.InitItems(new List<Item>(service.GetBodyArmors()),
                 service.EquippedBodyArmor);
-            BodyArmors.SelectionChanged += id => {
+            BodyArmors.SelectionChanged += id =>
+            {
                 Debug.Log("Body Armor changed");
                 service.EquippedBodyArmor = id;
                 DefenseIconScore.text = service.GetDefenseScore().ToString("N0");
             };
             Helmets.InitItems(new List<Item>(service.GetHelmets()), service.EquippedHelmet);
-            Helmets.SelectionChanged += id => {
+            Helmets.SelectionChanged += id =>
+            {
                 Debug.Log("Helmet changed");
                 service.EquippedHelmet = id;
                 DefenseIconScore.text = service.GetDefenseScore().ToString("N0");
             };
             Shields.InitItems(new List<Item>(service.GetShields()), service.EquippedShield);
-            Shields.SelectionChanged += id => {
+            Shields.SelectionChanged += id =>
+            {
                 Debug.Log("Shield changed");
                 service.EquippedShield = id;
                 DefenseIconScore.text = service.GetDefenseScore().ToString("N0");
@@ -145,9 +165,10 @@ namespace Google.Maps.Demos.Zoinkies {
         }
 
         /// <summary>
-        /// Updates the player name if it has changed.
+        ///     Updates the player name if it has changed.
         /// </summary>
-        public void OnNameChanged() {
+        public void OnNameChanged()
+        {
             service.AvatarName = AvatarName.text;
             Debug.Log("New name " + service.AvatarName);
         }

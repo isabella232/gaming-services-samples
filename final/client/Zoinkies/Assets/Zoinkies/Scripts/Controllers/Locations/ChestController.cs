@@ -19,32 +19,56 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 
-namespace Google.Maps.Demos.Zoinkies {
-
-    public class ChestController : BaseSpawnLocationController {
+namespace Google.Maps.Demos.Zoinkies
+{
+    /// <summary>
+    /// Controller class for chests game objects.
+    /// </summary>
+    public class ChestController : BaseSpawnLocationController
+    {
+        /// <summary>
+        /// Reference to the animator used to play the open/close animations on the chest.
+        /// </summary>
         public Animator Animator;
 
-        protected override void StartImpl() {
+        /// <summary>
+        /// Implementation of the Start function, triggered in the base class.
+        /// </summary>
+        protected override void StartImpl()
+        {
             base.StartImpl();
 
-            if (Animator != null) {
+            if (Animator != null)
+            {
                 // Close the chest for now
                 Animator.SetBool("open", false);
                 Animator.SetBool("reset", false);
             }
         }
 
-        protected override void RespawingState() {
+        /// <summary>
+        /// Implementation of the respawning state.
+        /// After chests are opened, they respawn with a duration provided by the server.
+        /// </summary>
+        protected override void RespawingState()
+        {
             // TODO Show lock and timer
         }
 
-        protected override void ActionState() {
+        /// <summary>
+        /// Implementation of the Start function, triggered in the base class.
+        /// </summary>
+        protected override void ActionState()
+        {
             if (IsLoading)
+            {
                 return;
+            }
 
             base.ActionState();
 
-            if (String.IsNullOrEmpty(LocationId)) {
+            if (string.IsNullOrEmpty(LocationId))
+            {
                 Debug.LogError("Incorrect PlaceId!");
                 return;
             }
@@ -54,8 +78,8 @@ namespace Google.Maps.Demos.Zoinkies {
             // If not show a floating popup with timeout information
             location = WorldService.GetInstance().GetSpawnLocation(LocationId);
 
-            if (WorldService.GetInstance().IsRespawning(LocationId)) {
-
+            if (WorldService.GetInstance().IsRespawning(LocationId))
+            {
                 UIManager.OnShowLoadingView(false);
 
                 DateTime t = DateTime.Parse(location.respawn_time);
@@ -67,22 +91,25 @@ namespace Google.Maps.Demos.Zoinkies {
             // Check pre-requisites
             if (location.key_type_id == GameConstants.GOLD_KEY
                 && PlayerService.GetInstance().GetNumberOfGoldKeys() >=
-                location.number_of_keys_to_activate) {
-
+                location.number_of_keys_to_activate)
+            {
                 // All good. Let's request our rewards
                 Debug.Log("Pre reqs met!");
 
-                try {
+                try
+                {
                     IsLoading = true;
                     StartCoroutine(ServerManager.PostChest(LocationId, OnSuccess, OnError));
                 }
-                catch (System.Exception e) {
-                    Debug.LogError("Failed to open chest! " + e.ToString());
+                catch (System.Exception e)
+                {
+                    Debug.LogError("Failed to open chest! " + e);
                     IsLoading = false;
                     UIManager.OnShowLoadingView(false);
                 }
             }
-            else {
+            else
+            {
                 UIManager.OnShowLoadingView(false);
                 Debug.Log("Pre reqs not met!");
                 UIManager.OnShowMessageDialog("You need "
@@ -90,19 +117,25 @@ namespace Google.Maps.Demos.Zoinkies {
                                               + " Gold Keys. \n You have "
                                               + PlayerService.GetInstance().GetNumberOfGoldKeys()
                                               + " of them!");
-
             }
         }
 
-        private void OnSuccess(RewardsData data) {
+        /// <summary>
+        /// Triggered when the server call to get the chest details returns successfully.
+        /// </summary>
+        /// <param name="data">Rewards data provided by the server.</param>
+        private void OnSuccess(RewardsData data)
+        {
             IsLoading = false;
 
-            if (data == null) {
+            if (data == null)
+            {
                 // The chest is respawning
                 return;
             }
 
-            if (Animator != null) {
+            if (Animator != null)
+            {
                 // Open the chest for now
                 Animator.SetBool("open", true);
                 Animator.SetBool("reset", false);
@@ -117,26 +150,26 @@ namespace Google.Maps.Demos.Zoinkies {
 
             UIManager.OnShowLoadingView(false);
 
-            if (UIManager != null) {
+            if (UIManager != null)
+            {
                 UIManager.OnShowLootResultsDialog("Loot!", data.items);
             }
         }
 
-        private IEnumerator CloseChest() {
-
+        /// <summary>
+        /// Plays the chest closing animation after a few seconds.
+        /// </summary>
+        /// <returns>An IEnumerator</returns>
+        private IEnumerator CloseChest()
+        {
             yield return new WaitForSeconds(3);
 
-            if (Animator != null) {
+            if (Animator != null)
+            {
                 // Close the chest for now
                 Animator.SetBool("open", false);
                 Animator.SetBool("reset", true);
             }
-
-        }
-
-        protected override SpawnLocation GetTestingLocation() {
-            // Pick first available chest
-            return WorldService.GetInstance().GetChests().ElementAt(0);
         }
     }
 }

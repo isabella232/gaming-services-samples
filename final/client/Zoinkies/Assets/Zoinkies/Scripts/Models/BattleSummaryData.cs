@@ -13,19 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google.Maps.Demos.Zoinkies {
-  /// <summary>
-  /// Model that provides information on the battle outcome.
-  /// </summary>
-  public class BattleSummaryData {
-    public bool winner{ get; set; }
-    public RewardsData rewards{ get; set; }
-    public bool wonTheGame{ get; set; }
-    public override string ToString() {
-      return "{winner: " + winner +
-             " rewards: " + rewards +
-             " wonTheGame: " + wonTheGame +
-             "}";
+
+namespace Google.Maps.Demos.Zoinkies
+{
+    /// <summary>
+    ///     Model that provides information on the battle outcome.
+    /// </summary>
+    public class BattleSummaryData
+    {
+        /// <summary>
+        /// Indicates who the winner was: 0 -> NPC  1 -> Avatar
+        /// </summary>
+        public bool winner { get; set; }
+        /// <summary>
+        /// Provides information about rewards or penalties for winning or losing.
+        /// </summary>
+        public RewardsData rewards { get; set; }
+        /// <summary>
+        /// Indicates if the player has won the game.
+        /// </summary>
+        public bool wonTheGame { get; set; }
+
+        public override string ToString()
+        {
+            return "{winner: " + winner +
+                   " rewards: " + rewards +
+                   " wonTheGame: " + wonTheGame +
+                   "}";
+        }
     }
-  }
 }

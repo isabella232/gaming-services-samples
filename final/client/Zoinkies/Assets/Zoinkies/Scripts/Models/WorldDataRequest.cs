@@ -16,23 +16,43 @@
 
 using Google.Maps.Coord;
 
-namespace Google.Maps.Demos.Zoinkies {
+namespace Google.Maps.Demos.Zoinkies
+{
+    /// <summary>
+    /// This model describes a world data request.
+    /// It provides information about the lat lng rectangle defined by the given north east
+    /// and south west corners.
+    /// </summary>
+    public class WorldDataRequest
+    {
+        /// <summary>
+        /// North east lat lng corner of a map region.
+        /// </summary>
+        public PlayableLocationLatLng northeast { get; set; }
+        /// <summary>
+        /// South west lat lng corner of a map region.
+        /// </summary>
+        public PlayableLocationLatLng southwest { get; set; }
 
-  public class WorldDataRequest {
-    public PLLatLng northeast { get; set; }
-    public PLLatLng southwest { get; set; }
+        /// <summary>
+        /// Helper function that initializes this PlayableLocation Lat Lng instance with
+        /// the provided LatLng structures from the Maps Gaming SDK.
+        /// </summary>
+        /// <param name="southwestlatLng"></param>
+        /// <param name="northeastlatLng"></param>
+        public void CopyFrom(LatLng southwestlatLng, LatLng northeastlatLng)
+        {
+            northeast = new PlayableLocationLatLng();
+            northeast.latitude = northeastlatLng.Lat;
+            northeast.longitude = northeastlatLng.Lng;
+            southwest = new PlayableLocationLatLng();
+            southwest.latitude = southwestlatLng.Lat;
+            southwest.longitude = southwestlatLng.Lng;
+        }
 
-    public void CopyFrom(LatLng southwestlatLng, LatLng northeastlatLng) {
-      northeast = new PLLatLng();
-      northeast.latitude = northeastlatLng.Lat;
-      northeast.longitude = northeastlatLng.Lng;
-      southwest = new PLLatLng();
-      southwest.latitude = southwestlatLng.Lat;
-      southwest.longitude = southwestlatLng.Lng;
+        public override string ToString()
+        {
+            return "northeast: " + northeast + " southwest: " + southwest;
+        }
     }
-
-    public override string ToString() {
-      return "northeast: " + northeast + " southwest: " + southwest;
-    }
-  }
 }

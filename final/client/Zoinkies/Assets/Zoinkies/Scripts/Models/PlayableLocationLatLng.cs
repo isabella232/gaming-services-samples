@@ -14,45 +14,28 @@
  * limitations under the License.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace Google.Maps.Demos.Zoinkies
 {
     /// <summary>
-    ///     Keeps track of all game locations.
+    ///     Simple class to keep track of a latitude longitude pair.
+    ///     This class, which holds similar information than the LatLng class
+    ///     from the Maps Gaming SDK, is used to serialize/deserialize the attributes
+    ///     of the json data provided by the server.
     /// </summary>
-    public class WorldData
+    public class PlayableLocationLatLng
     {
         /// <summary>
-        ///     List of spawn locations
+        /// Latitude of spawned location
         /// </summary>
-        public Dictionary<string, SpawnLocation> locations { get; set; }
-
+        public double latitude { get; set; }
         /// <summary>
-        ///     Current server time
+        /// Longitude of spawned location
         /// </summary>
-        public string currentServerTime { get; set; }
-
-        public WorldData()
-        {
-            locations = new Dictionary<string, SpawnLocation>();
-            currentServerTime = DateTime.UtcNow.ToString();
-        }
+        public double longitude { get; set; }
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("Locations: \n");
-            foreach (SpawnLocation loc in locations.Values)
-            {
-                sb.Append(loc + " \t");
-            }
-
-            sb.Append("----------------------");
-
-            return sb.ToString();
+            return "latitude: " + latitude + "longitude: " + longitude;
         }
     }
 }

@@ -13,50 +13,61 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Assertions;
+using UnityEngine.UI;
 
-namespace Google.Maps.Demos.Zoinkies {
+namespace Google.Maps.Demos.Zoinkies
+{
     /// <summary>
-    /// View class for the battle defeat dialog.
+    ///     View class for the battle defeat dialog.
     /// </summary>
-    public class LootResultsDialog : BaseView {
+    public class LootResultsDialog : BaseView
+    {
         public GameObject ItemsContainer;
         public Text Title;
-        void Start() {
+
+        private void Start()
+        {
             Assert.IsNotNull(ItemsContainer);
             Assert.IsNotNull(Title);
         }
 
         /// <summary>
-        /// Initializes the listing of items gained or lost during battle.
+        ///     Initializes the listing of items gained or lost during battle.
         /// </summary>
         /// <param name="data"></param>
         /// <exception cref="Exception"></exception>
-        public void Init(string title, List<Item> items) {
-            if (items == null || string.IsNullOrEmpty(title)) {
+        public void Init(string title, List<Item> items)
+        {
+            if (items == null || string.IsNullOrEmpty(title))
+            {
                 throw new System.Exception("Invalid data received.");
             }
 
             Title.text = title; //data.winner? "Victory!":"Defeat!";
 
             ItemGO ItemGOPrefab = Resources.Load<ItemGO>("ItemPrefab");
-            if (ItemGOPrefab == null) {
+            if (ItemGOPrefab == null)
+            {
                 throw new System.Exception("Can't instantiate a game object of type ItemPrefab!");
             }
 
             // Wipe out previous
-            foreach (Transform child in ItemsContainer.transform) {
+            foreach (Transform child in ItemsContainer.transform)
+            {
                 Destroy(child.gameObject);
             }
 
             // Display all items - these items are LOST!
-            foreach (Item i in items) {
+            foreach (Item i in items)
+            {
                 // Create an ItemGO, parent it to the container
                 ItemGO go = Instantiate(ItemGOPrefab, ItemsContainer.transform, true);
-                if (go != null) {
+                if (go != null)
+                {
                     // Set the item name, image
                     go.Init(i, true);
                 }

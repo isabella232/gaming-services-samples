@@ -19,24 +19,25 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
 
-namespace Google.Maps.Demos.Zoinkies {
-
-    public class LoadingDialog : BaseView {
-        public Image Spinner;
-
-        public float RotationSpeed = 50f;
-
+namespace Google.Maps.Demos.Zoinkies
+{
+    public class LoadingDialog : BaseView
+    {
         private Action callback;
 
-        void Start() {
+        public float RotationSpeed = 50f;
+        public Image Spinner;
+
+        private void Start()
+        {
             Assert.IsNotNull(Spinner);
         }
 
         // Init is called once per frame
-        void Update() {
+        private void Update()
+        {
             // Rotate spinner if available
             Spinner.rectTransform.Rotate(Vector3.forward, -RotationSpeed * Time.deltaTime);
-
         }
     }
 }

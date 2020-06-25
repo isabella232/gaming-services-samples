@@ -17,37 +17,42 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Google.Maps.Demos.Zoinkies {
-
-    public class Flash : MonoBehaviour {
-        public Image Hit;
+namespace Google.Maps.Demos.Zoinkies
+{
+    public class Flash : MonoBehaviour
+    {
+        private float CurrentTimer;
         public float flashSpeed = 3f;
+        public Image Hit;
 
-        private bool IsHit = false;
-        private float TIMEOUT = 4f;
-        private float CurrentTimer = 0f;
+        private bool IsHit;
+        private readonly float TIMEOUT = 4f;
 
-        void Start() {
+        private void Start()
+        {
             Hit.color = Color.white;
             Hit.gameObject.SetActive(false);
             IsHit = false;
         }
 
         // Init is called once per frame
-        void Update() {
-
-            if (IsHit) {
+        private void Update()
+        {
+            if (IsHit)
+            {
                 Hit.color = Color.Lerp(Hit.color, Color.clear, flashSpeed * Time.deltaTime);
 
                 CurrentTimer += Time.deltaTime;
-                if (CurrentTimer >= TIMEOUT) {
+                if (CurrentTimer >= TIMEOUT)
+                {
                     IsHit = false;
                     Hit.gameObject.SetActive(IsHit);
                 }
             }
         }
 
-        public void OnHit() {
+        public void OnHit()
+        {
             IsHit = true;
             Hit.gameObject.SetActive(IsHit);
             CurrentTimer = 0f;

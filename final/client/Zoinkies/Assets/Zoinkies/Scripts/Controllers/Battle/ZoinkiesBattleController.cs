@@ -15,51 +15,74 @@
  */
 
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Google.Maps.Demos.Zoinkies {
+namespace Google.Maps.Demos.Zoinkies
+{
+    public class ZoinkiesBattleController : MonoBehaviour
+    {
+        /// <summary>
+        ///     Keeps track of the laser beam scale. We use the scale property to "fire" the laser.
+        /// </summary>
+        private Vector3 _laserBeamScale;
 
-    public class ZoinkiesBattleController : MonoBehaviour {
+        /// <summary>
+        ///     Reference to the laser beam object.
+        /// </summary>
         public Transform LaserBeam;
+
+        /// <summary>
+        ///     Reference to the target point of the laser beam.
+        /// </summary>
         public Transform Target;
 
-
-        private Vector3 laserBeamScale;
-
-        void Awake() {
-            laserBeamScale = LaserBeam.localScale;
+        /// <summary>
+        ///     Initializes the laser beam properties.
+        /// </summary>
+        private void Awake()
+        {
+            _laserBeamScale = LaserBeam.localScale;
         }
 
-        public void OnShoot(bool missed) {
-
+        /// <summary>
+        ///     Called by the game, this function triggers the shooting animation sequence.
+        /// </summary>
+        /// <param name="missed"></param>
+        public void OnShoot(bool missed)
+        {
             StartCoroutine(Shoot(missed));
         }
 
-        public IEnumerator Shoot(bool missed) {
-
+        /// <summary>
+        ///     Implements the shoot sequence.
+        ///     If the attacker "misses", an offset is applied to the target point to indicate the miss.
+        /// </summary>
+        /// <param name="missed">
+        ///     Indicates if this shooting action has reached or missed the target
+        /// </param>
+        /// <returns>An IEnumerator</returns>
+        public IEnumerator Shoot(bool missed)
+        {
             Vector3 point = Target.position;
 
-            if (missed) {
+            if (missed)
+            {
                 point += Vector3.up * 2f;
             }
 
-            this.transform.LookAt(point);
-            transform.localRotation = this.transform.localRotation;
+            transform.LookAt(point);
+            transform.localRotation = transform.localRotation;
 
-            float d = Vector3.Distance(this.transform.position, point);
-            laserBeamScale.z = d;
-            LaserBeam.localScale = laserBeamScale;
-            LaserBeam.localPosition =
-                0.5f * d * LaserBeam.forward;
+            float distance = Vector3.Distance(transform.position, point);
 
-            //LaserBeam.localPosition.y = 0f;
-            //this.transform.localPosition +
+            _laserBeamScale.z = distance;
+            LaserBeam.localScale = _laserBeamScale;
+            LaserBeam.localPosition = 0.5f * distance * LaserBeam.forward;
 
             yield return new WaitForSeconds(0.4f);
 
-            laserBeamScale.z = 0;
-            LaserBeam.localScale = laserBeamScale;
+            _laserBeamScale.z = 0;
+            LaserBeam.localScale = _laserBeamScale;
             LaserBeam.localPosition = Vector3.zero;
         }
     }

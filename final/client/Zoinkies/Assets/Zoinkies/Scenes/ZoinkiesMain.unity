@@ -599,11 +599,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ZoinkiesMinionBattlePrefab
       objectReference: {fileID: 0}
-    - target: {fileID: 2961260816169366885, guid: 13c4185f76eb8465a960d96ad54e0aa2,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3247463894075463811, guid: 13c4185f76eb8465a960d96ad54e0aa2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -612,12 +607,12 @@ PrefabInstance:
     - target: {fileID: 3247463894075463811, guid: 13c4185f76eb8465a960d96ad54e0aa2,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -112.99
+      value: -114
       objectReference: {fileID: 0}
     - target: {fileID: 3247463894075463811, guid: 13c4185f76eb8465a960d96ad54e0aa2,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 58.4
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 3247463894075463811, guid: 13c4185f76eb8465a960d96ad54e0aa2,
         type: 3}
@@ -662,12 +657,12 @@ PrefabInstance:
     - target: {fileID: 229423674557150100, guid: 13c4185f76eb8465a960d96ad54e0aa2,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 229423674557150100, guid: 13c4185f76eb8465a960d96ad54e0aa2,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7667504597625004688, guid: 13c4185f76eb8465a960d96ad54e0aa2,
         type: 3}
@@ -5622,8 +5617,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LatLng:
-    _Lat: 35.7021725
-    _Lng: 139.77235799999994
+    _Lat: 35.701528
+    _Lng: 139.6741809
   MapsService: {fileID: 752417404}
   MaxDistance: 1000
   IsLoading: 0
@@ -6905,6 +6900,80 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1343820734}
   m_CullTransparentMesh: 0
+--- !u!1001 &1346820008
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 6213931694197390271, guid: ec908693ab7fb4860ad2d4a321fe5108,
+        type: 3}
+      propertyPath: m_Name
+      value: ZoinkiesArmy
+      objectReference: {fileID: 0}
+    - target: {fileID: 6213931694197390271, guid: ec908693ab7fb4860ad2d4a321fe5108,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6213931694197390270, guid: ec908693ab7fb4860ad2d4a321fe5108,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6213931694197390270, guid: ec908693ab7fb4860ad2d4a321fe5108,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6213931694197390270, guid: ec908693ab7fb4860ad2d4a321fe5108,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6213931694197390270, guid: ec908693ab7fb4860ad2d4a321fe5108,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6213931694197390270, guid: ec908693ab7fb4860ad2d4a321fe5108,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6213931694197390270, guid: ec908693ab7fb4860ad2d4a321fe5108,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6213931694197390270, guid: ec908693ab7fb4860ad2d4a321fe5108,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6213931694197390270, guid: ec908693ab7fb4860ad2d4a321fe5108,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6213931694197390270, guid: ec908693ab7fb4860ad2d4a321fe5108,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6213931694197390270, guid: ec908693ab7fb4860ad2d4a321fe5108,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6213931694197390270, guid: ec908693ab7fb4860ad2d4a321fe5108,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ec908693ab7fb4860ad2d4a321fe5108, type: 3}
 --- !u!1 &1361306644
 GameObject:
   m_ObjectHideFlags: 0
@@ -11518,6 +11587,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ZoinkiesGeneralBattlePrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 7717739795895720495, guid: 1f8f89d231ad04512958eddba66273f7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8003784141466908617, guid: 1f8f89d231ad04512958eddba66273f7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -11531,7 +11605,7 @@ PrefabInstance:
     - target: {fileID: 8003784141466908617, guid: 1f8f89d231ad04512958eddba66273f7,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 58.4
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 8003784141466908617, guid: 1f8f89d231ad04512958eddba66273f7,
         type: 3}
@@ -11581,12 +11655,12 @@ PrefabInstance:
     - target: {fileID: 4696546240786554078, guid: 1f8f89d231ad04512958eddba66273f7,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4696546240786554078, guid: 1f8f89d231ad04512958eddba66273f7,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1f8f89d231ad04512958eddba66273f7, type: 3}

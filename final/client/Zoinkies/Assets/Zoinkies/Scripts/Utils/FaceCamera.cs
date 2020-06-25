@@ -16,16 +16,19 @@
 
 using UnityEngine;
 
-namespace Google.Maps.Demos.Zoinkies {
-
-    public class FaceCamera : MonoBehaviour {
+namespace Google.Maps.Demos.Zoinkies
+{
+    public class FaceCamera : MonoBehaviour
+    {
         // Always look at the camera
-        void Update() {
+        private void Update()
+        {
             // Rotate around the (z) axis.
-            if (Camera.main != null) {
-                this.transform.LookAt(Camera.main.transform, Camera.main.transform.up);
-                this.transform.rotation =
-                    Quaternion.Euler(0, this.transform.rotation.eulerAngles.y, 0);
+            if (Camera.main != null)
+            {
+                transform.LookAt(Camera.main.transform, Camera.main.transform.up);
+                transform.rotation =
+                    Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
             }
         }
     }

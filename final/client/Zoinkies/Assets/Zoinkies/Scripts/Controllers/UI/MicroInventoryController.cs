@@ -15,14 +15,15 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Google.Maps.Demos.Zoinkies {
-
-    public class MicroInventoryController : MonoBehaviour {
+namespace Google.Maps.Demos.Zoinkies
+{
+    public class MicroInventoryController : MonoBehaviour
+    {
+        private ItemGO CurrentSelection;
 
         public ItemGO ItemGOPrefab;
         public List<ItemGO> ItemGOs;
@@ -32,34 +33,35 @@ namespace Google.Maps.Demos.Zoinkies {
 
         public Action<string> SelectionChanged;
 
-        private ItemGO CurrentSelection;
-
         // Start is called before the first frame update
-        void Start() {
+        private void Start()
+        {
             ItemGOs = new List<ItemGO>();
-
-
         }
 
-        public void InitItems(List<Item> selection, string id) {
+        public void InitItems(List<Item> selection, string id)
+        {
             // Delete current items
-            foreach (Transform child in ItemsContainer.transform) {
+            foreach (Transform child in ItemsContainer.transform)
+            {
                 Destroy(child.gameObject);
             }
 
             ItemGOs.Clear();
 
-            if (selection != null) {
-                foreach (var i in selection) {
+            if (selection != null)
+            {
+                foreach (Item i in selection)
+                {
                     ItemGO itemGO = Instantiate(ItemGOPrefab, ItemsContainer.transform);
                     itemGO.Init(i);
                     ItemGOs.Add(itemGO);
 
                     itemGO.gameObject.SetActive(i.id == id);
-                    if (i.id == id) {
+                    if (i.id == id)
+                    {
                         CurrentSelection = itemGO;
                     }
-
                 }
             }
 
@@ -67,14 +69,16 @@ namespace Google.Maps.Demos.Zoinkies {
             RightArrow.interactable = ItemGOs.Count > 0;
         }
 
-        public void SetItem(string id) {
-
-            if (CurrentSelection != null) {
+        public void SetItem(string id)
+        {
+            if (CurrentSelection != null)
+            {
                 CurrentSelection.gameObject.SetActive(false);
             }
 
             ItemGO selection = ItemGOs.Find(s => s.Id == id);
-            if (selection != null) {
+            if (selection != null)
+            {
                 CurrentSelection = selection;
                 CurrentSelection.gameObject.SetActive(true);
 
@@ -83,42 +87,58 @@ namespace Google.Maps.Demos.Zoinkies {
             }
         }
 
-        public void OnShowPrevious() {
+        public void OnShowPrevious()
+        {
             Debug.Log("Prev");
-            if (ItemGOs.Count == 0) {
+            if (ItemGOs.Count == 0)
+            {
                 return;
             }
 
-            if (CurrentSelection == null) {
+            if (CurrentSelection == null)
+            {
                 SetItem(ItemGOs[0].Id);
                 return;
             }
 
             // Get index of current selection (if any)
             int idx = ItemGOs.IndexOf(CurrentSelection);
-            if (idx >= 0) {
+            if (idx >= 0)
+            {
                 idx--;
-                if (idx < 0) idx = ItemGOs.Count - 1;
+                if (idx < 0)
+                {
+                    idx = ItemGOs.Count - 1;
+                }
+
                 SetItem(ItemGOs[idx].Id);
             }
         }
 
-        public void OnShowNext() {
+        public void OnShowNext()
+        {
             Debug.Log("Next");
-            if (ItemGOs.Count == 0) {
+            if (ItemGOs.Count == 0)
+            {
                 return;
             }
 
-            if (CurrentSelection == null) {
+            if (CurrentSelection == null)
+            {
                 SetItem(ItemGOs[0].Id);
                 return;
             }
 
             // Get index of current selection (if any)
             int idx = ItemGOs.IndexOf(CurrentSelection);
-            if (idx >= 0) {
+            if (idx >= 0)
+            {
                 idx++;
-                if (idx >= ItemGOs.Count) idx = 0;
+                if (idx >= ItemGOs.Count)
+                {
+                    idx = 0;
+                }
+
                 SetItem(ItemGOs[idx].Id);
             }
         }
