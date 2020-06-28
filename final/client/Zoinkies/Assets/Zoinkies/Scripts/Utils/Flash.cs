@@ -19,43 +19,68 @@ using UnityEngine.UI;
 
 namespace Google.Maps.Demos.Zoinkies
 {
+    /// <summary>
+    /// Simple class that creates a white flash for a few seconds.
+    /// </summary>
     public class Flash : MonoBehaviour
     {
-        private float CurrentTimer;
-        public float flashSpeed = 3f;
+        /// <summary>
+        /// Duration of the flash
+        /// </summary>
+        public float FlashSpeed = 3f;
+        /// <summary>
+        /// Reference to the Hit image
+        /// </summary>
         public Image Hit;
+        /// <summary>
+        /// Triggers the actual hit animation
+        /// </summary>
+        private bool _isHit;
+        /// <summary>
+        /// Keeps track of the time count
+        /// </summary>
+        private float _timeCounter;
+        /// <summary>
+        /// Duration of a tick
+        /// </summary>
+        private const float TIMEOUT = 4f;
 
-        private bool IsHit;
-        private readonly float TIMEOUT = 4f;
-
-        private void Start()
+        /// <summary>
+        /// Initializes the properties of the flash
+        /// </summary>
+        void Start()
         {
             Hit.color = Color.white;
             Hit.gameObject.SetActive(false);
-            IsHit = false;
+            _isHit = false;
         }
 
-        // Init is called once per frame
-        private void Update()
+        /// <summary>
+        /// When hit, adjusts the color and the alpha of the hit image, at the given speed.
+        /// </summary>
+        void Update()
         {
-            if (IsHit)
+            if (_isHit)
             {
-                Hit.color = Color.Lerp(Hit.color, Color.clear, flashSpeed * Time.deltaTime);
+                Hit.color = Color.Lerp(Hit.color, Color.clear, FlashSpeed * Time.deltaTime);
 
-                CurrentTimer += Time.deltaTime;
-                if (CurrentTimer >= TIMEOUT)
+                _timeCounter += Time.deltaTime;
+                if (_timeCounter >= TIMEOUT)
                 {
-                    IsHit = false;
-                    Hit.gameObject.SetActive(IsHit);
+                    _isHit = false;
+                    Hit.gameObject.SetActive(_isHit);
                 }
             }
         }
 
+        /// <summary>
+        /// When triggered, sets the animation in motion.
+        /// </summary>
         public void OnHit()
         {
-            IsHit = true;
-            Hit.gameObject.SetActive(IsHit);
-            CurrentTimer = 0f;
+            _isHit = true;
+            Hit.gameObject.SetActive(_isHit);
+            _timeCounter = 0f;
             Hit.color = Color.white;
         }
     }

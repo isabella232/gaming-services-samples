@@ -18,10 +18,15 @@ using UnityEngine;
 
 namespace Google.Maps.Demos.Zoinkies
 {
+    /// <summary>
+    /// A helper script to turn objects so that the same side always faces the camera.
+    /// </summary>
     public class FaceCamera : MonoBehaviour
     {
-        // Always look at the camera
-        private void Update()
+        /// <summary>
+        /// Rotate the object to always look at the camera
+        /// </summary>
+        void Update()
         {
             // Rotate around the (z) axis.
             if (Camera.main != null)

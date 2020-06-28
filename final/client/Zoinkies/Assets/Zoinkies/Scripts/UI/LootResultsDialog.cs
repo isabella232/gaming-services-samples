@@ -22,23 +22,34 @@ using UnityEngine.UI;
 namespace Google.Maps.Demos.Zoinkies
 {
     /// <summary>
-    ///     View class for the battle defeat dialog.
+    ///     This multipurpose view handles the display of subset of items.
+    ///     It is used when showing battle rewards or chest content.
     /// </summary>
     public class LootResultsDialog : BaseView
     {
+        /// <summary>
+        /// A reference to the items collection shown on screen
+        /// </summary>
         public GameObject ItemsContainer;
+        /// <summary>
+        /// The title of the dialog
+        /// </summary>
         public Text Title;
 
-        private void Start()
+        /// <summary>
+        /// Checks attributes validity
+        /// </summary>
+        void Start()
         {
             Assert.IsNotNull(ItemsContainer);
             Assert.IsNotNull(Title);
         }
 
         /// <summary>
-        ///     Initializes the listing of items gained or lost during battle.
+        ///     Initializes the items to be displayed on this dialog.
         /// </summary>
-        /// <param name="data"></param>
+        /// <param name="title">The title of the dialog</param>
+        /// /// <param name="items">A collection of items</param>
         /// <exception cref="Exception"></exception>
         public void Init(string title, List<Item> items)
         {
@@ -47,10 +58,10 @@ namespace Google.Maps.Demos.Zoinkies
                 throw new System.Exception("Invalid data received.");
             }
 
-            Title.text = title; //data.winner? "Victory!":"Defeat!";
+            Title.text = title;
 
-            ItemGO ItemGOPrefab = Resources.Load<ItemGO>("ItemPrefab");
-            if (ItemGOPrefab == null)
+            ItemView itemViewPrefab = Resources.Load<ItemView>("ItemPrefab");
+            if (itemViewPrefab == null)
             {
                 throw new System.Exception("Can't instantiate a game object of type ItemPrefab!");
             }
@@ -65,11 +76,11 @@ namespace Google.Maps.Demos.Zoinkies
             foreach (Item i in items)
             {
                 // Create an ItemGO, parent it to the container
-                ItemGO go = Instantiate(ItemGOPrefab, ItemsContainer.transform, true);
-                if (go != null)
+                ItemView view = Instantiate(itemViewPrefab, ItemsContainer.transform, true);
+                if (view != null)
                 {
                     // Set the item name, image
-                    go.Init(i, true);
+                    view.Init(i, true);
                 }
             }
         }

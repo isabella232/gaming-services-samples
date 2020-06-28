@@ -20,18 +20,27 @@ using UnityEngine.UI;
 
 namespace Google.Maps.Demos.Zoinkies
 {
+    /// <summary>
+    /// This class handles the how to play screen.
+    /// </summary>
     public class HowToPlayDialog : BaseView
     {
+        /// <summary>
+        /// Reference to the go to map button
+        /// </summary>
         public Button MapButton;
+        /// <summary>
+        /// Reference to the next step button
+        /// </summary>
         public Button NextButton;
 
-        private void Start()
+        void Start()
         {
             Assert.IsNotNull(MapButton);
             Assert.IsNotNull(NextButton);
         }
 
-        private void OnEnable()
+        void OnEnable()
         {
             bool IsFTUEComplete = PlayerPrefs.HasKey(GameConstants.FTUE_COMPLETE);
             MapButton.gameObject.SetActive(IsFTUEComplete);

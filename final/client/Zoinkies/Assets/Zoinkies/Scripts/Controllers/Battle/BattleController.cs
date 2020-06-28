@@ -22,7 +22,7 @@ namespace Google.Maps.Demos.Zoinkies
     /// <summary>
     ///     This class handles the firing animation of a laser beam during the battle sequence.
     /// </summary>
-    public class AvatarBattleController : MonoBehaviour
+    public class BattleController : MonoBehaviour
     {
         /// <summary>
         ///     Keeps track of the laser beam scale. We use the scale property to "fire" the laser.

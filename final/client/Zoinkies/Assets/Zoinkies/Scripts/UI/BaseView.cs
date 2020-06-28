@@ -25,6 +25,10 @@ namespace Google.Maps.Demos.Zoinkies
     /// </summary>
     public class BaseView : MonoBehaviour
     {
+        /// <summary>
+        /// This onclose event is used to notify other game components such as the UI Manager
+        /// that this view has been closed.
+        /// </summary>
         public UnityAction OnClose;
     }
 }

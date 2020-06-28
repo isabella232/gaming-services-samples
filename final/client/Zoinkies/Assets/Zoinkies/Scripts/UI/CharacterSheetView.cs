@@ -77,11 +77,6 @@ namespace Google.Maps.Demos.Zoinkies
         public MicroInventoryController Portraits;
 
         /// <summary>
-        ///     Reference to player service
-        /// </summary>
-        private readonly PlayerService service = PlayerService.GetInstance();
-
-        /// <summary>
         ///     Shield selector
         /// </summary>
         public MicroInventoryController Shields;
@@ -92,7 +87,73 @@ namespace Google.Maps.Demos.Zoinkies
         public MicroInventoryController Weapons;
 
         /// <summary>
-        ///     Checks if we are in FTUE. Completes FTUE.
+        ///     Reference to player service
+        /// </summary>
+        private PlayerService _playerService = PlayerService.GetInstance();
+
+        /// <summary>
+        ///     Initializes player stats and inventory from player data.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator Init()
+        {
+            yield return new WaitUntil(() => _playerService.IsInitialized);
+
+            AvatarName.text = _playerService.AvatarName;
+
+            if (_playerService.GetMaxEnergyLevel() != 0)
+            {
+                Lives.size = (float) _playerService.GetEnergyLevel() / _playerService.GetMaxEnergyLevel();
+            }
+
+            GoldKeyQuantity.text = _playerService.GetNumberOfGoldKeys().ToString("N0");
+            DiamondKeyQuantity.text = _playerService.GetNumberOfDiamondKeys().ToString("N0");
+            DefenseIconScore.text = _playerService.GetDefenseScore().ToString("N0");
+            AttackIconScore.text = _playerService.GetAttackScore().ToString("N0");
+            FreedLeadersQuantity.text = _playerService.GetNumberOfFreedLeaders().ToString("N0");
+
+            Portraits.InitItems(new List<Item>(_playerService.GetAvatars()), _playerService.AvatarType);
+            Portraits.SelectionChanged += id =>
+            {
+                _playerService.AvatarType = id;
+            };
+            Weapons.InitItems(new List<Item>(_playerService.GetWeapons()), _playerService.EquippedWeapon);
+            Weapons.SelectionChanged += id =>
+            {
+                _playerService.EquippedWeapon = id;
+                AttackIconScore.text = _playerService.GetAttackScore().ToString("N0");
+            };
+            BodyArmors.InitItems(new List<Item>(_playerService.GetBodyArmors()),
+                _playerService.EquippedBodyArmor);
+            BodyArmors.SelectionChanged += id =>
+            {
+                _playerService.EquippedBodyArmor = id;
+                DefenseIconScore.text = _playerService.GetDefenseScore().ToString("N0");
+            };
+            Helmets.InitItems(new List<Item>(_playerService.GetHelmets()), _playerService.EquippedHelmet);
+            Helmets.SelectionChanged += id =>
+            {
+                _playerService.EquippedHelmet = id;
+                DefenseIconScore.text = _playerService.GetDefenseScore().ToString("N0");
+            };
+            Shields.InitItems(new List<Item>(_playerService.GetShields()), _playerService.EquippedShield);
+            Shields.SelectionChanged += id =>
+            {
+                _playerService.EquippedShield = id;
+                DefenseIconScore.text = _playerService.GetDefenseScore().ToString("N0");
+            };
+        }
+
+        /// <summary>
+        ///     Updates the player name if it has changed.
+        /// </summary>
+        public void OnNameChanged()
+        {
+            _playerService.AvatarName = AvatarName.text;
+        }
+
+        /// <summary>
+        ///     Checks if we are in First Time User Experience. Completes the FTUE.
         /// </summary>
         private void OnEnable()
         {
@@ -103,74 +164,6 @@ namespace Google.Maps.Demos.Zoinkies
             }
 
             StartCoroutine(Init());
-        }
-
-        /// <summary>
-        ///     Initializes player stats and inventory from player data.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerator Init()
-        {
-            yield return new WaitUntil(() => service.IsInitialized);
-
-            AvatarName.text = service.AvatarName;
-
-            if (service.GetMaxEnergyLevel() != 0)
-            {
-                Lives.size = (float) service.GetEnergyLevel() / service.GetMaxEnergyLevel();
-            }
-
-            GoldKeyQuantity.text = service.GetNumberOfGoldKeys().ToString("N0");
-            DiamondKeyQuantity.text = service.GetNumberOfDiamondKeys().ToString("N0");
-            DefenseIconScore.text = service.GetDefenseScore().ToString("N0");
-            AttackIconScore.text = service.GetAttackScore().ToString("N0");
-            FreedLeadersQuantity.text = service.GetNumberOfFreedLeaders().ToString("N0");
-
-            Portraits.InitItems(new List<Item>(service.GetAvatars()), service.AvatarType);
-            Portraits.SelectionChanged += id =>
-            {
-                Debug.Log("Character type changed");
-                service.AvatarType = id;
-            };
-
-            Weapons.InitItems(new List<Item>(service.GetWeapons()), service.EquippedWeapon);
-            Weapons.SelectionChanged += id =>
-            {
-                Debug.Log("Weapon type changed");
-                service.EquippedWeapon = id;
-                AttackIconScore.text = service.GetAttackScore().ToString("N0");
-            };
-            BodyArmors.InitItems(new List<Item>(service.GetBodyArmors()),
-                service.EquippedBodyArmor);
-            BodyArmors.SelectionChanged += id =>
-            {
-                Debug.Log("Body Armor changed");
-                service.EquippedBodyArmor = id;
-                DefenseIconScore.text = service.GetDefenseScore().ToString("N0");
-            };
-            Helmets.InitItems(new List<Item>(service.GetHelmets()), service.EquippedHelmet);
-            Helmets.SelectionChanged += id =>
-            {
-                Debug.Log("Helmet changed");
-                service.EquippedHelmet = id;
-                DefenseIconScore.text = service.GetDefenseScore().ToString("N0");
-            };
-            Shields.InitItems(new List<Item>(service.GetShields()), service.EquippedShield);
-            Shields.SelectionChanged += id =>
-            {
-                Debug.Log("Shield changed");
-                service.EquippedShield = id;
-                DefenseIconScore.text = service.GetDefenseScore().ToString("N0");
-            };
-        }
-
-        /// <summary>
-        ///     Updates the player name if it has changed.
-        /// </summary>
-        public void OnNameChanged()
-        {
-            service.AvatarName = AvatarName.text;
-            Debug.Log("New name " + service.AvatarName);
         }
     }
 }

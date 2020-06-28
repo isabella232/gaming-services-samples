@@ -21,20 +21,37 @@ using UnityEngine.UI;
 
 namespace Google.Maps.Demos.Zoinkies
 {
+    /// <summary>
+    /// This class handles the loading animation.
+    /// When active, it displays a glass panel that blocks events to the UI.
+    /// </summary>
     public class LoadingDialog : BaseView
     {
+        /// <summary>
+        /// The rotation speed of the busy visual
+        /// </summary>
+        public float RotationSpeed = 50f;
+        /// <summary>
+        /// A reference to the busy visual
+        /// </summary>
+        public Image Spinner;
+        /// <summary>
+        /// A callback to the caller
+        /// </summary>
         private Action callback;
 
-        public float RotationSpeed = 50f;
-        public Image Spinner;
-
-        private void Start()
+        /// <summary>
+        /// Checks the validity of the attributes
+        /// </summary>
+        void Start()
         {
             Assert.IsNotNull(Spinner);
         }
 
-        // Init is called once per frame
-        private void Update()
+        /// <summary>
+        /// Rotates the spinner
+        /// </summary>
+        void Update()
         {
             // Rotate spinner if available
             Spinner.rectTransform.Rotate(Vector3.forward, -RotationSpeed * Time.deltaTime);

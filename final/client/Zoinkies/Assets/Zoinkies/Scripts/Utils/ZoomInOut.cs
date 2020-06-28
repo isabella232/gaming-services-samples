@@ -23,10 +23,15 @@ namespace Google.Maps.Demos.Zoinkies
     /// </summary>
     public class ZoomInOut : MonoBehaviour
     {
+        /// <summary>
+        /// Reference to the active camera
+        /// </summary>
         public Camera Camera;
 
-        // Init is called once per frame
-        private void Update()
+        /// <summary>
+        /// Updates the field of view when some keyboard keys are activated.
+        /// </summary>
+        void Update()
         {
             if (Input.GetKey(KeyCode.Q))
             {
