@@ -68,162 +68,202 @@ namespace Google.Maps.Demos.Zoinkies
         /// A reference to the attach button
         /// </summary>
         public Button AttackButton;
+
         /// <summary>
         /// A reference to the attack score
         /// </summary>
         public Text AvatarAttackScore;
+
         /// <summary>
         /// A reference to the defense score
         /// </summary>
         public Text AvatarDefenseScore;
+
         /// <summary>
         /// A reference to the feedback text
         /// </summary>
         public Text Feedback;
+
         /// <summary>
         /// A reference to the white flash when player is hit
         /// </summary>
         public Flash HitFlash;
+
         /// <summary>
         /// A reference to the player lives scrollbar
         /// </summary>
         public Scrollbar Lives;
+
         /// <summary>
         /// A reference to the NPC health slider
         /// </summary>
         public Slider NPCHealthSlider;
+
         /// <summary>
         /// A reference to the NPC health slide fill image
         /// </summary>
         public Image NPCHealthSliderFillImage;
+
         /// <summary>
         /// A reference to the boss battle controller
         /// </summary>
         public BattleController npcGeneral;
+
         /// <summary>
         /// A reference to the minion battle controller
         /// </summary>
         public BattleController npcMinion;
+
         /// <summary>
         /// A reference to the player battle controller
         /// </summary>
         public BattleController player;
+
         /// <summary>
         /// A reference to the player cooldown slider
         /// </summary>
         public Slider PlayerCooldownSlider;
+
         /// <summary>
         /// A time out on the feedback text before it disappears from the screen
         /// </summary>
         private const float SHOW_FEEDBACK_TIMEOUT = 2f;
+
         /// <summary>
         /// The current npc battle controller. It could be either a Boss or a Minion.
         /// </summary>
         private BattleController _npcBattleController;
+
         /// <summary>
         /// A reference to the battle data loaded from the server
         /// </summary>
         private BattleData _battleData;
+
         /// <summary>
         /// Is the battle still on?
         /// </summary>
         private bool _isBattleOn;
+
         /// <summary>
         /// The initial count down before the battle starts
         /// </summary>
         private int _battleStartCountDown = 3;
+
         /// <summary>
         /// Event triggered when the battle ends
         /// </summary>
         private Action<bool> _onBattleEnds;
+
         /// <summary>
         /// A counter to the battle start
         /// </summary>
         private float _battleStartCounter;
+
         /// <summary>
         /// The current time on the feedback timer
         /// </summary>
         private float _feedbackTimeCounter;
+
         /// <summary>
         /// Should we show the text feedback?
         /// </summary>
         private bool _showFeedback;
+
         /// <summary>
         /// The maximum NPC energy level
         /// </summary>
         private int _maximumNPCEnergyLevel;
+
         /// <summary>
         /// Should we show the NPC attack animation?
         /// </summary>
         private bool _showNPCAttackAnimation;
+
         /// <summary>
         /// The NPC attack score
         /// </summary>
         private int _npcAttackScore;
+
         /// <summary>
         /// The NPC cooldown
         /// </summary>
         private TimeSpan _npcCooldown;
+
         /// <summary>
         /// The current state of the battle for NPC
         /// </summary>
         private BATTLE_STATES _npcCurrentState;
+
         /// <summary>
         /// The NPC defense score
         /// </summary>
         private int _npcDefenseScore;
+
         /// <summary>
         /// The NPC actual energy level
         /// </summary>
         private int _currentNPCEnergyLevel;
+
         /// <summary>
         /// Should we play the NPC hit animation?
         /// </summary>
         private bool _showNPCHitAnimation;
+
         /// <summary>
         /// The NPC cooldown timer
         /// </summary>
         private float _npcTimeCounter;
+
         /// <summary>
         /// A reference to the NPC Stats
         /// </summary>
         private ReferenceItem _npcStats;
+
         /// <summary>
         /// The player base attack score
         /// </summary>
         private int _playerBaseAttackScore;
+
         /// <summary>
         /// The player base defense score
         /// </summary>
         private int _playerBaseDefenseScore;
+
         /// <summary>
         /// The player cooldown duration
         /// </summary>
         private TimeSpan _playerCooldownDuration;
+
         /// <summary>
         /// The Player current state
         /// </summary>
         private BATTLE_STATES _playerCurrentState;
+
         /// <summary>
         /// Should we show the avatar attack animation?
         /// </summary>
         private bool _avatarAttackAnimation;
+
         /// <summary>
         /// Should we show the avatar hit animation?
         /// </summary>
         private bool _avatarHitAnimation;
+
         /// <summary>
         /// A reference to the avatar cooldown counter
         /// </summary>
         private float _avatarCooldownCounter;
+
         /// <summary>
         /// A reference to the reference service (used to get access to the NPC stats among others)
         /// </summary>
         private ReferenceService _referenceService;
+
         /// <summary>
         /// A reference to the player service
         /// </summary>
         private PlayerService _playerService;
+
         /// <summary>
         /// A reference to the UI Manager
         /// </summary>
@@ -546,10 +586,10 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         /// Plays the "player is hit" animation
         /// </summary>
-        /// <param name="dmg"></param>
-        private void PlayPlayerIsHitAnimation(int dmg)
+        /// <param name="damage"></param>
+        private void PlayPlayerIsHitAnimation(int damage)
         {
-            Feedback.text = "-" + dmg;
+            Feedback.text = "-" + damage;
             Feedback.color = Color.red;
             _showFeedback = true;
             HitFlash.OnHit();
@@ -558,15 +598,15 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         /// Plays the "NPC is hit" animation
         /// </summary>
-        /// <param name="dmg"></param>
-        private void PlayNPCIsHitAnimation(int dmg)
+        /// <param name="damage"></param>
+        private void PlayNPCIsHitAnimation(int damage)
         {
             // Adjust the value and colour of the slider.
-            _currentNPCEnergyLevel -= dmg;
+            _currentNPCEnergyLevel -= damage;
             NPCHealthSlider.value = _currentNPCEnergyLevel;
             float fill = (float) _currentNPCEnergyLevel / _maximumNPCEnergyLevel * 100;
             NPCHealthSliderFillImage.color = Color.Lerp(Color.red, Color.green, fill);
-            Feedback.text = "-" + dmg;
+            Feedback.text = "-" + damage;
             Feedback.color = Color.green;
             _showFeedback = true;
         }

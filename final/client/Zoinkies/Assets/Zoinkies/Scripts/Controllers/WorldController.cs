@@ -300,7 +300,7 @@ namespace Google.Maps.Demos.Zoinkies
         {
             if (PlayerService.GetInstance().DataHasChanged)
             {
-                StartCoroutine(ServerManager.PostPlayerData(PlayerService.GetInstance().data,
+                StartCoroutine(ServerManager.PostPlayerData(PlayerService.GetInstance().Data,
                     data => { PlayerService.GetInstance().Init(data); }, OnError));
             }
         }
@@ -394,7 +394,7 @@ namespace Google.Maps.Demos.Zoinkies
 
             StartCoroutine(ServerManager.PostPlayerData(null, data =>
             {
-                PlayerService.GetInstance().data = data;
+                PlayerService.GetInstance().Init(data);
                 _startupCheckList.Remove(PLAYER_DATA_INITIALIZED);
                 CheckStartConditions();
             }, s => { Debug.LogError(s); }));

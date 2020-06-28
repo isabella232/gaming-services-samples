@@ -30,15 +30,15 @@ namespace Google.Maps.Demos.Zoinkies
     /// </summary>
     public class ReferenceData
     {
-        public ReferenceData()
-        {
-            references = new List<ReferenceItem>();
-        }
-
         /// <summary>
         ///     List of all references used in the game.
         /// </summary>
         public List<ReferenceItem> references { get; set; }
+
+        public ReferenceData()
+        {
+            references = new List<ReferenceItem>();
+        }
 
         public override string ToString()
         {

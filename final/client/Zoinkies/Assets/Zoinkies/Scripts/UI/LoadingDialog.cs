@@ -31,10 +31,12 @@ namespace Google.Maps.Demos.Zoinkies
         /// The rotation speed of the busy visual
         /// </summary>
         public float RotationSpeed = 50f;
+
         /// <summary>
         /// A reference to the busy visual
         /// </summary>
         public Image Spinner;
+
         /// <summary>
         /// A callback to the caller
         /// </summary>

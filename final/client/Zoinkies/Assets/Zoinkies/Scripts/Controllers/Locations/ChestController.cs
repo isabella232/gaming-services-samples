@@ -104,6 +104,7 @@ namespace Google.Maps.Demos.Zoinkies
                 {
                     IsLoading = false;
                     UIManager.OnShowLoadingView(false);
+                    Debug.LogError(e.ToString());
                 }
             }
             else

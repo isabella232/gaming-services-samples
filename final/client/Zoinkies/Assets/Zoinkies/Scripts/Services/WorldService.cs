@@ -56,7 +56,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// Keeps a reference to the world data.
         /// World data can only be changed through the init function.
         /// </summary>
-        private WorldData _data { get; set; }
+        private WorldData _data;
 
         /// <summary>
         ///     Initializes World Data.
@@ -80,7 +80,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Returns spawn locations ids.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A list of location ids</returns>
         /// <exception cref="Exception">Exception if world data is not initialized</exception>
         public IEnumerable<string> GetSpawnLocationsIds()
         {
@@ -91,18 +91,6 @@ namespace Google.Maps.Demos.Zoinkies
 
             return _data.locations.Keys;
         }
-
-        /*
-        public string GetLastServerTimeSnapshot()
-        {
-            if (_data == null)
-            {
-                throw new System.Exception("World data not initialized!");
-            }
-
-            return _data.currentServerTime;
-        }
-        */
 
         /// <summary>
         ///     Returns the spawn location identified by the given id.

@@ -36,18 +36,9 @@ namespace Google.Maps.Demos.Zoinkies
         public Animator SpaceShipAnimator;
 
         /// <summary>
-        ///     Triggers a full restart
-        /// </summary>
-        public void OnResetClicked()
-        {
-            // Trigger a full restart
-            NewGame?.Invoke();
-        }
-
-        /// <summary>
         ///     Shows the idle animation
         /// </summary>
-        private void OnEnable()
+        void OnEnable()
         {
             if (SpaceShipAnimator != null)
             {
@@ -59,12 +50,21 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Disables the idle animation
         /// </summary>
-        private void OnDisable()
+        void OnDisable()
         {
             if (SpaceShipAnimator != null)
             {
                 SpaceShipAnimator.enabled = false;
             }
+        }
+
+        /// <summary>
+        ///     Triggers a full restart
+        /// </summary>
+        public void OnResetClicked()
+        {
+            // Trigger a full restart
+            NewGame?.Invoke();
         }
     }
 }

@@ -79,25 +79,43 @@ namespace Google.Maps.Demos.Zoinkies
         }
 
         public PlayerData(
+            long id,
             string name,
-            string CharacterType,
-            int EnergyLevel,
-            int MaxEnergyLevel,
-            string EquippedWeapon,
-            string EquippedHelmet,
-            string EquippedBodyArmor,
-            string EquippedShield,
-            List<Item> Inventory)
+            string characterType,
+            int energyLevel,
+            int maxEnergyLevel,
+            string equippedWeapon,
+            string equippedHelmet,
+            string equippedBodyArmor,
+            string equippedShield,
+            List<Item> inventory)
         {
+            this.id = id;
             this.name = name;
-            characterType = CharacterType;
-            energyLevel = EnergyLevel;
-            maxEnergyLevel = MaxEnergyLevel;
-            equippedWeapon = EquippedWeapon;
-            equippedHelmet = EquippedHelmet;
-            equippedBodyArmor = EquippedBodyArmor;
-            equippedShield = EquippedShield;
-            inventory = Inventory;
+            this.characterType = characterType;
+            this.energyLevel = energyLevel;
+            this.maxEnergyLevel = maxEnergyLevel;
+            this.equippedWeapon = equippedWeapon;
+            this.equippedHelmet = equippedHelmet;
+            this.equippedBodyArmor = equippedBodyArmor;
+            this.equippedShield = equippedShield;
+            this.inventory = inventory;
+        }
+
+        public PlayerData Clone()
+        {
+            return new PlayerData(
+                id,
+                name,
+                characterType,
+                energyLevel,
+                maxEnergyLevel,
+                equippedWeapon,
+                equippedHelmet,
+                equippedBodyArmor,
+                equippedShield,
+                new List<Item>(inventory)
+                );
         }
 
         public override string ToString()

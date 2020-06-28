@@ -29,6 +29,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// Reference to the go to map button
         /// </summary>
         public Button MapButton;
+
         /// <summary>
         /// Reference to the next step button
         /// </summary>

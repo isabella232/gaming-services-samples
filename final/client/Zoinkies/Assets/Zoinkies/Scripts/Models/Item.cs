@@ -14,34 +14,38 @@
  * limitations under the License.
  */
 
-/**
- * Models a game item. Items can be anything, from a character type to a spawn location
- * to a reward item.
- */
-
-public class Item
+namespace Google.Maps.Demos.Zoinkies
 {
     /// <summary>
-    /// Unique identifier for this item.
-    /// This id is reconciled with the reference data loaded from the server.
+    /// Models a game item. Items can be anything, from a character type to a spawn location
+    /// to a reward item.
     /// </summary>
-    public string id { get; set; }
-    /// <summary>
-    /// Quantity owned.
-    /// </summary>
-    public int quantity { get; set; }
+    public class Item
+    {
+        /// <summary>
+        /// Unique identifier for this item.
+        /// This id is reconciled with the reference data loaded from the server.
+        /// </summary>
+        public string id { get; set; }
 
-    public Item()
-    {
-    }
+        /// <summary>
+        /// Quantity owned.
+        /// </summary>
+        public int quantity { get; set; }
 
-    public Item(string ObjectType, int Quantity)
-    {
-        id = ObjectType;
-        quantity = Quantity;
-    }
-    public override string ToString()
-    {
-        return "{Type: " + id + " Quantity: " + quantity + "}";
+        public Item()
+        {
+        }
+
+        public Item(string ObjectType, int Quantity)
+        {
+            id = ObjectType;
+            quantity = Quantity;
+        }
+
+        public override string ToString()
+        {
+            return "{Type: " + id + " Quantity: " + quantity + "}";
+        }
     }
 }

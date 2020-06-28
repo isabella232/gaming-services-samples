@@ -53,20 +53,24 @@ namespace Google.Maps.Demos.Zoinkies
         public bool DataHasChanged { get; set; }
 
         /// <summary>
-        ///     Direct access to player data.
-        ///     This is only accessible to other services or managers.
+        /// Returns a copy of player data
         /// </summary>
-        internal PlayerData data { get; set; }
+        public PlayerData Data => _data.Clone();
+
+        /// <summary>
+        ///     Reference to player data
+        /// </summary>
+        private PlayerData _data;
 
         /// <summary>
         ///     Returns the avatar name.
         /// </summary>
         public string AvatarName
         {
-            get => data.name;
+            get => _data.name;
             set
             {
-                data.name = value;
+                _data.name = value;
                 DataHasChanged = true;
             }
         }
@@ -76,10 +80,10 @@ namespace Google.Maps.Demos.Zoinkies
         /// </summary>
         public string EquippedHelmet
         {
-            get => data.equippedHelmet;
+            get => _data.equippedHelmet;
             set
             {
-                data.equippedHelmet = value;
+                _data.equippedHelmet = value;
                 DataHasChanged = true;
             }
         }
@@ -89,10 +93,10 @@ namespace Google.Maps.Demos.Zoinkies
         /// </summary>
         public string EquippedShield
         {
-            get => data.equippedShield;
+            get => _data.equippedShield;
             set
             {
-                data.equippedShield = value;
+                _data.equippedShield = value;
                 DataHasChanged = true;
             }
         }
@@ -102,10 +106,10 @@ namespace Google.Maps.Demos.Zoinkies
         /// </summary>
         public string EquippedBodyArmor
         {
-            get => data.equippedBodyArmor;
+            get => _data.equippedBodyArmor;
             set
             {
-                data.equippedBodyArmor = value;
+                _data.equippedBodyArmor = value;
                 DataHasChanged = true;
             }
         }
@@ -115,10 +119,10 @@ namespace Google.Maps.Demos.Zoinkies
         /// </summary>
         public string EquippedWeapon
         {
-            get => data.equippedWeapon;
+            get => _data.equippedWeapon;
             set
             {
-                data.equippedWeapon = value;
+                _data.equippedWeapon = value;
                 DataHasChanged = true;
             }
         }
@@ -128,10 +132,10 @@ namespace Google.Maps.Demos.Zoinkies
         /// </summary>
         public string AvatarType
         {
-            get => data.characterType;
+            get => _data.characterType;
             set
             {
-                data.characterType = value;
+                _data.characterType = value;
                 DataHasChanged = true;
             }
         }
@@ -156,7 +160,7 @@ namespace Google.Maps.Demos.Zoinkies
                 throw new System.Exception("Invalid player data. Can't be null!");
             }
 
-            this.data = data;
+            _data = data;
             IsInitialized = true;
             DataHasChanged = false;
         }
@@ -179,7 +183,7 @@ namespace Google.Maps.Demos.Zoinkies
         {
             // Attack score is sum of all attack scores from character type and equipped weapon
             int score = 0;
-            ReferenceItem type = _referenceService.GetItem(data.characterType);
+            ReferenceItem type = _referenceService.GetItem(_data.characterType);
             score += type.attackScore;
 
             if (EquippedWeapon != null)
@@ -198,7 +202,7 @@ namespace Google.Maps.Demos.Zoinkies
         {
             // Attack score is sum of all attack scores from character type and equipped weapon
             int score = 0;
-            ReferenceItem type = _referenceService.GetItem(data.characterType);
+            ReferenceItem type = _referenceService.GetItem(_data.characterType);
             score += type.defenseScore;
 
             if (EquippedBodyArmor != null)
@@ -225,12 +229,12 @@ namespace Google.Maps.Demos.Zoinkies
         /// <param name="value">The amount to increase the energy by.</param>
         public void IncreaseEnergyLevel(int value)
         {
-            if (data == null)
+            if (_data == null)
             {
                 throw new System.Exception(" data not initialized!");
             }
 
-            data.energyLevel = Math.Min(data.energyLevel + value, data.maxEnergyLevel);
+            _data.energyLevel = Math.Min(_data.energyLevel + value, _data.maxEnergyLevel);
             DataHasChanged = true;
         }
 
@@ -240,12 +244,12 @@ namespace Google.Maps.Demos.Zoinkies
         /// <param name="value">The amount to decrease the energy by</param>
         public void DecreaseEnergyLevel(int value)
         {
-            if (data == null)
+            if (_data == null)
             {
                 throw new System.Exception(" data not initialized!");
             }
 
-            data.energyLevel = Math.Max(data.energyLevel - value, 0);
+            _data.energyLevel = Math.Max(_data.energyLevel - value, 0);
             DataHasChanged = true;
         }
 
@@ -255,7 +259,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// <returns></returns>
         public int GetEnergyLevel()
         {
-            return data.energyLevel;
+            return _data.energyLevel;
         }
 
         /// <summary>
@@ -264,7 +268,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// <returns></returns>
         public int GetMaxEnergyLevel()
         {
-            return data.maxEnergyLevel;
+            return _data.maxEnergyLevel;
         }
 
         /// <summary>
@@ -280,21 +284,21 @@ namespace Google.Maps.Demos.Zoinkies
                 throw new System.Exception("Invalid items list input!");
             }
 
-            if (data == null)
+            if (_data == null)
             {
                 throw new System.Exception("data not initialized!");
             }
 
             foreach (Item item in items)
             {
-                Item i = data.inventory.Find(s => s.id == item.id);
+                Item i = _data.inventory.Find(s => s.id == item.id);
                 if (i != null)
                 {
                     i.quantity += i.quantity;
                 }
                 else
                 {
-                    data.inventory.Add(item);
+                    _data.inventory.Add(item);
                 }
             }
 
@@ -309,7 +313,7 @@ namespace Google.Maps.Demos.Zoinkies
         {
             int qty = 0;
 
-            Item i = data.inventory.Find(s => s.id == GameConstants.GOLD_KEY);
+            Item i = _data.inventory.Find(s => s.id == GameConstants.GOLD_KEY);
             if (i != null)
             {
                 qty = i.quantity;
@@ -326,7 +330,7 @@ namespace Google.Maps.Demos.Zoinkies
         {
             int qty = 0;
 
-            Item i = data.inventory.Find(s => s.id == GameConstants.DIAMOND_KEY);
+            Item i = _data.inventory.Find(s => s.id == GameConstants.DIAMOND_KEY);
             if (i != null)
             {
                 qty = i.quantity;
@@ -343,7 +347,7 @@ namespace Google.Maps.Demos.Zoinkies
         {
             int qty = 0;
 
-            Item i = data.inventory.Find(s => s.id == GameConstants.FREED_LEADERS);
+            Item i = _data.inventory.Find(s => s.id == GameConstants.FREED_LEADERS);
             if (i != null)
             {
                 qty = i.quantity;
@@ -358,7 +362,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// <returns></returns>
         public IEnumerable<Item> GetWeapons()
         {
-            if (data == null)
+            if (_data == null)
             {
                 throw new System.Exception(" data not initialized!");
             }
@@ -366,7 +370,7 @@ namespace Google.Maps.Demos.Zoinkies
             IEnumerable<ReferenceItem> refItems = _referenceService.GetWeapons();
             List<string> ids = refItems.Select(item => item.id).ToList();
 
-            return data.inventory.Where(s => ids.Contains(s.id));
+            return _data.inventory.Where(s => ids.Contains(s.id));
         }
 
         /// <summary>
@@ -375,7 +379,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// <returns></returns>
         public IEnumerable<Item> GetAvatars()
         {
-            if (data == null)
+            if (_data == null)
             {
                 throw new System.Exception(" data not initialized!");
             }
@@ -383,7 +387,7 @@ namespace Google.Maps.Demos.Zoinkies
             IEnumerable<ReferenceItem> refItems = _referenceService.GetAvatars();
             List<string> ids = refItems.Select(item => item.id).ToList();
 
-            return data.inventory.Where(s => ids.Contains(s.id));
+            return _data.inventory.Where(s => ids.Contains(s.id));
         }
 
         /// <summary>
@@ -392,7 +396,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// <returns></returns>
         public IEnumerable<Item> GetBodyArmors()
         {
-            if (data == null)
+            if (_data == null)
             {
                 throw new System.Exception(" data not initialized!");
             }
@@ -400,7 +404,7 @@ namespace Google.Maps.Demos.Zoinkies
             IEnumerable<ReferenceItem> refItems = _referenceService.GetBodyArmors();
             List<string> ids = refItems.Select(item => item.id).ToList();
 
-            return data.inventory.Where(s => ids.Contains(s.id));
+            return _data.inventory.Where(s => ids.Contains(s.id));
         }
 
         /// <summary>
@@ -409,7 +413,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// <returns></returns>
         public IEnumerable<Item> GetHelmets()
         {
-            if (data == null)
+            if (_data == null)
             {
                 throw new System.Exception(" data not initialized!");
             }
@@ -417,7 +421,7 @@ namespace Google.Maps.Demos.Zoinkies
             IEnumerable<ReferenceItem> refItems = _referenceService.GetHelmets();
             List<string> ids = refItems.Select(item => item.id).ToList();
 
-            return data.inventory.Where(s => ids.Contains(s.id));
+            return _data.inventory.Where(s => ids.Contains(s.id));
         }
 
         /// <summary>
@@ -426,7 +430,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// <returns></returns>
         public IEnumerable<Item> GetShields()
         {
-            if (data == null)
+            if (_data == null)
             {
                 throw new System.Exception(" data not initialized!");
             }
@@ -434,7 +438,7 @@ namespace Google.Maps.Demos.Zoinkies
             IEnumerable<ReferenceItem> refItems = _referenceService.GetShields();
             List<string> ids = refItems.Select(item => item.id).ToList();
 
-            return data.inventory.Where(s => ids.Contains(s.id));
+            return _data.inventory.Where(s => ids.Contains(s.id));
         }
     }
 }

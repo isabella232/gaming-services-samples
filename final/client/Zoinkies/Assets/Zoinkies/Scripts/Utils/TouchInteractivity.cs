@@ -30,15 +30,18 @@ namespace Google.Maps.Demos.Zoinkies
         /// Triggered when the object is touched / clicked on
         /// </summary>
         public UnityEvent OnClicked;
+
         /// <summary>
         /// Used to keep a reference on the camera, which might change as we load/unload
         /// the world scene
         /// </summary>
         public Camera activeCamera;
+
         /// <summary>
         /// Used for detecting hit on the gameobject
         /// </summary>
         private RaycastHit hit;
+
         /// <summary>
         /// Ray sent from the screen touched point to the target
         /// </summary>

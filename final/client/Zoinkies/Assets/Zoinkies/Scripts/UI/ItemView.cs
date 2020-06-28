@@ -28,26 +28,32 @@ namespace Google.Maps.Demos.Zoinkies
         /// A reference to the item description
         /// </summary>
         public Text ItemDescription;
+
         /// <summary>
         /// A reference to the item icon
         /// </summary>
         public Image ItemIcon;
+
         /// <summary>
         /// A reference to the item name
         /// </summary>
         public Text ItemName;
+
         /// <summary>
         /// A reference to the item quantity
         /// </summary>
         public Text ItemQuantity;
+
         /// <summary>
         /// A reference to the item id
         /// </summary>
         public string Id => _data.id;
+
         /// <summary>
         /// A reference to the properties of the item
         /// </summary>
         private ReferenceItem _referenceData;
+
         /// <summary>
         /// The actual quantities owned
         /// </summary>

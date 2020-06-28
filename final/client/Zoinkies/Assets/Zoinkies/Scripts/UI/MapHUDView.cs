@@ -23,7 +23,5 @@ namespace Google.Maps.Demos.Zoinkies
     /// </summary>
     public class MapHUDView : BaseView
     {
-        //public UnityAction OnShowCharacterSheet;
-        //public UnityAction OnShowHelp;
     }
 }

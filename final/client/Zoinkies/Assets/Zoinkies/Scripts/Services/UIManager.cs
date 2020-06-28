@@ -142,35 +142,41 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Shows the Message dialog
         /// </summary>
-        public void OnShowMessageDialog(string msg)
+        /// <param name="message">The message to display</param>
+        public void OnShowMessageDialog(string message)
         {
-            MessageDialog.Init(msg);
+            MessageDialog.Init(message);
             MessageDialog.gameObject.SetActive(true);
         }
 
         /// <summary>
         ///     Shows the Message dialog (Timer option)
         /// </summary>
-        public void OnShowMessageDialog(string msg, TimeSpan ts)
+        /// <param name="message">The message to display</param>
+        /// <param name="timeLeft">The time left on a timer</param>
+        public void OnShowMessageDialog(string message, TimeSpan timeLeft)
         {
-            MessageDialog.Init(msg, ts);
+            MessageDialog.Init(message, timeLeft);
             MessageDialog.gameObject.SetActive(true);
         }
 
         /// <summary>
         ///     Activates the Battle screen. This switches the game to Battle mode.
         /// </summary>
-        public void OnShowBattleView(BattleData data, Action<bool> OnBattleEnds)
+        /// <param name="data">The battle data</param>
+        /// <param name="onBattleEnds">The callback triggered when battle ends</param>
+        public void OnShowBattleView(BattleData data, Action<bool> onBattleEnds)
         {
             // Notify the game that we are switching from world to battleground
             ShowBattleground?.Invoke();
-            BattleView.Init(data, OnBattleEnds);
+            BattleView.Init(data, onBattleEnds);
             ShowView(BattleView);
         }
 
         /// <summary>
         ///     Activates the loading screen. This screen behaves like a modal dialog.
         /// </summary>
+        /// <param name="bool">A boolean to show or hide a view</param>
         public void OnShowLoadingView(bool show)
         {
             LoadingDialog.gameObject.SetActive(show);
@@ -179,6 +185,8 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Activates the Battle defeat screen
         /// </summary>
+        /// <param name="title">A title for the dialog</param>
+        /// <param name="items">A list of items</param>
         public void OnShowLootResultsDialog(string title, List<Item> items)
         {
             LootResultsDialog.Init(title, items);
@@ -232,7 +240,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// Callback triggered when an error message is bubbled up to the UI by other
         /// game components.
         /// </summary>
-        /// <param name="errorMsg"The error message></param>
+        /// <param name="errorMsg">The error message></param>
         public void OnError(string errorMsg)
         {
             StatusMsg.text = errorMsg;
@@ -267,15 +275,15 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Helper function to show the given view and hide all others.
         /// </summary>
-        /// <param name="view"></param>
-        /// <exception cref="Exception"></exception>
+        /// <param name="view">The view to show</param>
+        /// <exception cref="Exception">Exception if the view is invalid</exception>
         private void ShowView(BaseView view)
         {
             StatusMsg.text = "";
 
             if (view == null)
             {
-                throw new System.Exception("Invalid view gameobject!");
+                throw new System.Exception("Invalid view object!");
             }
 
             if (_currentView != null)

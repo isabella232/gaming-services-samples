@@ -31,22 +31,27 @@ namespace Google.Maps.Demos.Zoinkies
         /// A reference to the message widget
         /// </summary>
         public Text Message;
+
         /// <summary>
         /// Is the timer option active?
         /// </summary>
         private bool _hasTimer;
+
         /// <summary>
         /// Keeps track of the original message
         /// </summary>
         private string _message = "";
+
         /// <summary>
         /// Keeps track of time count
         /// </summary>
         private float _ticker;
+
         /// <summary>
         /// The duration of one tick (default is 1s)
         /// </summary>
         private const float TIMEOUT = 1f;
+
         /// <summary>
         /// The time left on the timer
         /// </summary>

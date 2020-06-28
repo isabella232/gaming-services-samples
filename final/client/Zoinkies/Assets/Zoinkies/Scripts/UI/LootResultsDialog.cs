@@ -31,6 +31,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// A reference to the items collection shown on screen
         /// </summary>
         public GameObject ItemsContainer;
+
         /// <summary>
         /// The title of the dialog
         /// </summary>

@@ -23,14 +23,14 @@ namespace Google.Maps.Demos.Zoinkies
     /// </summary>
     public class RewardsData
     {
-        public RewardsData()
-        {
-            items = new List<Item>();
-        }
-
         /// <summary>
         ///     List of items
         /// </summary>
         public List<Item> items { get; set; }
+
+        public RewardsData()
+        {
+            items = new List<Item>();
+        }
     }
 }
