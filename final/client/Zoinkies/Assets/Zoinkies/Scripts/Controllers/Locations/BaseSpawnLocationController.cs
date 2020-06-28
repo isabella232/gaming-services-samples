@@ -70,19 +70,31 @@ namespace Google.Maps.Demos.Zoinkies
             UpdateImpl();
         }
 
-        public void Init(string LocationId)
+        /// <summary>
+        /// Initializes this location with the information associated to the provided location id
+        /// </summary>
+        /// <param name="locationId"></param>
+        public void Init(string locationId)
         {
-            this.LocationId = LocationId;
-            location = WorldService.GetInstance().GetSpawnLocation(LocationId);
+            LocationId = locationId;
+            location = WorldService.GetInstance().GetSpawnLocation(locationId);
 
             UIManager = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UIManager>();
             ServerManager = GameObject.FindGameObjectWithTag("ServerManager")
                 .GetComponent<ServerManager>();
         }
 
+        /// <summary>
+        /// Triggered when the location is touched.
+        /// This function also detects how far the location is from the avatar.
+        /// </summary>
+        /// <remarks>
+        /// Only objects within reach can be interacted with.
+        /// The current maximum distance is arbitrarily set to 250 meters.
+        /// </remarks>
         public void OnClicked()
         {
-            // Detect how far we are from the avatar
+            //
             // We need to be within range
             GameObject avatar = GameObject.FindWithTag("Player");
             if (avatar != null)
@@ -145,7 +157,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         /// Base class implementation for server errors.
         /// </summary>
-        /// <param name="error"></param>
+        /// <param name="error">The error message string</param>
         protected virtual void OnError(string error)
         {
             Debug.LogError(error);

@@ -27,6 +27,11 @@ namespace Google.Maps.Demos.Zoinkies
     /// </summary>
     public class EnergyStationController : BaseSpawnLocationController
     {
+        /// <summary>
+        /// Implementation of the action state.
+        /// If the location is not respawning, the function makes a server call to retrieve
+        /// the amount of energy restored for the avatar.
+        /// </summary>
         protected override void ActionState()
         {
             if (IsLoading)
@@ -74,6 +79,7 @@ namespace Google.Maps.Demos.Zoinkies
 
         /// <summary>
         /// Triggered when the server request to refill the player's energy returns successfully.
+        /// This code starts the respawn on the energy station.
         /// </summary>
         /// <param name="data"></param>
         private void OnSuccess(EnergyData data)

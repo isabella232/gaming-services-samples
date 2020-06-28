@@ -56,7 +56,9 @@ namespace Google.Maps.Demos.Zoinkies
         }
 
         /// <summary>
-        /// Implementation of the Start function, triggered in the base class.
+        /// Implementation of the action state.
+        /// The code checks the prerequisites for the chest location, and triggers a request
+        /// to the server to get the content of the chest if conditions are met.
         /// </summary>
         protected override void ActionState()
         {
@@ -69,7 +71,7 @@ namespace Google.Maps.Demos.Zoinkies
 
             if (string.IsNullOrEmpty(LocationId))
             {
-                Debug.LogError("Incorrect PlaceId!");
+                Debug.LogError("Incorrect Location Id!");
                 return;
             }
 
@@ -93,9 +95,6 @@ namespace Google.Maps.Demos.Zoinkies
                 && PlayerService.GetInstance().GetNumberOfGoldKeys() >=
                 location.number_of_keys_to_activate)
             {
-                // All good. Let's request our rewards
-                Debug.Log("Pre reqs met!");
-
                 try
                 {
                     IsLoading = true;
@@ -103,7 +102,6 @@ namespace Google.Maps.Demos.Zoinkies
                 }
                 catch (System.Exception e)
                 {
-                    Debug.LogError("Failed to open chest! " + e);
                     IsLoading = false;
                     UIManager.OnShowLoadingView(false);
                 }
@@ -111,7 +109,6 @@ namespace Google.Maps.Demos.Zoinkies
             else
             {
                 UIManager.OnShowLoadingView(false);
-                Debug.Log("Pre reqs not met!");
                 UIManager.OnShowMessageDialog("You need "
                                               + location.number_of_keys_to_activate
                                               + " Gold Keys. \n You have "
@@ -122,6 +119,7 @@ namespace Google.Maps.Demos.Zoinkies
 
         /// <summary>
         /// Triggered when the server call to get the chest details returns successfully.
+        /// This function sets the chest in respawn mode.
         /// </summary>
         /// <param name="data">Rewards data provided by the server.</param>
         private void OnSuccess(RewardsData data)

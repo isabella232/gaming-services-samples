@@ -22,58 +22,66 @@ using UnityEngine.UI;
 namespace Google.Maps.Demos.Zoinkies
 {
     /// <summary>
-    /// This class represents a mini inventory for a specific collection of game items.
-    /// Game items could be weapons, body armors or event character types.
-    /// The controller keeps track of the actual inventory of the item type and
-    /// provides support for navigating forward and backward through the inventory.
+    ///     This class represents a mini inventory for a specific collection of game items.
+    ///     Game items could be weapons, body armors or event character types.
+    ///     The controller keeps track of the actual inventory of the item type and
+    ///     provides support for navigating forward and backward through the inventory.
     /// </summary>
-    /// <remarks>Some collections might be empty. When this happens, both navigation buttons
-    /// are disabled, and no item is shown.  If later an item is added to this inventory
-    /// but isn't selected, we still display an empty visual but the navigation buttons
-    /// are now enabled.
+    /// <remarks>
+    ///     Some collections might be empty. When this happens, both navigation buttons
+    ///     are disabled, and no item is shown.  If later an item is added to this inventory
+    ///     but isn't selected, we still display an empty visual but the navigation buttons
+    ///     are now enabled.
     /// </remarks>
     public class MicroInventoryController : MonoBehaviour
     {
+
         /// <summary>
-        /// Reference to the item view prefab
-        /// </summary>
-        public ItemView ItemViewPrefab;
-        /// <summary>
-        /// Reference to the inventory of items
+        ///     Reference to the inventory of items
         /// </summary>
         public List<ItemView> ItemsCollection;
+
         /// <summary>
-        /// Reference to the top items container
+        ///     Reference to the top items container
         /// </summary>
         public GameObject ItemsContainer;
+
         /// <summary>
-        /// Reference to the left arrow (cycles through the collection backward)
+        ///     Reference to the item view prefab
+        /// </summary>
+        public ItemView ItemViewPrefab;
+
+        /// <summary>
+        ///     Reference to the left arrow (cycles through the collection backward)
         /// </summary>
         public Button LeftArrow;
+
         /// <summary>
-        /// Reference to the right arrow (cycles through the collection forward)
+        ///     Reference to the right arrow (cycles through the collection forward)
         /// </summary>
         public Button RightArrow;
+
         /// <summary>
-        /// Event triggered if the selection has changed
+        ///     Event triggered if the selection has changed
         /// </summary>
         public Action<string> SelectionChanged;
+
         /// <summary>
-        /// Reference to the current selection
+        ///     Reference to the current selection
         /// </summary>
         private ItemView _currentSelection;
 
         /// <summary>
-        /// Initializes an empty collection of items
+        ///     Initializes an empty collection of items
         /// </summary>
-        void Start()
+        private void Start()
         {
             ItemsCollection = new List<ItemView>();
         }
 
 
         /// <summary>
-        /// Initializes the micro inventory with a new selection and a selected element.
+        ///     Initializes the micro inventory with a new selection and a selected element.
         /// </summary>
         /// <param name="selection">The new selection</param>
         /// <param name="id">The selected item</param>
@@ -108,7 +116,7 @@ namespace Google.Maps.Demos.Zoinkies
         }
 
         /// <summary>
-        /// Sets the active item to the item identified by the provided id.
+        ///     Sets the active item to the item identified by the provided id.
         /// </summary>
         /// <param name="id"></param>
         public void SetItem(string id)
@@ -130,7 +138,7 @@ namespace Google.Maps.Demos.Zoinkies
         }
 
         /// <summary>
-        /// Triggered when the left button is touched
+        ///     Triggered when the left button is touched
         /// </summary>
         public void OnShowPrevious()
         {
@@ -160,7 +168,7 @@ namespace Google.Maps.Demos.Zoinkies
         }
 
         /// <summary>
-        /// Triggered when the next button is touched
+        ///     Triggered when the next button is touched
         /// </summary>
         public void OnShowNext()
         {

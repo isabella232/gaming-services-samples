@@ -3162,7 +3162,7 @@ GameObject:
   - component: {fileID: 623374033}
   - component: {fileID: 623374036}
   m_Layer: 11
-  m_Name: AvatarInBattle
+  m_Name: AvatarBattle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -30,7 +30,7 @@ using Random = UnityEngine.Random;
 namespace Google.Maps.Demos.Zoinkies
 {
     /// <summary>
-    /// String event class used to pass string parameters to other Unity gameobjects.
+    ///     String event class used to pass string parameters to other Unity gameobjects.
     /// </summary>
     [Serializable]
     public class StringEvent : UnityEvent<string>
@@ -38,13 +38,11 @@ namespace Google.Maps.Demos.Zoinkies
     }
 
     /// <summary>
-    /// This class initializes reference, player, map data.
-    /// It also manages the creation and maintenance of spawned game objects.
+    ///     This class initializes reference, player, map data.
+    ///     It also manages the creation and maintenance of spawned game objects.
     /// </summary>
     public class WorldController : BaseMapLoader
     {
-        #region properties
-
         /// <summary>
         ///     Dispatched to the game when Reference Data, World Data and Player Data
         ///     are initialized.
@@ -210,8 +208,6 @@ namespace Google.Maps.Demos.Zoinkies
         /// </summary>
         private float _currentTimer;
 
-        #endregion
-
         /// <summary>
         ///     Sets up the setup milestones list.
         ///     Loads reference data and player data.
@@ -331,8 +327,8 @@ namespace Google.Maps.Demos.Zoinkies
         }
 
         /// <summary>
-        /// Event listener triggered by the game when transitioning from Battle to World Mode.
-        /// References to this method are implicit.
+        ///     Event listener triggered by the game when transitioning from Battle to World Mode.
+        ///     References to this method are implicit.
         /// </summary>
         public void OnShowWorld()
         {
@@ -347,8 +343,8 @@ namespace Google.Maps.Demos.Zoinkies
         }
 
         /// <summary>
-        /// Event listener triggered by the game when transitioning from World to Battle Mode.
-        /// References to this method are implicit.
+        ///     Event listener triggered by the game when transitioning from World to Battle Mode.
+        ///     References to this method are implicit.
         /// </summary>
         public void OnShowBattleground()
         {
@@ -416,6 +412,10 @@ namespace Google.Maps.Demos.Zoinkies
         ///     Otherwise use the default position, which is currently the Googleplex
         ///     in Mountain View, CA
         /// </summary>
+        /// <param name="onInitComplete">
+        ///     The callback triggered when we have a valid location info
+        /// </param>
+        /// <returns>An enumerator for a coroutine</returns>
         protected IEnumerator GetGPSLocation(Action<LocationInfo> onInitComplete)
         {
             Assert.IsNotNull(onInitComplete);
@@ -423,7 +423,6 @@ namespace Google.Maps.Demos.Zoinkies
             // Invalidate the previous position
             HasGPSLocation = false;
             LocationInfo locInfo = new LocationInfo();
-            Debug.Log("Location services enabled " + Input.location.isEnabledByUser);
 
             if (Input.location.isEnabledByUser)
             {
@@ -441,7 +440,6 @@ namespace Google.Maps.Demos.Zoinkies
                 // Service didn't initialize in 20 seconds
                 if (maxWait < 1)
                 {
-                    Debug.Log("Timed out");
                     onInitComplete.Invoke(locInfo);
                     yield break;
                 }
@@ -449,7 +447,6 @@ namespace Google.Maps.Demos.Zoinkies
                 // Connection has failed
                 if (Input.location.status == LocationServiceStatus.Failed)
                 {
-                    Debug.Log("Unable to determine device location");
                     // Failed to get
                     onInitComplete.Invoke(locInfo);
                     yield break;
@@ -457,14 +454,6 @@ namespace Google.Maps.Demos.Zoinkies
 
                 locInfo = Input.location.lastData;
                 HasGPSLocation = true;
-
-                // Access granted and location value could be retrieved
-                Debug.Log("Location: " + Input.location.lastData.latitude + " " +
-                          Input.location.lastData.longitude +
-                          " " +
-                          Input.location.lastData.altitude + " " +
-                          Input.location.lastData.horizontalAccuracy + " " +
-                          Input.location.lastData.timestamp);
 
                 // Success - locInfo is set
                 onInitComplete.Invoke(locInfo);
@@ -587,7 +576,7 @@ namespace Google.Maps.Demos.Zoinkies
         ///     GPS position.
         /// </summary>
         /// <param name="currentPosition">The current lat lng of our avatar</param>
-        /// <param name="radius">The radius of the map area around us</param>
+        /// <param name="distance">The radius of the map area around us</param>
         private void UpdateWorldData(LatLng currentPosition, float distance)
         {
             if (!_worldDataIsLoading)
@@ -613,8 +602,8 @@ namespace Google.Maps.Demos.Zoinkies
         ///     Creates all new spawn locations for the game from the World Data provided
         ///     by the server.
         /// </summary>
-        /// <param name="wd">World Data</param>
-        private void CreateNewLocations(WorldData wd)
+        /// <param name="worldData">World Data</param>
+        private void CreateNewLocations(WorldData worldData)
         {
             // Render the new data on the map:
             // Only render the playable locations that are within range of the loaded map.
@@ -639,7 +628,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// <param name="collection">A collection of spawn locations</param>
         /// <param name="prefab">The prefab to instantiate for each location</param>
         /// <param name="container">The container that holds all created gameobjects</param>
-        /// <returns></returns>
+        /// <returns>The amount of created assets</returns>
         private int CreateAssets(
             IEnumerable<SpawnLocation> collection,
             GameObject prefab,
@@ -692,12 +681,12 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         /// Triggered when a valid location info is returned from the Unity Input locations service.
         /// </summary>
-        /// <param name="locInfo">Location Info</param>
-        private void OnLocationServicesEvalComplete(LocationInfo locInfo)
+        /// <param name="locationInfo">Location Info</param>
+        private void OnLocationServicesEvalComplete(LocationInfo locationInfo)
         {
             if (HasGPSLocation) // aka we were able to get a valid GPS location
             {
-                LatLng = new LatLng(locInfo.latitude, locInfo.longitude);
+                LatLng = new LatLng(locationInfo.latitude, locationInfo.longitude);
                 MapsService.MoveFloatingOrigin(LatLng);
                 Avatar.transform.position = MapsService.Coords.FromLatLngToVector3(LatLng);
             }
@@ -733,11 +722,11 @@ namespace Google.Maps.Demos.Zoinkies
         /// Note that by world data we imply all game specific locations as opposed to maps data
         /// loaded through the Maps Unity SDK.
         /// </summary>
-        /// <param name="wd">World Data</param>
-        private void OnWorldDataLoaded(WorldData wd)
+        /// <param name="worldData">World Data</param>
+        private void OnWorldDataLoaded(WorldData worldData)
         {
             // Init the playerservice with the new batch of data
-            WorldService.GetInstance().Init(wd);
+            WorldService.GetInstance().Init(worldData);
 
             // Init gameobjects on the map
             IEnumerable<string> keysFromWorldData =
@@ -755,7 +744,7 @@ namespace Google.Maps.Demos.Zoinkies
             }
 
             // Add all new locations
-            CreateNewLocations(wd);
+            CreateNewLocations(worldData);
 
             // Show/hide objects based on distance from avatar
             foreach (string k in _spawnedGameObjects.Keys)
@@ -777,23 +766,23 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         /// Triggered when any server call fails with errors.
         /// </summary>
-        /// <param name="errMsg"></param>
-        private void OnError(string errMsg)
+        /// <param name="errorMessage">An error message</param>
+        private void OnError(string errorMessage)
         {
-            Debug.LogError(errMsg);
+            Debug.LogError(errorMessage);
             if (_worldDataIsLoading)
             {
                 _worldDataIsLoading = false;
             }
 
             // Dispatches an event to the game. This eventually bubbles up to the user interface.
-            GameLoadingError?.Invoke(errMsg);
+            GameLoadingError?.Invoke(errorMessage);
         }
 
         /// <summary>
         ///     Clears all children of a transform
         /// </summary>
-        /// <param name="container"></param>
+        /// <param name="container">A gameobject container</param>
         private void ClearContainer(Transform container)
         {
             foreach (Transform child in container)
@@ -809,10 +798,10 @@ namespace Google.Maps.Demos.Zoinkies
         ///     The Squasher MonoBehaviour reduced the vertical scale of the GameObject's transform
         ///     when a building object is nearby.
         /// </remarks>
-        /// <param name="go">The GameObject to which to add the Squasher behaviour.</param>
-        private void AddSquasher(GameObject go)
+        /// <param name="target">The GameObject to which to add the Squasher behaviour.</param>
+        private void AddSquasher(GameObject target)
         {
-            Squasher squasher = go.AddComponent<Squasher>();
+            Squasher squasher = target.AddComponent<Squasher>();
             squasher.Target = Avatar.transform;
             squasher.Near = SquashNear;
             squasher.Far = SquashFar;

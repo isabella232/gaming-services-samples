@@ -33,7 +33,8 @@ namespace Google.Maps.Demos.Zoinkies
     {
         /// <summary>
         /// Implementation of the action state.
-        /// This function checks if the tower is respawning and it the pre-requisites are met to
+        /// This function checks if all pre-requisites are met to interact with the tower.
+        /// If all conditions are met, it triggers a call to the server to get battle details.
         /// </summary>
         protected override void ActionState()
         {
@@ -53,20 +54,6 @@ namespace Google.Maps.Demos.Zoinkies
             // Check if this station is active?
             // If not show a floating popup with timeout information
             location = WorldService.GetInstance().GetSpawnLocation(LocationId);
-
-            /*
-            if (WorldService.GetInstance().IsRespawning(LocationId))
-            {
-                DateTime t = DateTime.Parse(location.respawn_time);
-                TimeSpan timeLeft = t.Subtract(DateTime.Now);
-
-                // Hide Minion... until it is respawned
-                UIManager.OnShowLoadingView(false);
-
-                UIManager.OnShowMessageDialog("Minion in transit", timeLeft);
-                return;
-            }
-            */
 
             // Check pre-requisites
             if (location.key_type_id == GameConstants.DIAMOND_KEY

@@ -25,11 +25,6 @@ namespace Google.Maps.Demos.Zoinkies
     public class BattleController : MonoBehaviour
     {
         /// <summary>
-        ///     Keeps track of the laser beam scale. We use the scale property to "fire" the laser.
-        /// </summary>
-        private Vector3 _laserBeamScale;
-
-        /// <summary>
         ///     Reference to the laser beam object.
         /// </summary>
         public Transform LaserBeam;
@@ -45,9 +40,14 @@ namespace Google.Maps.Demos.Zoinkies
         public Transform Weapon;
 
         /// <summary>
+        ///     Keeps track of the laser beam scale. We use the scale property to "fire" the laser.
+        /// </summary>
+        private Vector3 _laserBeamScale;
+
+        /// <summary>
         ///     Initializes the laser beam properties.
         /// </summary>
-        private void Awake()
+        void Awake()
         {
             _laserBeamScale = LaserBeam.localScale;
         }
@@ -55,7 +55,9 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Called by the game, this function triggers the shooting animation sequence.
         /// </summary>
-        /// <param name="missed"></param>
+        /// <param name="missed">
+        ///     Indicates if this shooting action has reached or missed the target
+        /// </param>
         public void OnShoot(bool missed = false)
         {
             StartCoroutine(Shoot(missed));
@@ -63,7 +65,8 @@ namespace Google.Maps.Demos.Zoinkies
 
         /// <summary>
         ///     Implements the shoot sequence.
-        ///     If the attacker "misses", an offset is applied to the target point to indicate the miss.
+        ///     If the attacker "misses", an offset is applied to the target point
+        ///     to indicate the miss.
         /// </summary>
         /// <param name="missed">
         ///     Indicates if this shooting action has reached or missed the target
