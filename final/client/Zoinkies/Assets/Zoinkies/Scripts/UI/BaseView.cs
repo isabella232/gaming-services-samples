@@ -30,5 +30,11 @@ namespace Google.Maps.Demos.Zoinkies
         /// that this view has been closed.
         /// </summary>
         public UnityAction OnClose;
+
+        public void Close()
+        {
+            OnClose?.Invoke();
+            gameObject.SetActive(false);
+        }
     }
 }

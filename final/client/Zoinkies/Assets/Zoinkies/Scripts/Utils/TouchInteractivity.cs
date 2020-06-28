@@ -32,53 +32,40 @@ namespace Google.Maps.Demos.Zoinkies
         public UnityEvent OnClicked;
 
         /// <summary>
-        /// Used to keep a reference on the camera, which might change as we load/unload
-        /// the world scene
-        /// </summary>
-        public Camera activeCamera;
-
-        /// <summary>
         /// Used for detecting hit on the gameobject
         /// </summary>
         private RaycastHit hit;
 
-        /// <summary>
-        /// Ray sent from the screen touched point to the target
-        /// </summary>
-        private Ray ray;
-
-        private void Start()
-        {
-            activeCamera = Camera.main;
-        }
-
         // Init is called once per frame
         private void Update()
         {
-            if (activeCamera != null)
+            if (Camera.main == null)
             {
-                #if UNITY_EDITOR
-                if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+                return;
+            }
+
+            #if UNITY_EDITOR
+            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            #endif
+
+            #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
+            // Detect a touch on the parent gameobject
+            // If detected, trigger a OnButtonPressedImpl action
+
+            if ((Input.touchCount > 0) && (Input.GetTouch(0).phase == TouchPhase.Began)
+                && !EventSystem.current.IsPointerOverGameObject(Input.touches[0].fingerId))
+            {
+                ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
+            #endif
+                if (Physics.Raycast(ray, out hit, 1000.0f))
                 {
-                    ray = activeCamera.ScreenPointToRay(Input.mousePosition);
-                #endif
-
-                #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
-                // Detect a touch on the parent gameobject
-                // If detected, trigger a OnButtonPressedImpl action
-
-                if ((Input.touchCount > 0) && (Input.GetTouch(0).phase == TouchPhase.Began)
-                    && !EventSystem.current.IsPointerOverGameObject(Input.touches[0].fingerId)) {
-                    ray = activeCamera.ScreenPointToRay(Input.GetTouch(0).position);
-                #endif
-                    if (Physics.Raycast(ray, out hit, 1000.0f))
+                    if (hit.transform != null && hit.transform.gameObject == gameObject)
                     {
-                        if (hit.transform != null && hit.transform.gameObject == gameObject)
+                        if (OnClicked != null)
                         {
-                            if (OnClicked != null)
-                            {
-                                OnClicked.Invoke();
-                            }
+                            OnClicked.Invoke();
                         }
                     }
                 }

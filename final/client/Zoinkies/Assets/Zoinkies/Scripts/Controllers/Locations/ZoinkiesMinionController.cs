@@ -109,7 +109,7 @@ namespace Google.Maps.Demos.Zoinkies
             }
             catch (System.Exception e)
             {
-                Debug.LogError("Failed to open chest! " + e);
+                Debug.LogError("Failed to get battle data! " + e);
                 IsLoading = false;
                 UIManager.OnShowLoadingView(false);
             }

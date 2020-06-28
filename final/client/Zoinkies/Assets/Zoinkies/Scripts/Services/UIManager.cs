@@ -288,7 +288,7 @@ namespace Google.Maps.Demos.Zoinkies
 
             if (_currentView != null)
             {
-                _currentView.OnClose?.Invoke();
+                _currentView.Close();
             }
 
             // Hide all other views

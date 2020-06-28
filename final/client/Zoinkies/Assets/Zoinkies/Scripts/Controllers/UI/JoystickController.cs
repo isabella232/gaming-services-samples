@@ -174,7 +174,7 @@ namespace Google.Maps.Demos.Zoinkies
         }
 
         /// <summary>
-        ///     Implements the IPointerUpHandler interface.
+        ///     Implements the IPointerDownHandler interface.
         ///     Applies changes in similar ways to the OnDrag function.
         /// </summary>
         /// <param name="ped">The pointer event data</param>
@@ -184,7 +184,7 @@ namespace Google.Maps.Demos.Zoinkies
         }
 
         /// <summary>
-        ///     Implements the IPointerDownHandler interface.
+        ///     Implements the IPointerUpHandler interface.
         ///     Resets the position of the joystick knob and the direction vector.
         /// </summary>
         /// <param name="ped">The pointer event data</param>

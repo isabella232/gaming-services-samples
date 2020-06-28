@@ -174,6 +174,7 @@ namespace Google.Maps.Demos.Zoinkies
         ///     Returns the avatar's cooldown parameter.
         /// </summary>
         /// <returns>A duration</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
         public TimeSpan GetCooldown()
         {
             ReferenceItem weaponRef = _referenceService.GetItem(EquippedWeapon);
@@ -184,8 +185,14 @@ namespace Google.Maps.Demos.Zoinkies
         ///     Returns the avatar's attack score.
         /// </summary>
         /// <returns>The attack score as int</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
         public int GetAttackScore()
         {
+            if (_data == null)
+            {
+                throw new System.Exception("Data not initialized!");
+            }
+
             // Attack score is sum of all attack scores from character type and equipped weapon
             int score = 0;
             ReferenceItem type = _referenceService.GetItem(_data.characterType);
@@ -203,9 +210,16 @@ namespace Google.Maps.Demos.Zoinkies
         ///     Returns the avatar's defense score.
         /// </summary>
         /// <returns>The defense score as int</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
         public int GetDefenseScore()
         {
-            // Attack score is sum of all attack scores from character type and equipped weapon
+            if (_data == null)
+            {
+                throw new System.Exception("Data not initialized!");
+            }
+
+            // Defense score is sum of all defense scores from character type
+            // and equipped defensive items
             int score = 0;
             ReferenceItem type = _referenceService.GetItem(_data.characterType);
             score += type.defenseScore;
@@ -232,6 +246,7 @@ namespace Google.Maps.Demos.Zoinkies
         ///     Increases the avatar's energy level.
         /// </summary>
         /// <param name="value">The amount to increase the energy by.</param>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
         public void IncreaseEnergyLevel(int value)
         {
             if (_data == null)
@@ -247,6 +262,7 @@ namespace Google.Maps.Demos.Zoinkies
         ///     Decreases the avatar's energy level.
         /// </summary>
         /// <param name="value">The amount to decrease the energy by</param>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
         public void DecreaseEnergyLevel(int value)
         {
             if (_data == null)
@@ -261,26 +277,36 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Returns the avatar's energy level.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The current energy level</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
         public int GetEnergyLevel()
         {
+            if (_data == null)
+            {
+                throw new System.Exception("Data not initialized!");
+            }
             return _data.energyLevel;
         }
 
         /// <summary>
         ///     Returns the avatar's max energy level.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The maximum energy level</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
         public int GetMaxEnergyLevel()
         {
+            if (_data == null)
+            {
+                throw new System.Exception("Data not initialized!");
+            }
             return _data.maxEnergyLevel;
         }
 
         /// <summary>
         ///     Adds new items or updates quantities of existing ones.
         /// </summary>
-        /// <param name="items"></param>
-        /// <exception cref="Exception"></exception>
+        /// <param name="items">The new collection of items to add</param>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
         public void AddToInventory(List<Item> items)
         {
             // Add all items in the list to the current inventory
@@ -313,9 +339,14 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Returns the amount of gold keys in the player's inventory.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A collection of gold keys</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
         public int GetNumberOfGoldKeys()
         {
+            if (_data == null)
+            {
+                throw new System.Exception("Data not initialized!");
+            }
             int qty = 0;
 
             Item i = _data.inventory.Find(s => s.id == GameConstants.GOLD_KEY);
@@ -330,9 +361,14 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Returns the amount of diamond keys in the player's inventory.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A collection of diamond keys</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
         public int GetNumberOfDiamondKeys()
         {
+            if (_data == null)
+            {
+                throw new System.Exception("Data not initialized!");
+            }
             int qty = 0;
 
             Item i = _data.inventory.Find(s => s.id == GameConstants.DIAMOND_KEY);
@@ -347,9 +383,14 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Returns the amount of freed leaders.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A collection of freed leaders</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
         public int GetNumberOfFreedLeaders()
         {
+            if (_data == null)
+            {
+                throw new System.Exception("Data not initialized!");
+            }
             int qty = 0;
 
             Item i = _data.inventory.Find(s => s.id == GameConstants.FREED_LEADERS);
@@ -364,7 +405,8 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Returns all weapons in the player's inventory.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A collection of weapons</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
         public IEnumerable<Item> GetWeapons()
         {
             if (_data == null)
@@ -381,7 +423,8 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Returns all avatar types available to the player.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A collection of avatar types</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
         public IEnumerable<Item> GetAvatars()
         {
             if (_data == null)
@@ -398,7 +441,8 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Returns all body armors in the player's inventory.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A collection of body armors</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
         public IEnumerable<Item> GetBodyArmors()
         {
             if (_data == null)
@@ -415,7 +459,8 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Returns all helmets in the player's inventory.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A collection of helmets</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
         public IEnumerable<Item> GetHelmets()
         {
             if (_data == null)
@@ -432,7 +477,8 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Returns all shields in the player's inventory.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A collection of shields</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
         public IEnumerable<Item> GetShields()
         {
             if (_data == null)

@@ -29,6 +29,16 @@ namespace Google.Maps.Demos.Zoinkies
         public Camera Camera;
 
         /// <summary>
+        /// Maximum field of view for the main camera
+        /// </summary>
+        public float MaximumFieldOfView = 110f;
+
+        /// <summary>
+        /// Minimum field of view for the main camera
+        /// </summary>
+        public float MinimumFieldOfView = 25f;
+
+        /// <summary>
         /// Updates the field of view when some keyboard keys are activated.
         /// </summary>
         void Update()
@@ -37,14 +47,14 @@ namespace Google.Maps.Demos.Zoinkies
             {
                 // Zoom in
                 Camera.fieldOfView += 1;
-                Camera.fieldOfView = Mathf.Min(110f, Camera.fieldOfView);
+                Camera.fieldOfView = Mathf.Min(MaximumFieldOfView, Camera.fieldOfView);
             }
 
             if (Input.GetKey(KeyCode.E))
             {
                 // Zoom out
                 Camera.fieldOfView -= 1;
-                Camera.fieldOfView = Mathf.Max(25f, Camera.fieldOfView);
+                Camera.fieldOfView = Mathf.Max(MinimumFieldOfView, Camera.fieldOfView);
             }
         }
     }

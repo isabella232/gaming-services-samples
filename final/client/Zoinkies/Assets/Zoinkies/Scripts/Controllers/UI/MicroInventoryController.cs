@@ -82,9 +82,9 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Initializes the micro inventory with a new selection and a selected element.
         /// </summary>
-        /// <param name="selection">The new selection</param>
-        /// <param name="id">The selected item</param>
-        public void InitItems(List<Item> selection, string id)
+        /// <param name="choices">The new selection</param>
+        /// <param name="selectedItemId">The selected item</param>
+        public void InitItems(List<Item> choices, string selectedItemId)
         {
             // Delete current items
             foreach (Transform child in ItemsContainer.transform)
@@ -94,16 +94,16 @@ namespace Google.Maps.Demos.Zoinkies
 
             ItemsCollection.Clear();
 
-            if (selection != null)
+            if (choices != null)
             {
-                foreach (Item i in selection)
+                foreach (Item i in choices)
                 {
                     ItemView itemView = Instantiate(ItemViewPrefab, ItemsContainer.transform);
                     itemView.Init(i);
                     ItemsCollection.Add(itemView);
 
-                    itemView.gameObject.SetActive(i.id == id);
-                    if (i.id == id)
+                    itemView.gameObject.SetActive(i.id == selectedItemId);
+                    if (i.id == selectedItemId)
                     {
                         _currentSelection = itemView;
                     }
@@ -177,22 +177,22 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Sets the active item to the item identified by the provided id.
         /// </summary>
-        /// <param name="id"></param>
-        private void SetItem(string id)
+        /// <param name="selectedItemId"></param>
+        private void SetItem(string selectedItemId)
         {
             if (_currentSelection != null)
             {
                 _currentSelection.gameObject.SetActive(false);
             }
 
-            ItemView selection = ItemsCollection.Find(s => s.Id == id);
+            ItemView selection = ItemsCollection.Find(s => s.Id == selectedItemId);
             if (selection != null)
             {
                 _currentSelection = selection;
                 _currentSelection.gameObject.SetActive(true);
 
                 // Send new selected id
-                SelectionChanged?.Invoke(id);
+                SelectionChanged?.Invoke(selectedItemId);
             }
         }
     }

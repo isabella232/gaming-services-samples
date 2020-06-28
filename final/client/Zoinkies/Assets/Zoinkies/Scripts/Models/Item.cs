@@ -37,10 +37,10 @@ namespace Google.Maps.Demos.Zoinkies
         {
         }
 
-        public Item(string ObjectType, int Quantity)
+        public Item(string objectType, int quantity)
         {
-            id = ObjectType;
-            quantity = Quantity;
+            id = objectType;
+            this.quantity = quantity;
         }
 
         public override string ToString()

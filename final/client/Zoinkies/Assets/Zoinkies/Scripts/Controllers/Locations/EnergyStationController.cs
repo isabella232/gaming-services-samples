@@ -48,7 +48,7 @@ namespace Google.Maps.Demos.Zoinkies
 
             if (string.IsNullOrEmpty(LocationId))
             {
-                Debug.LogError("Incorrect PlaceId!");
+                Debug.LogError("Incorrect Location Id!");
                 UIManager.OnShowLoadingView(false);
                 return;
             }
@@ -71,7 +71,7 @@ namespace Google.Maps.Demos.Zoinkies
             }
             catch (System.Exception e)
             {
-                Debug.LogError("Failed to open chest! " + e);
+                Debug.LogError("Failed to restore energy! " + e);
                 IsLoading = false;
                 UIManager.OnShowLoadingView(false);
             }
