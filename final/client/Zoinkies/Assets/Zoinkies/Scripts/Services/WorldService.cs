@@ -21,14 +21,22 @@ using System.Xml;
 
 namespace Google.Maps.Demos.Zoinkies
 {
-  /// <summary>
-  ///     This class provides access to world data through helper functions.
-  /// </summary>
-  public class WorldService
+    /// <summary>
+    ///     This class provides access to world data through helper functions.
+    /// </summary>
+    public class WorldService
     {
-        // Singleton
-        private static WorldService instance;
+        // Singleton pattern implementation
+        private static WorldService _instance;
+        public static WorldService GetInstance()
+        {
+            if (_instance == null)
+            {
+                _instance = new WorldService();
+            }
 
+            return _instance;
+        }
         private WorldService()
         {
             IsInitialized = false;
@@ -44,32 +52,25 @@ namespace Google.Maps.Demos.Zoinkies
         /// </summary>
         public bool DataHasChanged { get; set; }
 
-        internal WorldData data { get; set; }
-
-        public static WorldService GetInstance()
-        {
-            if (instance == null)
-            {
-                instance = new WorldService();
-            }
-
-            return instance;
-        }
+        /// <summary>
+        /// Keeps a reference to the world data.
+        /// World data can only be changed through the init function.
+        /// </summary>
+        private WorldData _data { get; set; }
 
         /// <summary>
         ///     Initializes World Data.
         /// </summary>
-        /// <param name="data"></param>
-        /// <exception cref="Exception"></exception>
+        /// <param name="data">A new trusted world data</param>
         public void Init(WorldData data)
         {
             if (data == null)
             {
-                this.data = new WorldData();
+                this._data = new WorldData();
             }
             else
             {
-                this.data = data;
+                this._data = data;
             }
 
             IsInitialized = true;
@@ -80,52 +81,55 @@ namespace Google.Maps.Demos.Zoinkies
         ///     Returns spawn locations ids.
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <exception cref="Exception">Exception if world data is not initialized</exception>
         public IEnumerable<string> GetSpawnLocationsIds()
         {
-            if (data == null)
+            if (_data == null)
             {
                 throw new System.Exception("World data not initialized!");
             }
 
-            return data.locations.Keys;
+            return _data.locations.Keys;
         }
 
+        /*
         public string GetLastServerTimeSnapshot()
         {
-            if (data == null)
+            if (_data == null)
             {
                 throw new System.Exception("World data not initialized!");
             }
 
-            return data.currentServerTime;
+            return _data.currentServerTime;
         }
+        */
 
         /// <summary>
         ///     Returns the spawn location identified by the given id.
         /// </summary>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public SpawnLocation GetSpawnLocation(string id)
+        /// <param name="locationId">The location id</param>
+        /// <returns>A Spawn location</returns>
+        /// <exception cref="Exception">Exception if id is invalid</exception>
+        public SpawnLocation GetSpawnLocation(string locationId)
         {
-            if (data == null)
+            if (_data == null)
             {
                 throw new System.Exception("World data not initialized!");
             }
 
-            if (string.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(locationId))
             {
                 throw new System.Exception(
                     "Invalid id found while trying to get a spawn location!");
             }
 
-            if (!data.locations.ContainsKey(id))
+            if (!_data.locations.ContainsKey(locationId))
             {
-                throw new System.Exception("Missing Spawn location with Id " + id +
+                throw new System.Exception("Missing Spawn location with Id " + locationId +
                                            " from world data!");
             }
 
-            return data.locations[id];
+            return _data.locations[locationId];
         }
 
         /// <summary>
@@ -134,24 +138,24 @@ namespace Google.Maps.Demos.Zoinkies
         ///     and respawn information.
         ///     Note that this information will be overriden after the next server sync.
         /// </summary>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public bool IsRespawning(string Id)
+        /// <param name="locationId">The location id</param>
+        /// <returns>A boolean to indicate if the location is respawning.</returns>
+        /// <exception cref="Exception">Exception if id is invalid</exception>
+        public bool IsRespawning(string locationId)
         {
-            if (string.IsNullOrEmpty(Id))
+            if (string.IsNullOrEmpty(locationId))
             {
                 throw new System.Exception("Invalid Id!");
             }
 
             // Init the spawn location respawn time and active flag (to mimic what the server will do)
             // Prevents constant syncs - the server is the final authority
-            SpawnLocation location = GetSpawnLocation(Id);
+            SpawnLocation location = GetSpawnLocation(locationId);
             if (location.respawn_time != null)
             {
                 DateTime t = DateTime.Parse(location.respawn_time);
                 if (t <= DateTime.Now)
                 {
-                    // Has respawned
                     location.respawn_time = null;
                     location.active = true;
                 }
@@ -173,18 +177,18 @@ namespace Google.Maps.Demos.Zoinkies
         ///     definition indicates that this it is respawnable.
         ///     Note that this information will be overriden after the next server sync.
         /// </summary>
-        /// <param name="Id"></param>
-        /// <exception cref="Exception"></exception>
-        public void StartRespawn(string Id)
+        /// <param name="locationId">The location id</param>
+        /// <exception cref="Exception">Exception if id is invalid</exception>
+        public void StartRespawn(string locationId)
         {
-            if (string.IsNullOrEmpty(Id))
+            if (string.IsNullOrEmpty(locationId))
             {
-                throw new System.Exception("Invalid PlaceId!");
+                throw new System.Exception("Invalid Location Id!");
             }
 
             // Init the spawn location respawn time and active flag (to mimic what the server will do)
             // Prevents constant syncs - the server is the final authority
-            SpawnLocation location = GetInstance().GetSpawnLocation(Id);
+            SpawnLocation location = GetInstance().GetSpawnLocation(locationId);
             ReferenceItem ri = ReferenceService.GetInstance().GetItem(location.object_type_id);
             if (location != null && ri != null && ri.respawnDuration != null)
             {
@@ -199,76 +203,76 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Returns all locations currently respawning.
         /// </summary>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <returns>A list of Spawn Locations</returns>
+        /// <exception cref="Exception">Exception if world data is not initialized</exception>
         public IEnumerable<SpawnLocation> GetAllRespawningLocations()
         {
-            if (data == null)
+            if (_data == null)
             {
                 throw new System.Exception("World data not initialized!");
             }
 
-            return data.locations.Values.Where(s => s.respawn_time != null);
+            return _data.locations.Values.Where(s => s.respawn_time != null);
         }
 
         /// <summary>
         ///     Returns all towers locations.
         /// </summary>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <returns>A list of Spawn Locations</returns>
+        /// <exception cref="Exception">Exception if world data is not initialized</exception>
         public IEnumerable<SpawnLocation> GetTowers()
         {
-            if (data == null)
+            if (_data == null)
             {
                 throw new System.Exception("World data not initialized!");
             }
 
-            return data.locations.Values.Where(s => s.object_type_id == GameConstants.TOWER);
+            return _data.locations.Values.Where(s => s.object_type_id == GameConstants.TOWER);
         }
 
         /// <summary>
         ///     Returns all minion locations.
         /// </summary>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <returns>A list of Spawn Locations</returns>
+        /// <exception cref="Exception">Exception if world data is not initialized</exception>
         public IEnumerable<SpawnLocation> GetMinions()
         {
-            if (data == null)
+            if (_data == null)
             {
                 throw new System.Exception("World data not initialized!");
             }
 
-            return data.locations.Values.Where(s => s.object_type_id == GameConstants.MINION);
+            return _data.locations.Values.Where(s => s.object_type_id == GameConstants.MINION);
         }
 
         /// <summary>
         ///     Returns all chests locations.
         /// </summary>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <returns>A list of Spawn Locations</returns>
+        /// <exception cref="Exception">Exception if world data is not initialized</exception>
         public IEnumerable<SpawnLocation> GetChests()
         {
-            if (data == null)
+            if (_data == null)
             {
                 throw new System.Exception("World data not initialized!");
             }
 
-            return data.locations.Values.Where(s => s.object_type_id == GameConstants.CHEST);
+            return _data.locations.Values.Where(s => s.object_type_id == GameConstants.CHEST);
         }
 
         /// <summary>
         ///     Returns all energy stations locations.
         /// </summary>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <returns>A list of Spawn Locations</returns>
+        /// <exception cref="Exception">Exception if world data is not initialized</exception>
         public IEnumerable<SpawnLocation> GetEnergyStations()
         {
-            if (data == null)
+            if (_data == null)
             {
                 throw new System.Exception("World data not initialized!");
             }
 
-            return data.locations.Values.Where(
+            return _data.locations.Values.Where(
                 s => s.object_type_id == GameConstants.ENERGY_STATION);
         }
     }

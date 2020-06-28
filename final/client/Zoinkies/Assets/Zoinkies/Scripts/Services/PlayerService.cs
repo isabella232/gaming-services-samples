@@ -21,16 +21,22 @@ using System.Xml;
 
 namespace Google.Maps.Demos.Zoinkies
 {
-  /// <summary>
-  ///     This class provides access to player data through helper functions.
-  /// </summary>
-  public class PlayerService
+    /// <summary>
+    ///     This class provides access to player data through helper functions.
+    /// </summary>
+    public class PlayerService
     {
         // Singleton pattern implementation
-        private static PlayerService instance;
+        private static PlayerService _instance;
+        public static PlayerService GetInstance()
+        {
+            if (_instance == null)
+            {
+                _instance = new PlayerService();
+            }
 
-        // Quick access to the reference service
-        private readonly ReferenceService RefService = ReferenceService.GetInstance();
+            return _instance;
+        }
         private PlayerService()
         {
             IsInitialized = false;
@@ -130,22 +136,18 @@ namespace Google.Maps.Demos.Zoinkies
             }
         }
 
-        public static PlayerService GetInstance()
-        {
-            if (instance == null)
-            {
-                instance = new PlayerService();
-            }
-
-            return instance;
-        }
+        /// <summary>
+        /// Quick access to the reference service.
+        /// </summary>
+        private readonly ReferenceService _referenceService = ReferenceService.GetInstance();
 
         /// <summary>
         ///     Initializes Player Data.
         /// </summary>
         /// <param name="data">A Player Data structure</param>
-        /// <exception cref="Exception">Throws an exception if the provided data
-        /// is invalid
+        /// <exception cref="Exception">
+        ///     Throws an exception if the provided data
+        ///     is invalid
         /// </exception>
         internal void Init(PlayerData data)
         {
@@ -165,7 +167,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// <returns>A duration</returns>
         public TimeSpan GetCooldown()
         {
-            ReferenceItem weaponRef = RefService.GetItem(EquippedWeapon);
+            ReferenceItem weaponRef = _referenceService.GetItem(EquippedWeapon);
             return XmlConvert.ToTimeSpan(weaponRef.cooldown);
         }
 
@@ -177,12 +179,12 @@ namespace Google.Maps.Demos.Zoinkies
         {
             // Attack score is sum of all attack scores from character type and equipped weapon
             int score = 0;
-            ReferenceItem type = RefService.GetItem(data.characterType);
+            ReferenceItem type = _referenceService.GetItem(data.characterType);
             score += type.attackScore;
 
             if (EquippedWeapon != null)
             {
-                score += RefService.GetItem(EquippedWeapon).attackScore;
+                score += _referenceService.GetItem(EquippedWeapon).attackScore;
             }
 
             return score;
@@ -196,22 +198,22 @@ namespace Google.Maps.Demos.Zoinkies
         {
             // Attack score is sum of all attack scores from character type and equipped weapon
             int score = 0;
-            ReferenceItem type = RefService.GetItem(data.characterType);
+            ReferenceItem type = _referenceService.GetItem(data.characterType);
             score += type.defenseScore;
 
             if (EquippedBodyArmor != null)
             {
-                score += RefService.GetItem(EquippedBodyArmor).defenseScore;
+                score += _referenceService.GetItem(EquippedBodyArmor).defenseScore;
             }
 
             if (EquippedHelmet != null)
             {
-                score += RefService.GetItem(EquippedHelmet).defenseScore;
+                score += _referenceService.GetItem(EquippedHelmet).defenseScore;
             }
 
             if (EquippedShield != null)
             {
-                score += RefService.GetItem(EquippedShield).defenseScore;
+                score += _referenceService.GetItem(EquippedShield).defenseScore;
             }
 
             return score;
@@ -361,7 +363,7 @@ namespace Google.Maps.Demos.Zoinkies
                 throw new System.Exception(" data not initialized!");
             }
 
-            IEnumerable<ReferenceItem> refItems = RefService.GetWeapons();
+            IEnumerable<ReferenceItem> refItems = _referenceService.GetWeapons();
             List<string> ids = refItems.Select(item => item.id).ToList();
 
             return data.inventory.Where(s => ids.Contains(s.id));
@@ -378,7 +380,7 @@ namespace Google.Maps.Demos.Zoinkies
                 throw new System.Exception(" data not initialized!");
             }
 
-            IEnumerable<ReferenceItem> refItems = RefService.GetAvatars();
+            IEnumerable<ReferenceItem> refItems = _referenceService.GetAvatars();
             List<string> ids = refItems.Select(item => item.id).ToList();
 
             return data.inventory.Where(s => ids.Contains(s.id));
@@ -395,7 +397,7 @@ namespace Google.Maps.Demos.Zoinkies
                 throw new System.Exception(" data not initialized!");
             }
 
-            IEnumerable<ReferenceItem> refItems = RefService.GetBodyArmors();
+            IEnumerable<ReferenceItem> refItems = _referenceService.GetBodyArmors();
             List<string> ids = refItems.Select(item => item.id).ToList();
 
             return data.inventory.Where(s => ids.Contains(s.id));
@@ -412,7 +414,7 @@ namespace Google.Maps.Demos.Zoinkies
                 throw new System.Exception(" data not initialized!");
             }
 
-            IEnumerable<ReferenceItem> refItems = RefService.GetHelmets();
+            IEnumerable<ReferenceItem> refItems = _referenceService.GetHelmets();
             List<string> ids = refItems.Select(item => item.id).ToList();
 
             return data.inventory.Where(s => ids.Contains(s.id));
@@ -429,7 +431,7 @@ namespace Google.Maps.Demos.Zoinkies
                 throw new System.Exception(" data not initialized!");
             }
 
-            IEnumerable<ReferenceItem> refItems = RefService.GetShields();
+            IEnumerable<ReferenceItem> refItems = _referenceService.GetShields();
             List<string> ids = refItems.Select(item => item.id).ToList();
 
             return data.inventory.Where(s => ids.Contains(s.id));

@@ -1799,18 +1799,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0500f56c2410b4bd2bb47813692aad27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Portraits: {fileID: 983572312}
-  Weapons: {fileID: 1914076092}
-  BodyArmors: {fileID: 157377199}
-  Helmets: {fileID: 1123549886}
-  Shields: {fileID: 1271293668}
-  GoldKeyQuantity: {fileID: 2064547423}
-  DiamondKeyQuantity: {fileID: 848850329}
-  DefenseIconScore: {fileID: 506896808}
   AttackIconScore: {fileID: 249179508}
-  FreedLeadersQuantity: {fileID: 67384728}
-  Lives: {fileID: 1284586007}
   AvatarName: {fileID: 1467318970}
+  BodyArmors: {fileID: 157377199}
+  DefenseIconScore: {fileID: 506896808}
+  DiamondKeyQuantity: {fileID: 848850329}
+  FreedLeadersQuantity: {fileID: 67384728}
+  GoldKeyQuantity: {fileID: 2064547423}
+  Helmets: {fileID: 1123549886}
+  Lives: {fileID: 1284586007}
+  Portraits: {fileID: 983572312}
+  Shields: {fileID: 1271293668}
+  Weapons: {fileID: 1914076092}
 --- !u!1 &308510630
 GameObject:
   m_ObjectHideFlags: 0
@@ -1930,8 +1930,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c7c8b4a84294091a32d925772add05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Spinner: {fileID: 53464560}
   RotationSpeed: 200
+  Spinner: {fileID: 53464560}
 --- !u!1 &378724495
 GameObject:
   m_ObjectHideFlags: 0
@@ -3637,18 +3637,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 581f29a94a8504d2da847a499fdf17aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DefenseIconScore: {fileID: 1228476736}
-  AttackIconScore: {fileID: 1156103086}
-  Lives: {fileID: 1009245859}
-  Feedback: {fileID: 439642442}
   AttackButton: {fileID: 783736892}
+  AttackIconScore: {fileID: 1156103086}
+  DefenseIconScore: {fileID: 1228476736}
+  Feedback: {fileID: 439642442}
+  HitFlash: {fileID: 1952847298}
+  Lives: {fileID: 1009245859}
+  NPCGeneralAvatar: {fileID: 4238326676139624820}
   NPCHealthSlider: {fileID: 102317152}
   NPCHealthSliderFillImage: {fileID: 102317151}
   NPCMinionAvatar: {fileID: 1475562014}
-  NPCGeneralAvatar: {fileID: 4238326676139624820}
-  PlayerCooldownSlider: {fileID: 119534593}
-  HitFlash: {fileID: 1952847298}
   PlayerAvatar: {fileID: 623374036}
+  PlayerCooldownSlider: {fileID: 119534593}
 --- !u!1 &752417402
 GameObject:
   m_ObjectHideFlags: 0
@@ -4301,12 +4301,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 862ef4d98b60945b997583ee34056aac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 911836974}
+  cameraMain: {fileID: 1334986831}
   distance: 100
   height: 35
-  rotationDamping: 3
   heightDamping: 2
-  cameraMain: {fileID: 1334986831}
+  rotationDamping: 3
+  target: {fileID: 911836974}
 --- !u!1 &862095857
 GameObject:
   m_ObjectHideFlags: 0
@@ -5707,7 +5707,7 @@ MonoBehaviour:
   SquashNear: 100
   SquashFar: 250
   MaximumSquash: 0.01
-  hasGPSLocation: 0
+  HasGPSLocation: 0
 --- !u!114 &1156814629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10489,8 +10489,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb0ad503ae5c546f08cebffc0cc78da6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Hit: {fileID: 1343820736}
   flashSpeed: 1
+  Hit: {fileID: 1343820736}
 --- !u!1 &1963103702
 GameObject:
   m_ObjectHideFlags: 0
@@ -11923,6 +11923,21 @@ PrefabInstance:
       propertyPath: StatusMsg
       value: 
       objectReference: {fileID: 1730025839}
+    - target: {fileID: 5852801550034806594, guid: e33adf88c965f4a5cb8506212009a532,
+        type: 3}
+      propertyPath: BattleView
+      value: 
+      objectReference: {fileID: 740368162}
+    - target: {fileID: 5852801550034806594, guid: e33adf88c965f4a5cb8506212009a532,
+        type: 3}
+      propertyPath: LootResultsDialog
+      value: 
+      objectReference: {fileID: 1863665567}
+    - target: {fileID: 5852801550034806594, guid: e33adf88c965f4a5cb8506212009a532,
+        type: 3}
+      propertyPath: HowToPlayDialog
+      value: 
+      objectReference: {fileID: 819174441}
     - target: {fileID: 5852801550034806593, guid: e33adf88c965f4a5cb8506212009a532,
         type: 3}
       propertyPath: m_LocalPosition.x

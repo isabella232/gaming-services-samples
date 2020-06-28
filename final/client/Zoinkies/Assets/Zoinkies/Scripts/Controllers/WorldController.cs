@@ -388,8 +388,8 @@ namespace Google.Maps.Demos.Zoinkies
 
             _gameStarted = false;
 
-            PlayerService.GetInstance().data = new PlayerData();
-            WorldService.GetInstance().data = new WorldData();
+            PlayerService.GetInstance().Init(new PlayerData());
+            WorldService.GetInstance().Init(new WorldData());
 
             // Maps data stay the same (we are at the same location)PLAYER_DATA_INITIALIZED,
             _startupCheckList = new List<string> {PLAYABLE_LOCATIONS_INITIALIZED};

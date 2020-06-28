@@ -23,24 +23,31 @@ using UnityEngine.Networking;
 
 namespace Google.Maps.Demos.Zoinkies
 {
-  /// <summary>
-  ///     Server manager that makes all REST API calls to the game server.
-  /// </summary>
-  public class ServerManager : MonoBehaviour
+    /// <summary>
+    ///     Server manager that makes all REST API calls to the game server.
+    /// </summary>
+    public class ServerManager : MonoBehaviour
     {
+        /// <summary>
+        /// The  server url used when testing locally
+        /// </summary>
         //private const string SERVER_URL = "http://localhost:8080";
+
+        /// <summary>
+        /// The url used to access the remote server
+        /// </summary>
         private const string SERVER_URL = "https://musk-samples.wl.r.appspot.com";
 
         /// <summary>
         ///     Sends battle results to the server.
         ///     The server will compute the rewards (or the penalty) depending on who wins.
         /// </summary>
-        /// <param name="placeId"></param>
-        /// <param name="Winner"></param>
-        /// <param name="onSuccess"></param>
-        /// <param name="onError"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <param name="locationId">The location id</param>
+        /// <param name="Winner">The winner of the battle</param>
+        /// <param name="onSuccess">The callback invoked when the call returns successfully</param>
+        /// <param name="onError">The callback invoked if the call fails</param>
+        /// <returns>An enumerator for the coroutine</returns>
+        /// <exception cref="Exception">Exception when location id is invalid</exception>
         public IEnumerator PostBattleSummary(
             string locationId,
             bool Winner,
@@ -54,8 +61,8 @@ namespace Google.Maps.Demos.Zoinkies
 
             using (UnityWebRequest webRequest =
                 new UnityWebRequest(
-                    SERVER_URL + "/battlesummary/" + GetUserId() + "/" + locationId + "?winner=" +
-                    Winner,
+                    SERVER_URL + "/battlesummary/" + GetUserId() + "/"
+                    + locationId + "?winner=" + Winner,
                     "POST"))
             {
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
@@ -85,26 +92,27 @@ namespace Google.Maps.Demos.Zoinkies
         }
 
         /// <summary>
-        ///     Creates or updates a new battle on the server. The data returned describes the parameter for
-        ///     the encounter.
+        ///     Creates or updates a new battle on the server.
+        ///     The data returned describes the parameter for the encounter.
         /// </summary>
-        /// <param name="placeId"></param>
-        /// <param name="onSuccess"></param>
-        /// <param name="onError"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <param name="locationId"></param>
+        /// <param name="onSuccess">The callback invoked when the call returns successfully</param>
+        /// <param name="onError">The callback invoked if the call fails</param>
+        /// <returns>An enumerator for the coroutine</returns>
+        /// <exception cref="Exception">Exception when location id is invalid</exception>
         public IEnumerator PostBattleData(
-            string placeId,
+            string locationId,
             Action<BattleData> onSuccess,
             Action<string> onError)
         {
-            if (string.IsNullOrEmpty(placeId))
+            if (string.IsNullOrEmpty(locationId))
             {
-                throw new System.Exception("Invalid Place Id!");
+                throw new System.Exception("Invalid Location Id!");
             }
 
             using (UnityWebRequest webRequest =
-                new UnityWebRequest(SERVER_URL + "/battle/" + GetUserId() + "/" + placeId, "POST"))
+                new UnityWebRequest(SERVER_URL + "/battle/" + GetUserId() + "/"
+                                    + locationId, "POST"))
             {
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
                 webRequest.SetRequestHeader("Content-Type", "application/json");
@@ -134,25 +142,26 @@ namespace Google.Maps.Demos.Zoinkies
         ///     Requests an energy recharge for our avatar to the server.
         ///     The data returned indicates how much energy was restored.
         /// </summary>
-        /// <param name="placeId"></param>
-        /// <param name="onSuccess"></param>
-        /// <param name="onError"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <param name="locationId"></param>
+        /// <param name="onSuccess">The callback invoked when the call returns successfully</param>
+        /// <param name="onError">The callback invoked if the call fails</param>
+        /// <returns>An enumerator for the coroutine</returns>
+        /// <exception cref="Exception">Exception when location id is invalid</exception>
         public IEnumerator PostRechargingStation(
-            string placeId,
+            string locationId,
             Action<EnergyData> onSuccess,
             Action<string> onError)
         {
-            if (string.IsNullOrEmpty(placeId))
+            if (string.IsNullOrEmpty(locationId))
             {
-                throw new System.Exception("Invalid Place Id!");
+                throw new System.Exception("Invalid Location Id!");
             }
 
             string json = "";
 
             using (UnityWebRequest webRequest =
-                new UnityWebRequest(SERVER_URL + "/energystation/" + GetUserId() + "/" + placeId,
+                new UnityWebRequest(SERVER_URL + "/energystation/" + GetUserId()
+                                    + "/" + locationId,
                     "POST"))
             {
                 if (!string.IsNullOrEmpty(json))
@@ -191,25 +200,26 @@ namespace Google.Maps.Demos.Zoinkies
         ///     Notifies the server that the player is opening a chest.
         ///     Returns the content of the chest if this action is validated by the server.
         /// </summary>
-        /// <param name="placeId"></param>
-        /// <param name="onSuccess"></param>
-        /// <param name="onError"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <param name="locationId"></param>
+        /// <param name="onSuccess">The callback invoked when the call returns successfully</param>
+        /// <param name="onError">The callback invoked if the call fails</param>
+        /// <returns>An enumerator for the coroutine</returns>
+        /// <exception cref="Exception">Exception when location id is invalid</exception>
         public IEnumerator PostChest(
-            string placeId,
+            string locationId,
             Action<RewardsData> onSuccess,
             Action<string> onError)
         {
-            if (string.IsNullOrEmpty(placeId))
+            if (string.IsNullOrEmpty(locationId))
             {
-                throw new System.Exception("Invalid Place Id!");
+                throw new System.Exception("Invalid Location Id!");
             }
 
             string json = "";
 
             using (UnityWebRequest webRequest =
-                new UnityWebRequest(SERVER_URL + "/chests/" + GetUserId() + "/" + placeId, "POST"))
+                new UnityWebRequest(SERVER_URL + "/chests/" + GetUserId() + "/"
+                                    + locationId, "POST"))
             {
                 if (!string.IsNullOrEmpty(json))
                 {
@@ -247,8 +257,12 @@ namespace Google.Maps.Demos.Zoinkies
         ///     Loads reference data from the game server.
         ///     This data is now accessible with the ReferenceService.
         /// </summary>
-        /// <returns></returns>
-        public IEnumerator GetReferenceData(Action<ReferenceData> onSuccess, Action<string> onError)
+        /// <param name="onSuccess">The callback invoked when the call returns successfully</param>
+        /// <param name="onError">The callback invoked if the call fails</param>
+        /// <returns>An enumerator for the coroutine</returns>
+        public IEnumerator GetReferenceData(
+            Action<ReferenceData> onSuccess,
+            Action<string> onError)
         {
             using (UnityWebRequest webRequest = UnityWebRequest.Get(SERVER_URL + "/references"))
             {
@@ -271,8 +285,12 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Loads stats and inventory for the given player.
         /// </summary>
-        /// <returns></returns>
-        public IEnumerator GetPlayerData(Action<PlayerData> onSuccess, Action<string> onError)
+        /// <param name="onSuccess">The callback invoked when the call returns successfully</param>
+        /// <param name="onError">The callback invoked if the call fails</param>
+        /// <returns>An enumerator for the coroutine</returns>
+        public IEnumerator GetPlayerData(
+            Action<PlayerData> onSuccess,
+            Action<string> onError)
         {
             using (UnityWebRequest webRequest =
                 UnityWebRequest.Get(SERVER_URL + "/users/" + GetUserId())
@@ -307,8 +325,10 @@ namespace Google.Maps.Demos.Zoinkies
         ///     Creates (stats and inventory) or updates (stats) of the current player.
         ///     Note that the inventory is managed by the game server.
         /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
+        /// <param name="data">A player data</param>
+        /// <param name="onSuccess">The callback invoked when the call returns successfully</param>
+        /// <param name="onError">The callback invoked if the call fails</param>
+        /// <returns>An enumerator for the coroutine</returns>
         public IEnumerator PostPlayerData(
             PlayerData data,
             Action<PlayerData> onSuccess,
@@ -349,9 +369,9 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Deletes the world data associated to our user id.
         /// </summary>
-        /// <param name="onSuccess"></param>
-        /// <param name="onError"></param>
-        /// <returns></returns>
+        /// <param name="onSuccess">The callback invoked when the call returns successfully</param>
+        /// <param name="onError">The callback invoked if the call fails</param>
+        /// <returns>An enumerator for the coroutine</returns>
         public IEnumerator DeleteWorldData(Action<WorldData> onSuccess, Action<string> onError)
         {
             using (UnityWebRequest webRequest =
@@ -366,7 +386,6 @@ namespace Google.Maps.Demos.Zoinkies
                 }
                 else
                 {
-                    //WorldService.data = new WorldData();
                     onSuccess?.Invoke(new WorldData());
                 }
             }
@@ -376,16 +395,19 @@ namespace Google.Maps.Demos.Zoinkies
         ///     Returns the world data for the given Lat Lng rectangle.
         ///     This calls updates the server cache if new playable locations are found.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="worldDataRequest">World data request</param>
+        /// <param name="onSuccess">The callback invoked when the call returns successfully</param>
+        /// <param name="onError">The callback invoked if the call fails</param>
+        /// <returns>An enumerator for the coroutine function</returns>
         public IEnumerator PostWorldData(
-            WorldDataRequest wdr,
+            WorldDataRequest worldDataRequest,
             Action<WorldData> onSuccess,
             Action<string> onError)
         {
             string json = "";
-            if (wdr != null)
+            if (worldDataRequest != null)
             {
-                json = JsonMapper.ToJson(wdr);
+                json = JsonMapper.ToJson(worldDataRequest);
             }
 
             using (UnityWebRequest webRequest =
@@ -411,9 +433,11 @@ namespace Google.Maps.Demos.Zoinkies
         }
 
         /// <summary>
-        ///     Returns a unique identifier for this player/device
+        ///     Returns a unique identifier for this player/device.
+        ///     The user id is cached in <see cref="PlayerPrefs"/> when first created.
+        ///     It is read from the cache if it already exists.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A generated user id</returns>
         public string GetUserId()
         {
             // Retrieves a user Id from player prefs or generate a new one if can't be found.

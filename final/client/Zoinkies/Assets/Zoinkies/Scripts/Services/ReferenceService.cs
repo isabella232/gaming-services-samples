@@ -20,37 +20,36 @@ using System.Linq;
 
 namespace Google.Maps.Demos.Zoinkies
 {
-  /// <summary>
-  ///     This class provides access reference data through helper functions.
-  /// </summary>
-  public class ReferenceService
+    /// <summary>
+    ///     This class provides access reference data through helper functions.
+    /// </summary>
+    public class ReferenceService
     {
         // Singleton Pattern Implementation
-        private static ReferenceService instance;
+        private static ReferenceService _instance;
+        public static ReferenceService GetInstance()
+        {
+            if (_instance == null)
+            {
+                _instance = new ReferenceService();
+            }
+
+            return _instance;
+        }
+        private ReferenceService()
+        {
+        }
 
         /// <summary>
         ///     Reference to the actual reference data
         /// </summary>
         internal ReferenceData data;
 
-        private ReferenceService()
-        {
-        }
-        public static ReferenceService GetInstance()
-        {
-            if (instance == null)
-            {
-                instance = new ReferenceService();
-            }
-
-            return instance;
-        }
-
         /// <summary>
         ///     Initializes Player Data.
         /// </summary>
-        /// <param name="data"></param>
-        /// <exception cref="Exception"></exception>
+        /// <param name="data">Reference Data</param>
+        /// <exception cref="Exception">Exception when data has not been initialized.</exception>
         public void Init(ReferenceData data)
         {
             if (data == null)
@@ -64,9 +63,9 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Returns a reference item identified by the given id.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <param name="id">The item id</param>
+        /// <returns>A reference item associated with the provided id</returns>
+        /// <exception cref="Exception">Exception when data has not been initialized.</exception>
         public ReferenceItem GetItem(string id)
         {
             if (data == null)
@@ -80,8 +79,8 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Returns all weapons references.
         /// </summary>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <returns>A list of reference items</returns>
+        /// <exception cref="Exception">Exception when data has not been initialized.</exception>
         public IEnumerable<ReferenceItem> GetWeapons()
         {
             if (data == null)
@@ -95,8 +94,8 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Returns all body armors references.
         /// </summary>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <returns>A list of reference items</returns>
+        /// <exception cref="Exception">Exception when data has not been initialized.</exception>
         public IEnumerable<ReferenceItem> GetBodyArmors()
         {
             if (data == null)
@@ -110,8 +109,8 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Returns all helmets references.
         /// </summary>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <returns>A list of reference items</returns>
+        /// <exception cref="Exception">Exception when data has not been initialized.</exception>
         public IEnumerable<ReferenceItem> GetHelmets()
         {
             if (data == null)
@@ -125,8 +124,8 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Returns all shields references.
         /// </summary>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <returns>A list of reference items</returns>
+        /// <exception cref="Exception">Exception when data has not been initialized.</exception>
         public IEnumerable<ReferenceItem> GetShields()
         {
             if (data == null)
@@ -140,8 +139,8 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Returns all Avatar types references.
         /// </summary>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <returns>A list of reference items</returns>
+        /// <exception cref="Exception">Exception when data has not been initialized.</exception>
         public IEnumerable<ReferenceItem> GetAvatars()
         {
             if (data == null)
