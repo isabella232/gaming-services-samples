@@ -94,32 +94,31 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         /// Initializes the dialog with a time
         /// </summary>
-        /// <param name="message"></param>
+        /// <param name="message">The message to display</param>
         public void Init(string message)
         {
+            Message.text = "";
+
             if (!string.IsNullOrEmpty(message))
             {
                 _message = message;
-                Message.text = _message;
                 _hasTimer = false;
                 _duration = TimeSpan.Zero;
+                Message.text = _message;
             }
         }
 
         /// <summary>
         /// Initializes the dialog with a message and a time left.
         /// </summary>
-        /// <param name="message"></param>
-        /// <param name="duration"></param>
+        /// <param name="message">The message to display</param>
+        /// <param name="duration">The time left on the timer</param>
         public void Init(string message, TimeSpan duration)
         {
-            if (duration != null && message != null)
-            {
-                _hasTimer = true;
-                _duration = duration;
-                _message = message;
-                Message.text = message + duration.ToString(@"mm\:ss");
-            }
+            Init(message);
+            _hasTimer = true;
+            _duration = duration;
+            Message.text = _message + _duration.ToString(@"mm\:ss");
         }
 
         /// <summary>

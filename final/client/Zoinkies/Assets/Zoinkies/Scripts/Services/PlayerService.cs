@@ -48,11 +48,6 @@ namespace Google.Maps.Demos.Zoinkies
         public bool IsInitialized { get; set; }
 
         /// <summary>
-        ///     Indicates if player data has been modified in the client and needs to sync with the server.
-        /// </summary>
-        public bool DataHasChanged { get; set; }
-
-        /// <summary>
         /// Returns a copy of player data
         /// </summary>
         public PlayerData Data => _data.Clone();
@@ -71,7 +66,7 @@ namespace Google.Maps.Demos.Zoinkies
             set
             {
                 _data.name = value;
-                DataHasChanged = true;
+                _dataIsUntrusted = true;
             }
         }
 
@@ -84,7 +79,7 @@ namespace Google.Maps.Demos.Zoinkies
             set
             {
                 _data.equippedHelmet = value;
-                DataHasChanged = true;
+                _dataIsUntrusted = true;
             }
         }
 
@@ -97,7 +92,7 @@ namespace Google.Maps.Demos.Zoinkies
             set
             {
                 _data.equippedShield = value;
-                DataHasChanged = true;
+                _dataIsUntrusted = true;
             }
         }
 
@@ -110,7 +105,7 @@ namespace Google.Maps.Demos.Zoinkies
             set
             {
                 _data.equippedBodyArmor = value;
-                DataHasChanged = true;
+                _dataIsUntrusted = true;
             }
         }
 
@@ -123,7 +118,7 @@ namespace Google.Maps.Demos.Zoinkies
             set
             {
                 _data.equippedWeapon = value;
-                DataHasChanged = true;
+                _dataIsUntrusted = true;
             }
         }
 
@@ -136,9 +131,19 @@ namespace Google.Maps.Demos.Zoinkies
             set
             {
                 _data.characterType = value;
-                DataHasChanged = true;
+                _dataIsUntrusted = true;
             }
         }
+
+        /// <summary>
+        /// Returns DataIsUntrusted
+        /// </summary>
+        public bool DataIsUntrusted => _dataIsUntrusted;
+
+        /// <summary>
+        ///     Indicates if player data has been modified in the client and needs to sync with the server.
+        /// </summary>
+        private bool _dataIsUntrusted;
 
         /// <summary>
         /// Quick access to the reference service.
@@ -162,7 +167,7 @@ namespace Google.Maps.Demos.Zoinkies
 
             _data = data;
             IsInitialized = true;
-            DataHasChanged = false;
+            _dataIsUntrusted = false;
         }
 
         /// <summary>
@@ -235,7 +240,7 @@ namespace Google.Maps.Demos.Zoinkies
             }
 
             _data.energyLevel = Math.Min(_data.energyLevel + value, _data.maxEnergyLevel);
-            DataHasChanged = true;
+            _dataIsUntrusted = true;
         }
 
         /// <summary>
@@ -250,7 +255,7 @@ namespace Google.Maps.Demos.Zoinkies
             }
 
             _data.energyLevel = Math.Max(_data.energyLevel - value, 0);
-            DataHasChanged = true;
+            _dataIsUntrusted = true;
         }
 
         /// <summary>
@@ -302,7 +307,7 @@ namespace Google.Maps.Demos.Zoinkies
                 }
             }
 
-            DataHasChanged = true;
+            _dataIsUntrusted = true;
         }
 
         /// <summary>

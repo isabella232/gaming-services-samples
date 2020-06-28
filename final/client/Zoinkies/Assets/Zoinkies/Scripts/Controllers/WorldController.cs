@@ -298,7 +298,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// </summary>
         public void SyncData()
         {
-            if (PlayerService.GetInstance().DataHasChanged)
+            if (PlayerService.GetInstance().DataIsUntrusted)
             {
                 StartCoroutine(ServerManager.PostPlayerData(PlayerService.GetInstance().Data,
                     data => { PlayerService.GetInstance().Init(data); }, OnError));

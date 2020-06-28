@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
@@ -36,11 +35,6 @@ namespace Google.Maps.Demos.Zoinkies
         /// A reference to the busy visual
         /// </summary>
         public Image Spinner;
-
-        /// <summary>
-        /// A callback to the caller
-        /// </summary>
-        private Action callback;
 
         /// <summary>
         /// Checks the validity of the attributes

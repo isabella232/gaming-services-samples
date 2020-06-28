@@ -79,7 +79,6 @@ namespace Google.Maps.Demos.Zoinkies
             ItemsCollection = new List<ItemView>();
         }
 
-
         /// <summary>
         ///     Initializes the micro inventory with a new selection and a selected element.
         /// </summary>
@@ -113,28 +112,6 @@ namespace Google.Maps.Demos.Zoinkies
 
             LeftArrow.interactable = ItemsCollection.Count > 0;
             RightArrow.interactable = ItemsCollection.Count > 0;
-        }
-
-        /// <summary>
-        ///     Sets the active item to the item identified by the provided id.
-        /// </summary>
-        /// <param name="id"></param>
-        public void SetItem(string id)
-        {
-            if (_currentSelection != null)
-            {
-                _currentSelection.gameObject.SetActive(false);
-            }
-
-            ItemView selection = ItemsCollection.Find(s => s.Id == id);
-            if (selection != null)
-            {
-                _currentSelection = selection;
-                _currentSelection.gameObject.SetActive(true);
-
-                // Send new selected id
-                SelectionChanged?.Invoke(id);
-            }
         }
 
         /// <summary>
@@ -194,6 +171,28 @@ namespace Google.Maps.Demos.Zoinkies
                 }
 
                 SetItem(ItemsCollection[idx].Id);
+            }
+        }
+
+        /// <summary>
+        ///     Sets the active item to the item identified by the provided id.
+        /// </summary>
+        /// <param name="id"></param>
+        private void SetItem(string id)
+        {
+            if (_currentSelection != null)
+            {
+                _currentSelection.gameObject.SetActive(false);
+            }
+
+            ItemView selection = ItemsCollection.Find(s => s.Id == id);
+            if (selection != null)
+            {
+                _currentSelection = selection;
+                _currentSelection.gameObject.SetActive(true);
+
+                // Send new selected id
+                SelectionChanged?.Invoke(id);
             }
         }
     }
