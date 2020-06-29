@@ -18,14 +18,26 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Google.Maps.Demos.Zoinkies {
-
-    public class EnergyStationController : BaseSpawnLocationController {
-
-        protected override void ActionState() {
-
+namespace Google.Maps.Demos.Zoinkies
+{
+    /// <summary>
+    /// Controller class for energy stations.
+    /// Energy stations replenish the lives of our Avatar to 100%, then become unavailable for
+    /// a small amount of time.
+    /// </summary>
+    public class EnergyStationController : BaseSpawnLocationController
+    {
+        /// <summary>
+        /// Implementation of the action state.
+        /// If the location is not respawning, the function makes a server call to retrieve
+        /// the amount of energy restored for the avatar.
+        /// </summary>
+        protected override void ActionState()
+        {
             if (IsLoading)
+            {
                 return;
+            }
 
             base.ActionState();
 
@@ -34,16 +46,17 @@ namespace Google.Maps.Demos.Zoinkies {
                 new List<SpawnLocation>(WorldService.GetInstance().GetEnergyStations());
             LocationId = s.ElementAt(0).id;
 
-            if (String.IsNullOrEmpty(LocationId)) {
-                Debug.LogError("Incorrect PlaceId!");
+            if (string.IsNullOrEmpty(LocationId))
+            {
+                Debug.LogError("Incorrect Location Id!");
                 UIManager.OnShowLoadingView(false);
                 return;
             }
 
             // Check if this station is active?
             // If not show a floating popup with timeout information
-            if (WorldService.GetInstance().IsRespawning(LocationId)) {
-
+            if (WorldService.GetInstance().IsRespawning(LocationId))
+            {
                 DateTime t = DateTime.Parse(location.respawn_time);
                 TimeSpan timeLeft = t.Subtract(DateTime.Now);
                 UIManager.OnShowMessageDialog("Station recharging. Time left: ", timeLeft);
@@ -51,20 +64,29 @@ namespace Google.Maps.Demos.Zoinkies {
                 return;
             }
 
-            try {
+            try
+            {
                 IsLoading = true;
                 StartCoroutine(ServerManager.PostRechargingStation(LocationId, OnSuccess, OnError));
             }
-            catch (System.Exception e) {
-                Debug.LogError("Failed to open chest! " + e.ToString());
+            catch (System.Exception e)
+            {
+                Debug.LogError("Failed to restore energy! " + e);
                 IsLoading = false;
                 UIManager.OnShowLoadingView(false);
             }
         }
 
-        private void OnSuccess(EnergyData data) {
+        /// <summary>
+        /// Triggered when the server request to refill the player's energy returns successfully.
+        /// This code starts the respawn on the energy station.
+        /// </summary>
+        /// <param name="data"></param>
+        private void OnSuccess(EnergyData data)
+        {
             IsLoading = false;
-            if (data == null) {
+            if (data == null)
+            {
                 // The station is recharging
                 return;
             }
@@ -77,11 +99,6 @@ namespace Google.Maps.Demos.Zoinkies {
             UIManager.OnShowLoadingView(false);
 
             UIManager.OnShowMessageDialog("Energy recharged to 100%!");
-        }
-
-        protected override SpawnLocation GetTestingLocation() {
-            // Pick first available minion
-            return WorldService.GetInstance().GetEnergyStations().ElementAt(0);
         }
     }
 }

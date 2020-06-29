@@ -13,67 +13,121 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
 
-namespace Google.Maps.Demos.Zoinkies {
+namespace Google.Maps.Demos.Zoinkies
+{
+    /// <summary>
+    /// This view represents a simple message dialog.
+    /// It has an option for actively displaying timers.
+    /// </summary>
+    public class MessageDialog : BaseView
+    {
+        /// <summary>
+        /// A reference to the message widget
+        /// </summary>
+        public Text Message;
 
-    public class MessageDialog : BaseView {
-        public Text message;
+        /// <summary>
+        /// Is the timer option active?
+        /// </summary>
+        private bool _hasTimer;
 
-        private string msg = "";
-        private bool IsTime = false;
-        private TimeSpan ts;
-        private float TIMEOUT = 1f; // 1s
-        private float ticker = 0f;
+        /// <summary>
+        /// Keeps track of the original message
+        /// </summary>
+        private string _message = "";
 
-        // Start is called before the first frame update
-        void Start() {
-            Assert.IsNotNull(message);
+        /// <summary>
+        /// Keeps track of time count
+        /// </summary>
+        private float _ticker;
+
+        /// <summary>
+        /// The duration of one tick (default is 1s)
+        /// </summary>
+        private const float TIMEOUT = 1f;
+
+        /// <summary>
+        /// The time left on the timer
+        /// </summary>
+        private TimeSpan _duration;
+
+        /// <summary>
+        /// Checks that all properties are valid.
+        /// </summary>
+        void Start()
+        {
+            Assert.IsNotNull(Message);
         }
 
-        void Update() {
-            if (IsTime) {
-                ticker += Time.deltaTime;
-                if (ticker >= TIMEOUT) {
-                    ts = ts.Subtract(TimeSpan.FromSeconds(1));
-                    if (ts.Equals(TimeSpan.Zero)) {
-                        IsTime = false;
-                        message.text = "Done!";
+        /// <summary>
+        /// Updates the timer when one is provided.
+        /// </summary>
+        void Update()
+        {
+            if (_hasTimer)
+            {
+                _ticker += Time.deltaTime;
+                if (_ticker >= TIMEOUT)
+                {
+                    _duration = _duration.Subtract(TimeSpan.FromSeconds(1));
+                    if (_duration.Equals(TimeSpan.Zero))
+                    {
+                        _hasTimer = false;
+                        Message.text = "Done!";
                     }
-                    else {
-                        message.text = msg + ts.ToString(@"mm\:ss");
+                    else
+                    {
+                        Message.text = _message + _duration.ToString(@"mm\:ss");
                     }
 
-                    ticker = 0f;
+                    _ticker = 0f;
                 }
             }
         }
 
-        public void Init(string msg) {
-            if (!string.IsNullOrEmpty(msg)) {
-                this.msg = msg;
-                message.text = this.msg;
-                IsTime = false;
-                this.ts = TimeSpan.Zero;
+        /// <summary>
+        /// Initializes the dialog with a time
+        /// </summary>
+        /// <param name="message">The message to display</param>
+        public void Init(string message)
+        {
+            Message.text = "";
+
+            if (!string.IsNullOrEmpty(message))
+            {
+                _message = message;
+                _hasTimer = false;
+                _duration = TimeSpan.Zero;
+                Message.text = _message;
             }
         }
 
-        public void Init(string msg, TimeSpan ts) {
-            if (ts != null && msg != null) {
-                IsTime = true;
-                this.ts = ts;
-                this.msg = msg;
-                message.text = msg + ts.ToString(@"mm\:ss");
-            }
+        /// <summary>
+        /// Initializes the dialog with a message and a time left.
+        /// </summary>
+        /// <param name="message">The message to display</param>
+        /// <param name="duration">The time left on the timer</param>
+        public void Init(string message, TimeSpan duration)
+        {
+            Init(message);
+            _hasTimer = true;
+            _duration = duration;
+            Message.text = _message + _duration.ToString(@"mm\:ss");
         }
 
-
-        public void OnCloseButton() {
-            // Close self - this is a dialog
-            this.gameObject.SetActive(false);
+        /// <summary>
+        /// Triggered when the close button is touched.
+        /// </summary>
+        public void OnCloseButton()
+        {
+            // Closes self - this is a dialog box
+            gameObject.SetActive(false);
         }
     }
 }

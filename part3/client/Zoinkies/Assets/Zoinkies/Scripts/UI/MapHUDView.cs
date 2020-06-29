@@ -16,21 +16,12 @@
 
 using UnityEngine.Events;
 
-namespace Google.Maps.Demos.Zoinkies {
-
-    public class MapHUDView : BaseView {
-
-        public UnityAction OnShowCharacterSheet;
-        public UnityAction OnShowHelp;
-
-        // Start is called before the first frame update
-        void Start() {
-
-        }
-
-        // Init is called once per frame
-        void Update() {
-
-        }
+namespace Google.Maps.Demos.Zoinkies
+{
+    /// <summary>
+    /// This class represents the HUD on the Map
+    /// </summary>
+    public class MapHUDView : BaseView
+    {
     }
 }

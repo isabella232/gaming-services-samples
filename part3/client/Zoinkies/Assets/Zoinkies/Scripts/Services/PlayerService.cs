@@ -13,372 +13,483 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 
-namespace Google.Maps.Demos.Zoinkies {
-
-  /// <summary>
-  /// This class provides access to player data through helper functions.
-  /// </summary>
-  public class PlayerService {
-
+namespace Google.Maps.Demos.Zoinkies
+{
     /// <summary>
-    /// Indicates if player data has been set (at least once).
+    ///     This class provides access to player data through helper functions.
     /// </summary>
-    public bool IsInitialized { get; set; }
-    /// <summary>
-    /// Indicates if player data has been modified in the client and needs to sync with the server.
-    /// </summary>
-    public bool DataHasChanged { get; set; }
+    public class PlayerService
+    {
+        // Singleton pattern implementation
+        private static PlayerService _instance;
+        public static PlayerService GetInstance()
+        {
+            if (_instance == null)
+            {
+                _instance = new PlayerService();
+            }
 
-    // Singleton
-    private static PlayerService instance;
-    public static PlayerService GetInstance() {
-      if (instance == null) {
-        instance = new PlayerService();
-      }
-      return instance;
-    }
-
-    // Quick access to the reference service
-    private ReferenceService RefService = ReferenceService.GetInstance();
-
-    private PlayerService() {
-      IsInitialized = false;
-    }
-
-    /// <summary>
-    /// Direct access to player data.
-    /// This is only accessible to other services or managers.
-    /// </summary>
-    internal PlayerData data { get; set; }
-
-    /// <summary>
-    /// Initializes Player Data.
-    /// </summary>
-    /// <param name="d"></param>
-    /// <exception cref="Exception"></exception>
-    internal void Init(PlayerData data) {
-      if (data == null) {
-        throw new System.Exception("Invalid player data. Can't be null!");
-      }
-
-      this.data = data;
-      IsInitialized = true;
-      DataHasChanged = false;
-    }
-
-    /// <summary>
-    /// Returns the avatar name.
-    /// </summary>
-    public string AvatarName {
-      get { return data.name; }
-      set {
-        data.name = value;
-        DataHasChanged = true;
-      }
-    }
-
-    /// <summary>
-    /// Returns the id of the equipped helmet, null if nothing is equipped.
-    /// </summary>
-    public string EquippedHelmet {
-      get { return data.equippedHelmet; }
-      set {
-        data.equippedHelmet = value;
-        DataHasChanged = true;
-      }
-    }
-
-    /// <summary>
-    /// Returns the id of the equipped shield, null if nothing is equipped.
-    /// </summary>
-    public string EquippedShield {
-      get { return data.equippedShield; }
-      set {
-        data.equippedShield = value;
-        DataHasChanged = true;
-      }
-    }
-
-    /// <summary>
-    /// Returns the id of the equipped body armor, null if nothing is equipped.
-    /// </summary>
-    public string EquippedBodyArmor {
-      get { return data.equippedBodyArmor; }
-      set {
-        data.equippedBodyArmor = value;
-        DataHasChanged = true;
-      }
-    }
-
-    /// <summary>
-    /// Returns the id of the equipped weapon, null if nothing is equipped.
-    /// </summary>
-    public string EquippedWeapon {
-      get { return data.equippedWeapon; }
-      set {
-        data.equippedWeapon = value;
-        DataHasChanged = true;
-      }
-    }
-
-    /// <summary>
-    /// Returns the type of the current avatar selection.
-    /// </summary>
-    public string AvatarType {
-      get { return data.characterType; }
-      set {
-        data.characterType = value;
-        DataHasChanged = true;
-      }
-    }
-
-    /// <summary>
-    /// Returns the avatar's cooldown parameter.
-    /// </summary>
-    /// <returns></returns>
-    public TimeSpan GetCooldown() {
-      ReferenceItem weaponRef = RefService.GetItem(EquippedWeapon);
-      return XmlConvert.ToTimeSpan(weaponRef.cooldown);
-    }
-
-    /// <summary>
-    /// Returns the avatar's attack score.
-    /// </summary>
-    /// <returns></returns>
-    public int GetAttackScore() {
-
-      // Attack score is sum of all attack scores from character type and equipped weapon
-      int score = 0;
-      ReferenceItem type = RefService.GetItem(data.characterType);
-      score += type.attackScore;
-
-      if (EquippedWeapon != null) {
-        score += RefService.GetItem(EquippedWeapon).attackScore;
-      }
-
-      return score;
-    }
-
-    /// <summary>
-    /// Returns the avatar's defense score.
-    /// </summary>
-    /// <returns></returns>
-    public int GetDefenseScore() {
-
-      // Attack score is sum of all attack scores from character type and equipped weapon
-      int score = 0;
-      ReferenceItem type = RefService.GetItem(data.characterType);
-      score += type.defenseScore;
-
-      if (EquippedBodyArmor != null) {
-        score += RefService.GetItem(EquippedBodyArmor).defenseScore;
-      }
-
-      if (EquippedHelmet != null) {
-        score += RefService.GetItem(EquippedHelmet).defenseScore;
-      }
-
-      if (EquippedShield != null) {
-        score += RefService.GetItem(EquippedShield).defenseScore;
-      }
-
-      return score;
-    }
-
-    /// <summary>
-    /// Increases the avatar's energy level.
-    /// </summary>
-    /// <returns></returns>
-    public void IncreaseEnergyLevel(int value) {
-      if (data == null) {
-        throw new System.Exception(" data not initialized!");
-      }
-
-      this.data.energyLevel = Math.Min(this.data.energyLevel + value, data.maxEnergyLevel);
-      this.DataHasChanged = true;
-    }
-
-    /// <summary>
-    /// Decreases the avatar's energy level.
-    /// </summary>
-    /// <returns></returns>
-    public void DecreaseEnergyLevel(int value) {
-      if (data == null) {
-        throw new System.Exception(" data not initialized!");
-      }
-
-      this.data.energyLevel = Math.Max(this.data.energyLevel - value, 0);
-      this.DataHasChanged = true;
-    }
-
-    /// <summary>
-    /// Returns the avatar's energy level.
-    /// </summary>
-    /// <returns></returns>
-    public int GetEnergyLevel() {
-      return data.energyLevel;
-    }
-
-    /// <summary>
-    /// Returns the avatar's max energy level.
-    /// </summary>
-    /// <returns></returns>
-    public int GetMaxEnergyLevel() {
-      return data.maxEnergyLevel;
-    }
-
-    /// <summary>
-    /// Adds new items or updates quantities of existing ones.
-    ///
-    /// </summary>
-    /// <param name="items"></param>
-    /// <exception cref="Exception"></exception>
-    public void AddToInventory(List<Item> items) {
-      // Add all items in the list to the current inventory
-      if (items == null) {
-        throw new System.Exception("Invalid items list input!");
-      }
-
-      if (data == null) {
-        throw new System.Exception("data not initialized!");
-      }
-
-      foreach (Item item in items) {
-        Item i = data.inventory.Find(s => s.id == item.id);
-        if (i != null) {
-          i.quantity += i.quantity;
+            return _instance;
         }
-        else {
-          data.inventory.Add(item);
+        private PlayerService()
+        {
+            IsInitialized = false;
         }
-      }
 
-      this.DataHasChanged = true;
+        /// <summary>
+        ///     Indicates if player data has been set (at least once).
+        /// </summary>
+        public bool IsInitialized { get; set; }
+
+        /// <summary>
+        /// Returns a copy of player data
+        /// </summary>
+        public PlayerData Data => _data.Clone();
+
+        /// <summary>
+        ///     Reference to player data
+        /// </summary>
+        private PlayerData _data;
+
+        /// <summary>
+        ///     Returns the avatar name.
+        /// </summary>
+        public string AvatarName
+        {
+            get => _data.name;
+            set
+            {
+                _data.name = value;
+                _dataIsUntrusted = true;
+            }
+        }
+
+        /// <summary>
+        ///     Returns the id of the equipped helmet, null if nothing is equipped.
+        /// </summary>
+        public string EquippedHelmet
+        {
+            get => _data.equippedHelmet;
+            set
+            {
+                _data.equippedHelmet = value;
+                _dataIsUntrusted = true;
+            }
+        }
+
+        /// <summary>
+        ///     Returns the id of the equipped shield, null if nothing is equipped.
+        /// </summary>
+        public string EquippedShield
+        {
+            get => _data.equippedShield;
+            set
+            {
+                _data.equippedShield = value;
+                _dataIsUntrusted = true;
+            }
+        }
+
+        /// <summary>
+        ///     Returns the id of the equipped body armor, null if nothing is equipped.
+        /// </summary>
+        public string EquippedBodyArmor
+        {
+            get => _data.equippedBodyArmor;
+            set
+            {
+                _data.equippedBodyArmor = value;
+                _dataIsUntrusted = true;
+            }
+        }
+
+        /// <summary>
+        ///     Returns the id of the equipped weapon, null if nothing is equipped.
+        /// </summary>
+        public string EquippedWeapon
+        {
+            get => _data.equippedWeapon;
+            set
+            {
+                _data.equippedWeapon = value;
+                _dataIsUntrusted = true;
+            }
+        }
+
+        /// <summary>
+        ///     Returns the type of the current avatar selection.
+        /// </summary>
+        public string AvatarType
+        {
+            get => _data.characterType;
+            set
+            {
+                _data.characterType = value;
+                _dataIsUntrusted = true;
+            }
+        }
+
+        /// <summary>
+        /// Returns DataIsUntrusted
+        /// </summary>
+        public bool DataIsUntrusted => _dataIsUntrusted;
+
+        /// <summary>
+        ///     Indicates if player data has been modified in the client and needs to sync with the server.
+        /// </summary>
+        private bool _dataIsUntrusted;
+
+        /// <summary>
+        /// Quick access to the reference service.
+        /// </summary>
+        private readonly ReferenceService _referenceService = ReferenceService.GetInstance();
+
+        /// <summary>
+        ///     Initializes Player Data.
+        /// </summary>
+        /// <param name="data">A Player Data structure</param>
+        /// <exception cref="Exception">
+        ///     Throws an exception if the provided data
+        ///     is invalid
+        /// </exception>
+        internal void Init(PlayerData data)
+        {
+            if (data == null)
+            {
+                throw new System.Exception("Invalid player data. Can't be null!");
+            }
+
+            _data = data;
+            IsInitialized = true;
+            _dataIsUntrusted = false;
+        }
+
+        /// <summary>
+        ///     Returns the avatar's cooldown parameter.
+        /// </summary>
+        /// <returns>A duration</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
+        public TimeSpan GetCooldown()
+        {
+            ReferenceItem weaponRef = _referenceService.GetItem(EquippedWeapon);
+            return XmlConvert.ToTimeSpan(weaponRef.cooldown);
+        }
+
+        /// <summary>
+        ///     Returns the avatar's attack score.
+        /// </summary>
+        /// <returns>The attack score as int</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
+        public int GetAttackScore()
+        {
+            if (_data == null)
+            {
+                throw new System.Exception("Data not initialized!");
+            }
+
+            // Attack score is sum of all attack scores from character type and equipped weapon
+            int score = 0;
+            ReferenceItem type = _referenceService.GetItem(_data.characterType);
+            score += type.attackScore;
+
+            if (EquippedWeapon != null)
+            {
+                score += _referenceService.GetItem(EquippedWeapon).attackScore;
+            }
+
+            return score;
+        }
+
+        /// <summary>
+        ///     Returns the avatar's defense score.
+        /// </summary>
+        /// <returns>The defense score as int</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
+        public int GetDefenseScore()
+        {
+            if (_data == null)
+            {
+                throw new System.Exception("Data not initialized!");
+            }
+
+            // Defense score is sum of all defense scores from character type
+            // and equipped defensive items
+            int score = 0;
+            ReferenceItem type = _referenceService.GetItem(_data.characterType);
+            score += type.defenseScore;
+
+            if (EquippedBodyArmor != null)
+            {
+                score += _referenceService.GetItem(EquippedBodyArmor).defenseScore;
+            }
+
+            if (EquippedHelmet != null)
+            {
+                score += _referenceService.GetItem(EquippedHelmet).defenseScore;
+            }
+
+            if (EquippedShield != null)
+            {
+                score += _referenceService.GetItem(EquippedShield).defenseScore;
+            }
+
+            return score;
+        }
+
+        /// <summary>
+        ///     Increases the avatar's energy level.
+        /// </summary>
+        /// <param name="value">The amount to increase the energy by.</param>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
+        public void IncreaseEnergyLevel(int value)
+        {
+            if (_data == null)
+            {
+                throw new System.Exception(" data not initialized!");
+            }
+
+            _data.energyLevel = Math.Min(_data.energyLevel + value, _data.maxEnergyLevel);
+            _dataIsUntrusted = true;
+        }
+
+        /// <summary>
+        ///     Decreases the avatar's energy level.
+        /// </summary>
+        /// <param name="value">The amount to decrease the energy by</param>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
+        public void DecreaseEnergyLevel(int value)
+        {
+            if (_data == null)
+            {
+                throw new System.Exception(" data not initialized!");
+            }
+
+            _data.energyLevel = Math.Max(_data.energyLevel - value, 0);
+            _dataIsUntrusted = true;
+        }
+
+        /// <summary>
+        ///     Returns the avatar's energy level.
+        /// </summary>
+        /// <returns>The current energy level</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
+        public int GetEnergyLevel()
+        {
+            if (_data == null)
+            {
+                throw new System.Exception("Data not initialized!");
+            }
+            return _data.energyLevel;
+        }
+
+        /// <summary>
+        ///     Returns the avatar's max energy level.
+        /// </summary>
+        /// <returns>The maximum energy level</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
+        public int GetMaxEnergyLevel()
+        {
+            if (_data == null)
+            {
+                throw new System.Exception("Data not initialized!");
+            }
+            return _data.maxEnergyLevel;
+        }
+
+        /// <summary>
+        ///     Adds new items or updates quantities of existing ones.
+        /// </summary>
+        /// <param name="items">The new collection of items to add</param>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
+        public void AddToInventory(List<Item> items)
+        {
+            // Add all items in the list to the current inventory
+            if (items == null)
+            {
+                throw new System.Exception("Invalid items list input!");
+            }
+
+            if (_data == null)
+            {
+                throw new System.Exception("data not initialized!");
+            }
+
+            foreach (Item item in items)
+            {
+                Item i = _data.inventory.Find(s => s.id == item.id);
+                if (i != null)
+                {
+                    i.quantity += i.quantity;
+                }
+                else
+                {
+                    _data.inventory.Add(item);
+                }
+            }
+
+            _dataIsUntrusted = true;
+        }
+
+        /// <summary>
+        ///     Returns the amount of gold keys in the player's inventory.
+        /// </summary>
+        /// <returns>A collection of gold keys</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
+        public int GetNumberOfGoldKeys()
+        {
+            if (_data == null)
+            {
+                throw new System.Exception("Data not initialized!");
+            }
+            int qty = 0;
+
+            Item i = _data.inventory.Find(s => s.id == GameConstants.GOLD_KEY);
+            if (i != null)
+            {
+                qty = i.quantity;
+            }
+
+            return qty;
+        }
+
+        /// <summary>
+        ///     Returns the amount of diamond keys in the player's inventory.
+        /// </summary>
+        /// <returns>A collection of diamond keys</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
+        public int GetNumberOfDiamondKeys()
+        {
+            if (_data == null)
+            {
+                throw new System.Exception("Data not initialized!");
+            }
+            int qty = 0;
+
+            Item i = _data.inventory.Find(s => s.id == GameConstants.DIAMOND_KEY);
+            if (i != null)
+            {
+                qty = i.quantity;
+            }
+
+            return qty;
+        }
+
+        /// <summary>
+        ///     Returns the amount of freed leaders.
+        /// </summary>
+        /// <returns>A collection of freed leaders</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
+        public int GetNumberOfFreedLeaders()
+        {
+            if (_data == null)
+            {
+                throw new System.Exception("Data not initialized!");
+            }
+            int qty = 0;
+
+            Item i = _data.inventory.Find(s => s.id == GameConstants.FREED_LEADERS);
+            if (i != null)
+            {
+                qty = i.quantity;
+            }
+
+            return qty;
+        }
+
+        /// <summary>
+        ///     Returns all weapons in the player's inventory.
+        /// </summary>
+        /// <returns>A collection of weapons</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
+        public IEnumerable<Item> GetWeapons()
+        {
+            if (_data == null)
+            {
+                throw new System.Exception(" data not initialized!");
+            }
+
+            IEnumerable<ReferenceItem> refItems = _referenceService.GetWeapons();
+            List<string> ids = refItems.Select(item => item.id).ToList();
+
+            return _data.inventory.Where(s => ids.Contains(s.id));
+        }
+
+        /// <summary>
+        ///     Returns all avatar types available to the player.
+        /// </summary>
+        /// <returns>A collection of avatar types</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
+        public IEnumerable<Item> GetAvatars()
+        {
+            if (_data == null)
+            {
+                throw new System.Exception(" data not initialized!");
+            }
+
+            IEnumerable<ReferenceItem> refItems = _referenceService.GetAvatars();
+            List<string> ids = refItems.Select(item => item.id).ToList();
+
+            return _data.inventory.Where(s => ids.Contains(s.id));
+        }
+
+        /// <summary>
+        ///     Returns all body armors in the player's inventory.
+        /// </summary>
+        /// <returns>A collection of body armors</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
+        public IEnumerable<Item> GetBodyArmors()
+        {
+            if (_data == null)
+            {
+                throw new System.Exception(" data not initialized!");
+            }
+
+            IEnumerable<ReferenceItem> refItems = _referenceService.GetBodyArmors();
+            List<string> ids = refItems.Select(item => item.id).ToList();
+
+            return _data.inventory.Where(s => ids.Contains(s.id));
+        }
+
+        /// <summary>
+        ///     Returns all helmets in the player's inventory.
+        /// </summary>
+        /// <returns>A collection of helmets</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
+        public IEnumerable<Item> GetHelmets()
+        {
+            if (_data == null)
+            {
+                throw new System.Exception(" data not initialized!");
+            }
+
+            IEnumerable<ReferenceItem> refItems = _referenceService.GetHelmets();
+            List<string> ids = refItems.Select(item => item.id).ToList();
+
+            return _data.inventory.Where(s => ids.Contains(s.id));
+        }
+
+        /// <summary>
+        ///     Returns all shields in the player's inventory.
+        /// </summary>
+        /// <returns>A collection of shields</returns>
+        /// <exception cref="Exception">Exception when invalid inputs are found</exception>
+        public IEnumerable<Item> GetShields()
+        {
+            if (_data == null)
+            {
+                throw new System.Exception(" data not initialized!");
+            }
+
+            IEnumerable<ReferenceItem> refItems = _referenceService.GetShields();
+            List<string> ids = refItems.Select(item => item.id).ToList();
+
+            return _data.inventory.Where(s => ids.Contains(s.id));
+        }
     }
-
-    /// <summary>
-    /// Returns the amount of gold keys in the player's inventory.
-    /// </summary>
-    /// <returns></returns>
-    public int GetNumberOfGoldKeys() {
-      int qty = 0;
-
-      Item i = data.inventory.Find(s => s.id == GameConstants.GOLD_KEY);
-      if (i != null) {
-        qty = i.quantity;
-      }
-
-      return qty;
-    }
-
-    /// <summary>
-    /// Returns the amount of diamond keys in the player's inventory.
-    /// </summary>
-    /// <returns></returns>
-    public int GetNumberOfDiamondKeys() {
-      int qty = 0;
-
-      Item i = data.inventory.Find(s => s.id == GameConstants.DIAMOND_KEY);
-      if (i != null) {
-        qty = i.quantity;
-      }
-
-      return qty;
-    }
-
-    /// <summary>
-    /// Returns the amount of freed leaders.
-    /// </summary>
-    /// <returns></returns>
-    public int GetNumberOfFreedLeaders() {
-      int qty = 0;
-
-      Item i = data.inventory.Find(s => s.id == GameConstants.FREED_LEADERS);
-      if (i != null) {
-        qty = i.quantity;
-      }
-
-      return qty;
-    }
-
-    /// <summary>
-    /// Returns all weapons in the player's inventory.
-    /// </summary>
-    /// <returns></returns>
-    public IEnumerable<Item> GetWeapons() {
-      if (data == null) {
-        throw new System.Exception(" data not initialized!");
-      }
-
-      IEnumerable<ReferenceItem> refItems = RefService.GetWeapons();
-      var ids = refItems.Select(item => item.id).ToList();
-
-      return data.inventory.Where(s => ids.Contains(s.id));
-    }
-
-    /// <summary>
-    /// Returns all avatar types available to the player.
-    /// </summary>
-    /// <returns></returns>
-    public IEnumerable<Item> GetAvatars() {
-      if (data == null) {
-        throw new System.Exception(" data not initialized!");
-      }
-
-      IEnumerable<ReferenceItem> refItems = RefService.GetAvatars();
-      var ids = refItems.Select(item => item.id).ToList();
-
-      return data.inventory.Where(s => ids.Contains(s.id));
-    }
-
-    /// <summary>
-    /// Returns all body armors in the player's inventory.
-    /// </summary>
-    /// <returns></returns>
-    public IEnumerable<Item> GetBodyArmors() {
-      if (data == null) {
-        throw new System.Exception(" data not initialized!");
-      }
-
-      IEnumerable<ReferenceItem> refItems = RefService.GetBodyArmors();
-      var ids = refItems.Select(item => item.id).ToList();
-
-      return data.inventory.Where(s => ids.Contains(s.id));
-    }
-
-    /// <summary>
-    /// Returns all helmets in the player's inventory.
-    /// </summary>
-    /// <returns></returns>
-    public IEnumerable<Item> GetHelmets() {
-      if (data == null) {
-        throw new System.Exception(" data not initialized!");
-      }
-
-      IEnumerable<ReferenceItem> refItems = RefService.GetHelmets();
-      var ids = refItems.Select(item => item.id).ToList();
-
-      return data.inventory.Where(s => ids.Contains(s.id));
-    }
-
-    /// <summary>
-    /// Returns all shields in the player's inventory.
-    /// </summary>
-    /// <returns></returns>
-    public IEnumerable<Item> GetShields() {
-      if (data == null) {
-        throw new System.Exception(" data not initialized!");
-      }
-
-      IEnumerable<ReferenceItem> refItems = RefService.GetShields();
-      var ids = refItems.Select(item => item.id).ToList();
-
-      return data.inventory.Where(s => ids.Contains(s.id));
-    }
-  }
 }

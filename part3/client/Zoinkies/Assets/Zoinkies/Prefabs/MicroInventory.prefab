@@ -359,9 +359,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92ec22b829bc9487790ac9e194672f17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ItemGOPrefab: {fileID: 6627469162802105139, guid: cdbfc364d789640cda8954a5eb28192a,
+  ItemViewPrefab: {fileID: 6627469162802105139, guid: cdbfc364d789640cda8954a5eb28192a,
     type: 3}
-  ItemGOs: []
+  ItemsCollection: []
   ItemsContainer: {fileID: 1692230850747439433}
   LeftArrow: {fileID: 634496651110593212}
   RightArrow: {fileID: 634496650418982060}

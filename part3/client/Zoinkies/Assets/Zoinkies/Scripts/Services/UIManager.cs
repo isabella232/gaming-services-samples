@@ -13,105 +13,123 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using System.Collections.Generic;
-using Google.Maps.Demos.Utilities;
 using UnityEngine;
-using UnityEngine.Assertions;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace Google.Maps.Demos.Zoinkies {
-
+namespace Google.Maps.Demos.Zoinkies
+{
     /// <summary>
-    /// This class handles all UI interaction and UI flow.
-    ///
+    ///     This class handles all UI interaction and UI flow.
     /// </summary>
-    public class UIManager : MonoBehaviour {
-
-        #region properties
+    public class UIManager : MonoBehaviour
+    {
         /// <summary>
-        /// Event dispatched when a battle is about to start.
+        ///     Event dispatched when a battle is about to start.
         /// </summary>
         public UnityEvent ShowBattleground;
+
         /// <summary>
-        /// Event dispatched when a battle has concluded and we are reverting to the game world.
+        ///     Event dispatched when a battle has concluded and we are reverting to the game world.
         /// </summary>
         public UnityEvent ShowWorld;
+
         /// <summary>
-        /// Reference to the battle defeat dialog screen.
+        ///     Reference to the battle defeat dialog screen.
         /// </summary>
-        public LootResultsDialog lootResultsDialog;
+        public LootResultsDialog LootResultsDialog;
+
         /// <summary>
-        /// Reference to the battle screen.
+        ///     Reference to the battle screen.
         /// </summary>
-        public BattleView battleView;
+        public BattleView BattleView;
+
         /// <summary>
-        /// Reference to the character sheet.
+        ///     Reference to the character sheet.
         /// </summary>
         public CharacterSheetView CharacterSheetView;
+
         /// <summary>
-        /// Reference to the game victory screen.
+        ///     Reference to the game victory screen.
         /// </summary>
         public GameVictoryView GameVictoryView;
+
         /// <summary>
-        /// Reference to the help screen.
+        ///     Reference to the help screen.
         /// </summary>
-        public HowToPlayDialog howToPlayDialog;
+        public HowToPlayDialog HowToPlayDialog;
+
         /// <summary>
-        /// Reference to the map HUD.
+        ///     Reference to the map HUD.
         /// </summary>
         public MapHUDView MapHudView;
+
         /// <summary>
-        /// Reference to the loading glass panel.
+        ///     Reference to the loading glass panel.
         /// </summary>
         public LoadingDialog LoadingDialog;
+
         /// <summary>
-        /// Reference to the message dialog.
+        ///     Reference to the message dialog.
         /// </summary>
         public MessageDialog MessageDialog;
+
         /// <summary>
-        /// Reference to the splash screen.
+        ///     Reference to the splash screen.
         /// </summary>
         public SplashView SplashView;
+
         /// <summary>
-        /// Used to report system messages
+        ///     Used to report system messages
         /// </summary>
         public Text StatusMsg;
+
         /// <summary>
-        /// This flag (re)enables the FTUE flow
+        ///     This flag (re)enables the FTUE (First time user experience) flow
         /// </summary>
         public bool EnableFTUE;
-        /// <summary>
-        /// Provides a quick access to all screens in the game.
-        /// </summary>
-        private List<BaseView> views = new List<BaseView>();
-        /// <summary>
-        /// Keeps track of the previous view
-        /// </summary>
-        private BaseView CurrentView;
-
-        #endregion
 
         /// <summary>
-        /// Initializes callbacks and initializes the splash screen.
+        ///     Provides a quick access to all screens in the game.
         /// </summary>
-        void Start() {
+        private readonly List<BaseView> _views = new List<BaseView>();
 
-            // Debug
+        /// <summary>
+        ///     Keeps track of the previous view
+        /// </summary>
+        private BaseView _currentView;
+
+        private const float STATUS_MESSAGE_TIMEOUT = 3f;
+
+        private float _statusMessageTimeCounter = 0f;
+
+        private bool _showStatusMessage = false;
+
+
+        /// <summary>
+        ///     Initializes callbacks and initializes the splash screen.
+        /// </summary>
+        void Start()
+        {
+            // When the debug flag is enabled, we run the FTUE at each start.
             if (EnableFTUE && PlayerPrefs.HasKey(GameConstants.FTUE_COMPLETE))
+            {
                 PlayerPrefs.DeleteKey(GameConstants.FTUE_COMPLETE);
+            }
 
             // Register views
-            views.Add(battleView);
-            views.Add(CharacterSheetView);
-            views.Add(GameVictoryView);
-            views.Add(howToPlayDialog);
-            views.Add(MapHudView);
-            views.Add(SplashView);
-            views.Add(lootResultsDialog);
-            views.Add(LoadingDialog);
-            views.Add(MessageDialog);
+            _views.Add(BattleView);
+            _views.Add(CharacterSheetView);
+            _views.Add(GameVictoryView);
+            _views.Add(HowToPlayDialog);
+            _views.Add(MapHudView);
+            _views.Add(SplashView);
+            _views.Add(LootResultsDialog);
+            _views.Add(LoadingDialog);
+            _views.Add(MessageDialog);
 
             // Initializes all callbacks
             InitCallbacks();
@@ -121,150 +139,194 @@ namespace Google.Maps.Demos.Zoinkies {
         }
 
         /// <summary>
-        /// Initializes a set of callbacks to set the game in World or Battle modes.
+        /// Display a status message for a limited amount of time.
         /// </summary>
-        private void InitCallbacks() {
+        void Update()
+        {
+            if (_showStatusMessage)
+            {
+                _statusMessageTimeCounter += Time.deltaTime;
+                if (_statusMessageTimeCounter > STATUS_MESSAGE_TIMEOUT)
+                {
+                    _statusMessageTimeCounter = 0f;
+                    _showStatusMessage = false;
+                    StatusMsg.text = "";
+                }
+            }
+
+        }
+
+        /// <summary>
+        ///     Activates the Game Victory screen
+        /// </summary>
+        public void OnShowGameVictoryView()
+        {
+            ShowView(GameVictoryView);
+        }
+
+        /// <summary>
+        ///     Shows the Message dialog
+        /// </summary>
+        /// <param name="message">The message to display</param>
+        public void OnShowMessageDialog(string message)
+        {
+            MessageDialog.Init(message);
+            MessageDialog.gameObject.SetActive(true);
+        }
+
+        /// <summary>
+        ///     Shows the Message dialog (Timer option)
+        /// </summary>
+        /// <param name="message">The message to display</param>
+        /// <param name="timeLeft">The time left on a timer</param>
+        public void OnShowMessageDialog(string message, TimeSpan timeLeft)
+        {
+            MessageDialog.Init(message, timeLeft);
+            MessageDialog.gameObject.SetActive(true);
+        }
+
+        /// <summary>
+        ///     Activates the Battle screen. This switches the game to Battle mode.
+        /// </summary>
+        /// <param name="data">The battle data</param>
+        /// <param name="onBattleEnds">The callback triggered when battle ends</param>
+        public void OnShowBattleView(BattleData data, Action<bool> onBattleEnds)
+        {
+            // Notify the game that we are switching from world to battleground
+            ShowBattleground?.Invoke();
+            BattleView.Init(data, onBattleEnds);
+            ShowView(BattleView);
+        }
+
+        /// <summary>
+        ///     Activates the loading screen. This screen behaves like a modal dialog.
+        /// </summary>
+        /// <param name="bool">A boolean to show or hide a view</param>
+        public void OnShowLoadingView(bool show)
+        {
+            LoadingDialog.gameObject.SetActive(show);
+        }
+
+        /// <summary>
+        ///     Activates the Battle defeat screen
+        /// </summary>
+        /// <param name="title">A title for the dialog</param>
+        /// <param name="items">A list of items</param>
+        public void OnShowLootResultsDialog(string title, List<Item> items)
+        {
+            LootResultsDialog.Init(title, items);
+            ShowView(LootResultsDialog);
+        }
+
+        /// <summary>
+        ///     Activates the Character Sheet
+        /// </summary>
+        public void OnShowCharacterSheet()
+        {
+            ShowView(CharacterSheetView);
+        }
+
+        /// <summary>
+        ///     Activates the Help screen
+        /// </summary>
+        public void OnShowHowToPlayDialog()
+        {
+            ShowView(HowToPlayDialog);
+        }
+
+
+        /// <summary>
+        ///     Shows the Map
+        /// </summary>
+        public void OnShowMap()
+        {
+            ShowView(MapHudView);
+        }
+
+        /// <summary>
+        ///     Shows the Map on escape (different flow)
+        /// </summary>
+        public void OnEscape()
+        {
+            ShowWorld?.Invoke();
+            OnShowMap();
+        }
+
+        /// <summary>
+        ///     Shows the Splash screen.
+        /// </summary>
+        public void OnNewGame()
+        {
+            _currentView = null;
+            ShowView(SplashView);
+        }
+
+        /// <summary>
+        /// Callback triggered when an error message is bubbled up to the UI by other
+        /// game components.
+        /// </summary>
+        /// <param name="errorMsg">The error message></param>
+        public void OnError(string errorMsg)
+        {
+            StatusMsg.text = errorMsg;
+            _showStatusMessage = true;
+            _statusMessageTimeCounter = 0f;
+        }
+
+        /// <summary>
+        ///     Initializes a set of callbacks to set the game in World or Battle modes.
+        /// </summary>
+        private void InitCallbacks()
+        {
             GameVictoryView.OnClose += () => { ShowWorld?.Invoke(); };
-            //BattleVictoryDialog.OnClose += () => { ShowWorld?.Invoke(); };
-            lootResultsDialog.OnClose += () => { ShowWorld?.Invoke(); };
+            LootResultsDialog.OnClose += () => { ShowWorld?.Invoke(); };
             CharacterSheetView.OnClose += () => { ShowWorld?.Invoke(); };
-            //ChestRewardsDialog.OnClose += () => { ShowWorld?.Invoke(); };
 
             // Register callbacks
-            SplashView.OnClose += () => {
-                CurrentView = null;
+            SplashView.OnClose += () =>
+            {
+                _currentView = null;
                 // If first time experience, show How to play
-                if (PlayerPrefs.HasKey(GameConstants.FTUE_COMPLETE)) {
+                // Otherwise show the map
+                if (PlayerPrefs.HasKey(GameConstants.FTUE_COMPLETE))
+                {
                     OnShowMap();
                 }
-                else {
+                else
+                {
                     OnShowHowToPlayDialog();
                 }
             };
         }
 
-        #region event listeners
-
         /// <summary>
-        /// Activates the Game Victory screen
+        ///     Helper function to show the given view and hide all others.
         /// </summary>
-        public void OnShowGameVictoryView() {
-            ShowView(GameVictoryView);
-        }
-
-        /// <summary>
-        /// Shows the Message dialog
-        /// </summary>
-        public void OnShowMessageDialog(String msg) {
-            MessageDialog.Init(msg);
-            MessageDialog.gameObject.SetActive(true);
-        }
-
-        /// <summary>
-        /// Shows the Message dialog (Timer option)
-        /// </summary>
-        public void OnShowMessageDialog(String msg, TimeSpan ts) {
-            MessageDialog.Init(msg, ts);
-            MessageDialog.gameObject.SetActive(true);
-        }
-
-        /// <summary>
-        /// Activates the Battle screen. This switches the game in Battle mode.
-        /// </summary>
-        public void OnShowBattleView(BattleData data, Action<bool> OnBattleEnds) {
-            // Notify the game that we are switching from world to battleground
-            ShowBattleground?.Invoke();
-            battleView.Init(data, OnBattleEnds);
-            ShowView(battleView);
-        }
-
-        /// <summary>
-        /// Activates the loading screen. This screen behaves like a modal dialog.
-        /// </summary>
-        public void OnShowLoadingView(bool show) {
-            LoadingDialog.gameObject.SetActive(show);
-        }
-
-        /// <summary>
-        /// Activates the Battle defeat screen
-        /// </summary>
-        public void OnShowLootResultsDialog(string title, List<Item> items) { //BattleSummaryData data
-            lootResultsDialog.Init(title, items);
-            ShowView(lootResultsDialog);
-        }
-
-        /// <summary>
-        /// Activates the Character Sheet
-        /// </summary>
-        public void OnShowCharacterSheet() {
-            ShowView(CharacterSheetView);
-        }
-
-        /// <summary>
-        /// Activates the Help screen
-        /// </summary>
-        public void OnShowHowToPlayDialog() {
-            ShowView(howToPlayDialog);
-        }
-
-
-        /// <summary>
-        /// Shows the Map
-        /// </summary>
-        public void OnShowMap() {
-            ShowView(MapHudView);
-        }
-
-        /// <summary>
-        /// Shows the Map on escape (different flow)
-        /// </summary>
-        public void OnEscape() {
-            this.ShowWorld?.Invoke();
-            OnShowMap();
-        }
-
-        /// <summary>
-        /// Shows the Splash screen.
-        /// </summary>
-        public void OnNewGame() {
-            CurrentView = null;
-            ShowView(SplashView);
-        }
-
-        public void OnError(string errorMsg) {
-            StatusMsg.text = errorMsg;
-        }
-
-        #endregion
-
-        #region helper functions
-
-        /// <summary>
-        /// Helper function to show the given view and hide all others.
-        /// </summary>
-        /// <param name="view"></param>
-        /// <exception cref="Exception"></exception>
-        private void ShowView(BaseView view) {
-
+        /// <param name="view">The view to show</param>
+        /// <exception cref="Exception">Exception if the view is invalid</exception>
+        private void ShowView(BaseView view)
+        {
             StatusMsg.text = "";
 
-            if (view == null) {
-                throw new System.Exception("Invalid view gameobject!");
+            if (view == null)
+            {
+                throw new System.Exception("Invalid view object!");
             }
 
-            if (CurrentView != null) {
-                CurrentView.OnClose?.Invoke();
+            if (_currentView != null)
+            {
+                _currentView.Close();
             }
 
             // Hide all other views
-            foreach (BaseView v in views) {
+            foreach (BaseView v in _views)
+            {
                 v.gameObject.SetActive(v == view);
-                if (v == view) {
-                    CurrentView = v;
+                if (v == view)
+                {
+                    _currentView = v;
                 }
             }
         }
-
-        #endregion
     }
 }

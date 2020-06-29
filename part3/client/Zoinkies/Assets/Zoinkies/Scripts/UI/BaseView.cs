@@ -13,16 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Google.Maps.Demos.Zoinkies {
-
+namespace Google.Maps.Demos.Zoinkies
+{
     /// <summary>
-    /// Base class for all views.
-    /// Provides support for an OnClose event.
+    ///     Base class for all views.
+    ///     Provides support for an OnClose event.
     /// </summary>
-    public class BaseView : MonoBehaviour {
+    public class BaseView : MonoBehaviour
+    {
+        /// <summary>
+        /// This onclose event is used to notify other game components such as the UI Manager
+        /// that this view has been closed.
+        /// </summary>
         public UnityAction OnClose;
+
+        public void Close()
+        {
+            OnClose?.Invoke();
+            gameObject.SetActive(false);
+        }
     }
 }

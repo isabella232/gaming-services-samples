@@ -17,7 +17,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Google.Maps;
 using Google.Maps.Coord;
 using Google.Maps.Examples;
 using Google.Maps.Examples.Shared;
@@ -26,522 +25,648 @@ using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Events;
+using Random = UnityEngine.Random;
 
-namespace Google.Maps.Demos.Zoinkies {
-
-  [Serializable] public class StringEvent : UnityEvent<string> { }
-
-  /// <summary>
-  /// This class initializes reference, player, map data.
-  /// It also manages the creation and maintenance of spawned game objects.
-  ///
-  /// </summary>
-  public class WorldController : BaseMapLoader {
-
-    #region properties
-
+namespace Google.Maps.Demos.Zoinkies
+{
     /// <summary>
-    /// Dispatched to the game when Reference Data, World Data and Player Data
-    /// are initialized.
+    ///     String event class used to pass string parameters to other Unity gameobjects.
     /// </summary>
-    public UnityEvent GameReady;
-
-    /// <summary>
-    /// Dispatched to the game when some loading errors occur.
-    /// </summary>
-    public StringEvent GameLoadingError;
-
-    /// <summary>
-    /// Reference to the main camera
-    /// </summary>
-    public Camera mainCamera;
-
-    /// <summary>
-    /// Reference to the battle camera
-    /// </summary>
-    public Camera battleCamera;
-
-    /// <summary>
-    /// Reference to the server Manager, responsible for all REST calls.
-    /// </summary>
-    public ServerManager ServerManager;
-
-    /// <summary>
-    /// Convenient container to hold all spawned locations for quick access.
-    /// </summary>
-    public Transform PlayableLocationsContainer;
-
-    /// <summary>
-    /// Tower prefab
-    /// </summary>
-    public GameObject TowerPrefab;
-
-    /// <summary>
-    /// Minion prefab
-    /// </summary>
-    public GameObject MinionPrefab;
-
-    /// <summary>
-    /// Chest prefab
-    /// </summary>
-    public GameObject ChestPrefab;
-
-    /// <summary>
-    /// Energy station prefab
-    /// </summary>
-    public GameObject EnergyStationPrefab;
-
-    /// <summary>
-    /// Reference to avatar
-    /// </summary>
-    public GameObject Avatar;
-
-    /// <summary>
-    /// Reference to ground material
-    /// </summary>
-    public Material GroundMaterial;
-
-    /// <summary>
-    /// Reference to roads material
-    /// </summary>
-    public Material RoadsMaterial;
-
-    /// <summary>
-    /// Reference to building walls material
-    /// </summary>
-    public Material BuildingsWallMaterial;
-
-    /// <summary>
-    /// Reference to building roof material
-    /// </summary>
-    public Material BuildingsRoofMaterial;
-
-    /// <summary>
-    ///   Distance inside which buildings will be completely squashed (<see cref="MaximumSquash" />)
-    /// </summary>
-    public float SquashNear = 50;
-
-    /// <summary>
-    ///   Distance outside which buildings will not be squashed.
-    /// </summary>
-    public float SquashFar = 200;
-
-    /// <summary>
-    ///   The vertical scaling factor applied at maximum squashing.
-    /// </summary>
-    public float MaximumSquash = 0.1f;
-
-    /// <summary>
-    /// Indicates if the floating origin has been set
-    /// </summary>
-    private bool FloatingOriginIsSet;
-
-    /// <summary>
-    ///   Keeps track of game objects already instantiated.
-    ///   We only display game objects within a certain range.
-    /// </summary>
-    private Dictionary<string, GameObject> SpawnedGameObjects;
-
-    /// <summary>
-    /// Reference to the styles options applied to loaded map features
-    /// </summary>
-    private GameObjectOptions ZoinkiesStylesOptions;
-
-    /// <summary>
-    /// Keeps track of startup milestones
-    /// </summary>
-    private List<String> StartupCheckList;
-
-    /// <summary>
-    /// Setup milestone: Playable Locations loaded and initialized.
-    /// </summary>
-    private static string PLAYABLE_LOCATIONS_INITIALIZED = "PLAYABLE_LOCATIONS_INITIALIZED";
-
-    /// <summary>
-    /// Setup milestone: Reference data loaded and initialized.
-    /// </summary>
-    private static string REFERENCE_DATA_INITIALIZED = "REFERENCE_DATA_INITIALIZED";
-
-    /// <summary>
-    /// Setup milestone: Player data loaded and initialized.
-    /// </summary>
-    private static string PLAYER_DATA_INITIALIZED = "PLAYER_DATA_INITIALIZED";
-
-    /// <summary>
-    /// Setup milestone: Map data loaded and initialized.
-    /// </summary>
-    private static string MAP_INITIALIZED = "MAP_INITIALIZED";
-
-    /// <summary>
-    /// Indicates if the game has started
-    /// </summary>
-    private bool GameStarted;
-
-    private bool WorldDataIsLoading;
-
-    #endregion
-
-    private void CheckStartConditions() {
-      if (StartupCheckList.Count == 0 && !GameStarted) {
-        GameReady?.Invoke();
-        GameStarted = true;
-      }
+    [Serializable]
+    public class StringEvent : UnityEvent<string>
+    {
     }
 
     /// <summary>
-    /// Sets up the setup milestones list.
-    /// Loads reference data and player data.
+    ///     This class initializes reference, player, map data.
+    ///     It also manages the creation and maintenance of spawned game objects.
     /// </summary>
-    private void Awake() {
+    public class WorldController : BaseMapLoader
+    {
+        /// <summary>
+        ///     Dispatched to the game when Reference Data, World Data and Player Data
+        ///     are initialized.
+        /// </summary>
+        public UnityEvent GameReady;
 
-      // Initialize start up check list
-      StartupCheckList = new List<string> {
-        PLAYABLE_LOCATIONS_INITIALIZED,
-        REFERENCE_DATA_INITIALIZED,
-        PLAYER_DATA_INITIALIZED,
-        MAP_INITIALIZED
-      };
+        /// <summary>
+        ///     Dispatched to the game when some loading errors occur.
+        /// </summary>
+        public StringEvent GameLoadingError;
 
-      // Load and initialize Reference Data
-      StartCoroutine(ServerManager.GetReferenceData(data => {
-        ReferenceService.GetInstance().Init(data);
-        StartupCheckList.Remove(REFERENCE_DATA_INITIALIZED);
-        CheckStartConditions();
-      }, OnError));
+        /// <summary>
+        ///     Reference to the main camera
+        /// </summary>
+        public Camera mainCamera;
 
-      // Load and initialize Player Data
-      StartCoroutine(ServerManager.GetPlayerData(data => {
-        PlayerService.GetInstance().Init(data);
-        StartupCheckList.Remove(PLAYER_DATA_INITIALIZED);
-        CheckStartConditions();
-      }, OnError));
-    }
+        /// <summary>
+        ///     Reference to the battle camera
+        /// </summary>
+        public Camera battleCamera;
 
-    /// <summary>
-    /// Performs the initial Map load
-    /// </summary>
-    protected override void Start() {
+        /// <summary>
+        ///     Reference to the server Manager, responsible for all REST calls.
+        /// </summary>
+        public ServerManager ServerManager;
 
-      Assert.IsNotNull(mainCamera);
-      Assert.IsNotNull(battleCamera);
-      Assert.IsNotNull(PlayableLocationsContainer);
-      Assert.IsNotNull(ServerManager);
-      Assert.IsNotNull(Avatar);
-      base.Start();
+        /// <summary>
+        ///     Convenient container to hold all spawned locations for quick access.
+        /// </summary>
+        public Transform PlayableLocationsContainer;
 
-      SpawnedGameObjects = new Dictionary<string, GameObject>();
+        /// <summary>
+        ///     Tower prefab
+        /// </summary>
+        public GameObject TowerPrefab;
 
-      // Load Initial Map
-      LoadMap();
-    }
+        /// <summary>
+        ///     Minion prefab
+        /// </summary>
+        public GameObject MinionPrefab;
 
-    /// <summary>
-    ///   This function performs a sync of important data with the server.
-    ///   Althought the client is making local game changes for usability reasons
-    ///   the server is the ultimate authority for player stats and inventory
-    ///   as well as spawn locations states.
-    /// </summary>
-    public void SyncData() {
-      Debug.Log("SyncData+++");
+        /// <summary>
+        ///     Chest prefab
+        /// </summary>
+        public GameObject ChestPrefab;
 
-      if (PlayerService.GetInstance().DataHasChanged) {
-        StartCoroutine(ServerManager.PostPlayerData(PlayerService.GetInstance().data,
-          data => { PlayerService.GetInstance().Init(data); }, OnError));
-      }
-    }
+        /// <summary>
+        ///     Energy station prefab
+        /// </summary>
+        public GameObject EnergyStationPrefab;
 
+        /// <summary>
+        ///     Reference to avatar
+        /// </summary>
+        public GameObject Avatar;
 
-    /// <summary>
-    /// Initializes the style options for this game, by setting materials to roads, buildings
-    /// and water areas.
-    ///
-    /// </summary>
-    protected override void InitStylingOptions() {
-      ZoinkiesStylesOptions = ExampleDefaults.DefaultGameObjectOptions;
+        /// <summary>
+        ///     Reference to ground material
+        /// </summary>
+        public Material GroundMaterial;
 
-      // The default maps shader has a glossy property that allows the sky to reflect on it. Cool.
-      Material waterMaterial = ExampleDefaults.DefaultGameObjectOptions.RegionStyle.FillMaterial;
-      waterMaterial.color = new Color(0.4274509804f, 0.7725490196f, 0.8941176471f);
+        /// <summary>
+        ///     Reference to roads material
+        /// </summary>
+        public Material RoadsMaterial;
 
-      ZoinkiesStylesOptions.ExtrudedStructureStyle = new ExtrudedStructureStyle.Builder {
-        RoofMaterial = BuildingsRoofMaterial,
-        WallMaterial = BuildingsWallMaterial
-      }.Build();
+        /// <summary>
+        ///     Reference to list of building walls materials
+        /// </summary>
+        public List<Material> BuildingsWallMaterials;
 
-      ZoinkiesStylesOptions.ModeledStructureStyle = new ModeledStructureStyle.Builder {
-        Material = BuildingsWallMaterial
-      }.Build();
+        /// <summary>
+        ///     Reference to list of building roof materials
+        /// </summary>
+        public List<Material> BuildingsRoofMaterials;
 
-      ZoinkiesStylesOptions.RegionStyle = new RegionStyle.Builder {
-        FillMaterial = GroundMaterial
-      }.Build();
+        /// <summary>
+        ///     Reference to material for modeled structures
+        /// </summary>
+        public Material ModeledBuildingsMaterial;
 
-      ZoinkiesStylesOptions.AreaWaterStyle = new AreaWaterStyle.Builder {
-        FillMaterial = waterMaterial
-      }.Build();
+        /// <summary>
+        ///     Distance inside which buildings will be completely squashed (<see cref="MaximumSquash" />)
+        /// </summary>
+        public float SquashNear = 50;
 
-      ZoinkiesStylesOptions.LineWaterStyle = new LineWaterStyle.Builder {
-        Material = waterMaterial
-      }.Build();
+        /// <summary>
+        ///     Distance outside which buildings will not be squashed.
+        /// </summary>
+        public float SquashFar = 200;
 
-      ZoinkiesStylesOptions.SegmentStyle = new SegmentStyle.Builder {
-        Material = RoadsMaterial
-      }.Build();
+        /// <summary>
+        ///     The vertical scaling factor applied at maximum squashing.
+        /// </summary>
+        public float MaximumSquash = 0.1f;
 
-      if (RenderingStyles == null) RenderingStyles = ZoinkiesStylesOptions;
-    }
+        /// <summary>
+        ///     Indicates if we have acquired a GPS Location
+        /// </summary>
+        [ReadOnly]
+        public bool HasGPSLocation;
 
-    /// <summary>
-    /// Adds some squashing behavior to all extruded structures.
-    /// Basically, we squash everything around our Avatar so that generated game items can be seen
-    /// from a distance.
-    /// </summary>
-    protected override void InitEventListeners() {
-      base.InitEventListeners();
+        /// <summary>
+        ///     Setup milestone: Playable Locations loaded and initialized.
+        /// </summary>
+        private const string PLAYABLE_LOCATIONS_INITIALIZED =
+            "PLAYABLE_LOCATIONS_INITIALIZED";
 
-      if (MapsService == null) return;
+        /// <summary>
+        ///     Setup milestone: Reference data loaded and initialized.
+        /// </summary>
+        private const string REFERENCE_DATA_INITIALIZED = "REFERENCE_DATA_INITIALIZED";
 
-      // Apply a post-creation listener that adds the squashing MonoBehaviour to each building.
-      MapsService.Events.ExtrudedStructureEvents.DidCreate.AddListener(
-        e => { AddSquasher(e.GameObject); });
+        /// <summary>
+        ///     Setup milestone: Player data loaded and initialized.
+        /// </summary>
+        private const string PLAYER_DATA_INITIALIZED = "PLAYER_DATA_INITIALIZED";
 
-      // Apply a post-creation listener that adds the squashing MonoBehaviour to each building.
-      MapsService.Events.ModeledStructureEvents.DidCreate.AddListener(
-        e => { AddSquasher(e.GameObject); });
+        /// <summary>
+        ///     Setup milestone: Map data loaded and initialized.
+        /// </summary>
+        private const string MAP_INITIALIZED = "MAP_INITIALIZED";
 
-      MapsService.Events.MapEvents.Loaded.AddListener(arg0 => {
-        StartupCheckList.Remove(MAP_INITIALIZED);
-        CheckStartConditions();
-      });
-    }
+        /// <summary>
+        ///     Frequency at which we check our device location (to save battery).
+        /// </summary>
+        private const float LOCATION_PING = 10f; // 10 seconds
 
-    /// <summary>
-    ///   Loads all playable locations within a round area centered on the player's GPS position
-    /// </summary>
-    /// <param name="currentPosition"></param>
-    /// <param name="radius"></param>
-    private void UpdateWorldData(LatLng currentPosition, float distance) {
-      if (!WorldDataIsLoading) {
-        WorldDataIsLoading = true;
+        /// <summary>
+        ///     Indicates if the floating origin has been set
+        /// </summary>
+        private bool _floatingOriginIsSet;
 
-        var center = MapsService.Coords.FromLatLngToVector3(currentPosition);
+        /// <summary>
+        ///     Keeps track of game objects already instantiated.
+        ///     We only display game objects within a certain range.
+        /// </summary>
+        private Dictionary<string, GameObject> _spawnedGameObjects;
 
-        var NorthEastCorner = center + new Vector3(distance, 0f, distance);
-        var NorthEastLatLng = MapsService.Coords.FromVector3ToLatLng(NorthEastCorner);
+        /// <summary>
+        ///     Reference to the styles options applied to loaded map features
+        /// </summary>
+        private GameObjectOptions _zoinkiesStylesOptions;
 
-        var SouthWestCorner = center + new Vector3(-distance, 0f, -distance);
-        var SouthWestLatLng = MapsService.Coords.FromVector3ToLatLng(SouthWestCorner);
+        /// <summary>
+        ///     Keeps track of startup milestones
+        /// </summary>
+        private List<string> _startupCheckList;
 
-        var wdr = new WorldDataRequest();
-        wdr.CopyFrom(SouthWestLatLng, NorthEastLatLng);
+        /// <summary>
+        ///     Indicates if the game has started
+        /// </summary>
+        private bool _gameStarted;
 
-        StartCoroutine(ServerManager.PostWorldData(wdr, OnWorldDataLoaded, OnError));
-      }
-    }
+        /// <summary>
+        ///     Indicates if we have a pending request to get world data.
+        ///     Used for optimization.
+        /// </summary>
+        private bool _worldDataIsLoading;
 
+        /// <summary>
+        ///     Current value of ping location timer.
+        /// </summary>
+        private float _currentTimer;
 
-    /// <summary>
-    /// Creates all new spawn locations for the game from the World Data provided by the server.
-    /// </summary>
-    /// <param name="wd"></param>
-    private void CreateNewLocations(WorldData wd) {
-      // Render the new data on the map
-      Debug.Log("OnWorldDataLoaded+++ " + wd.locations.Count);
+        /// <summary>
+        ///     Sets up the setup milestones list.
+        ///     Loads reference data and player data.
+        /// </summary>
+        void Awake()
+        {
+            // Initialize start up check list
+            _startupCheckList = new List<string>
+            {
+                PLAYABLE_LOCATIONS_INITIALIZED,
+                REFERENCE_DATA_INITIALIZED,
+                PLAYER_DATA_INITIALIZED,
+                MAP_INITIALIZED
+            };
 
-      // Only render the playable locations that are within range of the loaded map.
-      // The API returns all locations within the overlapping cells - which may be way larger
-      // than our map.
-      CreateAssets(WorldService.GetInstance().GetMinions(),
-        MinionPrefab,
-        PlayableLocationsContainer);
-      CreateAssets(WorldService.GetInstance().GetTowers(), TowerPrefab, PlayableLocationsContainer);
-      CreateAssets(WorldService.GetInstance().GetChests(), ChestPrefab, PlayableLocationsContainer);
-      CreateAssets(WorldService.GetInstance().GetEnergyStations(),
-        EnergyStationPrefab,
-        PlayableLocationsContainer);
-    }
+            // Load and initialize Reference Data
+            StartCoroutine(ServerManager.GetReferenceData(data =>
+            {
+                ReferenceService.GetInstance().Init(data);
+                _startupCheckList.Remove(REFERENCE_DATA_INITIALIZED);
+                CheckStartConditions();
+            }, OnError));
 
-    /// <summary>
-    /// This helper class creates all gameobjects based on the given collection of spawn locations.
-    ///
-    /// </summary>
-    /// <param name="collection">A collection of spawn locations</param>
-    /// <param name="prefab">The prefab to instantiate for each location</param>
-    /// <param name="container">The container that holds all created gameobjects</param>
-    /// <returns></returns>
-    private int CreateAssets(IEnumerable<SpawnLocation> collection,
-      GameObject prefab,
-      Transform container) {
-      var numberOfObjectsCreated = 0;
-      foreach (var loc in collection)
-        if (loc.snappedPoint != null) {
-          var pos = MapsService.Coords.FromLatLngToVector3(
-            new LatLng(loc.snappedPoint.latitude, loc.snappedPoint.longitude));
-          // Do we already have this object in our scene?
-          if (!SpawnedGameObjects.ContainsKey(loc.id)) {
-            var go =
-              Instantiate(prefab, container);
-            go.transform.position = pos;
+            // Load and initialize Player Data
+            StartCoroutine(ServerManager.GetPlayerData(data =>
+            {
+                PlayerService.GetInstance().Init(data);
+                _startupCheckList.Remove(PLAYER_DATA_INITIALIZED);
+                CheckStartConditions();
+            }, OnError));
 
-            // The reference to placeId allows us to find the associated data
-            // through WorldService
-            go.name = loc.id;
-
-            BaseSpawnLocationController sl = go.GetComponent<BaseSpawnLocationController>();
-            Assert.IsNotNull(sl);
-            sl.Init(loc.id);
-
-            SpawnedGameObjects.Add(loc.id, go);
-            numberOfObjectsCreated++;
-          }
+            LoadOnStart = false;
         }
 
-      return numberOfObjectsCreated;
+        /// <summary>
+        ///     Performs the initial Map load
+        /// </summary>
+        protected override void Start()
+        {
+            Assert.IsNotNull(mainCamera);
+            Assert.IsNotNull(battleCamera);
+            Assert.IsNotNull(PlayableLocationsContainer);
+            Assert.IsNotNull(ServerManager);
+            Assert.IsNotNull(Avatar);
+            base.Start();
+
+            _spawnedGameObjects = new Dictionary<string, GameObject>();
+
+            if (BuildingsRoofMaterials.Count == 0
+                || BuildingsWallMaterials.Count == 0
+                || BuildingsRoofMaterials.Count != BuildingsWallMaterials.Count)
+            {
+                throw new System.Exception("We expect at least one wall " +
+                                           "and one roof material.");
+            }
+
+            // Load Initial Map
+            LoadMap();
+        }
+
+        /// <summary>
+        ///     This function performs a sync of important data with the server.
+        ///     Althought the client is making local game changes for usability reasons
+        ///     the server is the ultimate authority for player stats and inventory
+        ///     as well as spawn locations states.
+        /// </summary>
+        public void SyncData()
+        {
+            if (PlayerService.GetInstance().DataIsUntrusted)
+            {
+                StartCoroutine(ServerManager.PostPlayerData(PlayerService.GetInstance().Data,
+                    data => { PlayerService.GetInstance().Init(data); }, OnError));
+            }
+        }
+
+        /// <summary>
+        ///     Event listener triggered by the game when transitioning from Battle to World Mode.
+        ///     References to this method are implicit.
+        /// </summary>
+        public void OnShowWorld()
+        {
+            Avatar.gameObject.SetActive(true);
+            GetComponent<DynamicMapsUpdater>().enabled = true;
+
+            mainCamera.enabled = true;
+            battleCamera.enabled = false;
+
+            // Good time to do a server sync
+            SyncData();
+        }
+
+        /// <summary>
+        ///     Event listener triggered by the game when transitioning from World to Battle Mode.
+        ///     References to this method are implicit.
+        /// </summary>
+        public void OnShowBattleground()
+        {
+            Avatar.gameObject.SetActive(false);
+            GetComponent<DynamicMapsUpdater>().enabled = false;
+
+            mainCamera.enabled = false;
+            battleCamera.enabled = true;
+        }
+
+        /// <summary>
+        ///     Triggered when the map load starts.
+        /// </summary>
+        public void OnMapLoadStart()
+        {
+            // We've moved enough to restart a new map
+
+            // Get all game objects near our avatar (us)
+            // Note that we position the camera at the current GPS coordinates,
+            // so the Avatar position is slightly offset.
+            // At start, the Avatar is positioned at the origin of the world space,
+            // which coincide with the floating origin lat lng.
+            LatLng avatarLatLng = MapsService.Coords.FromVector3ToLatLng(Avatar.transform.position);
+            UpdateWorldData(avatarLatLng, MaxDistance);
+        }
+
+        /// <summary>
+        ///     Triggered by the UI when a new game needs to be created.
+        ///     This event listener resets player and world data.
+        /// </summary>
+        public void OnNewGame()
+        {
+            _spawnedGameObjects.Clear();
+
+            // Clear the world
+            ClearContainer(PlayableLocationsContainer);
+
+            _gameStarted = false;
+
+            PlayerService.GetInstance().Init(new PlayerData());
+            WorldService.GetInstance().Init(new WorldData());
+
+            // Maps data stay the same (we are at the same location)PLAYER_DATA_INITIALIZED,
+            _startupCheckList = new List<string> {PLAYABLE_LOCATIONS_INITIALIZED};
+
+            // Reset Player data
+
+            StartCoroutine(ServerManager.PostPlayerData(null, data =>
+            {
+                PlayerService.GetInstance().Init(data);
+                _startupCheckList.Remove(PLAYER_DATA_INITIALIZED);
+                CheckStartConditions();
+            }, s => { Debug.LogError(s); }));
+
+
+            StartCoroutine(ServerManager.DeleteWorldData(data =>
+            {
+                // Generate new world
+                UpdateWorldData(LatLng, MaxDistance);
+            }, s => { Debug.LogError(s); }));
+        }
+
+        /// <summary>
+        ///     Initializes the style options for this game, by setting materials to roads,
+        ///     buildings and water areas.
+        /// </summary>
+        protected override void InitStylingOptions()
+        {
+            _zoinkiesStylesOptions = ExampleDefaults.DefaultGameObjectOptions;
+
+            // The default maps shader has a glossy property that allows the sky to reflect on it.
+            Material waterMaterial =
+                ExampleDefaults.DefaultGameObjectOptions.RegionStyle.FillMaterial;
+            waterMaterial.color = new Color(0.4274509804f, 0.7725490196f, 0.8941176471f);
+
+            _zoinkiesStylesOptions.ModeledStructureStyle = new ModeledStructureStyle.Builder
+            {
+                Material = ModeledBuildingsMaterial
+            }.Build();
+
+            _zoinkiesStylesOptions.RegionStyle = new RegionStyle.Builder
+            {
+                FillMaterial = GroundMaterial
+            }.Build();
+
+            _zoinkiesStylesOptions.AreaWaterStyle = new AreaWaterStyle.Builder
+            {
+                FillMaterial = waterMaterial
+            }.Build();
+
+            _zoinkiesStylesOptions.LineWaterStyle = new LineWaterStyle.Builder
+            {
+                Material = waterMaterial
+            }.Build();
+
+            _zoinkiesStylesOptions.SegmentStyle = new SegmentStyle.Builder
+            {
+                Material = RoadsMaterial
+            }.Build();
+
+            if (RenderingStyles == null)
+            {
+                RenderingStyles = _zoinkiesStylesOptions;
+            }
+        }
+
+        /// <summary>
+        ///     Adds some squashing behavior to all extruded structures.
+        ///     Basically, we squash everything around our Avatar so that generated game items
+        ///     can be seen from a distance.
+        /// </summary>
+        protected override void InitEventListeners()
+        {
+            base.InitEventListeners();
+
+            if (MapsService == null)
+            {
+                return;
+            }
+
+            // Apply a pre-creation listener that picks a random style for extruded buildings
+            MapsService.Events.ExtrudedStructureEvents.WillCreate.AddListener(
+                e =>
+                {
+                    int i = Random.Range(0, BuildingsRoofMaterials.Count);
+                    e.Style = new ExtrudedStructureStyle.Builder
+                    {
+                        RoofMaterial = BuildingsRoofMaterials[i],
+                        WallMaterial = BuildingsWallMaterials[i]
+                    }.Build();
+                });
+
+            // Apply a pre-creation listener that picks a random style for modeled buildings
+            // In this game, modeled buildings are plain and unicolor.
+            MapsService.Events.ModeledStructureEvents.WillCreate.AddListener(
+                e =>
+                {
+                    int i = Random.Range(0, BuildingsRoofMaterials.Count);
+                    e.Style = new ModeledStructureStyle.Builder
+                    {
+                        Material = BuildingsRoofMaterials[i]
+                    }.Build();
+                });
+
+            // Apply a post-creation listener that adds the squashing MonoBehaviour
+            // to each building.
+            MapsService.Events.ExtrudedStructureEvents.DidCreate.AddListener(
+                e => { AddSquasher(e.GameObject); });
+
+            // Apply a post-creation listener that adds the squashing MonoBehaviour
+            // to each building.
+            MapsService.Events.ModeledStructureEvents.DidCreate.AddListener(
+                e => { AddSquasher(e.GameObject); });
+
+            // Apply a post-creation listener that move road segments up to prevent  .
+            MapsService.Events.SegmentEvents.DidCreate.AddListener(
+                e =>
+                {
+                    // Move y position up to prevent z-fighting with water areas;
+                    e.GameObject.transform.position += new Vector3(0f, 0.01f, 0f);
+                });
+
+            MapsService.Events.MapEvents.Loaded.AddListener(arg0 =>
+            {
+                _startupCheckList.Remove(MAP_INITIALIZED);
+                CheckStartConditions();
+            });
+        }
+
+        /// <summary>
+        ///     Loads all playable locations within a round area centered on the player's
+        ///     GPS position.
+        /// </summary>
+        /// <param name="currentPosition">The current lat lng of our avatar</param>
+        /// <param name="distance">The radius of the map area around us</param>
+        private void UpdateWorldData(LatLng currentPosition, float distance)
+        {
+            if (!_worldDataIsLoading)
+            {
+                _worldDataIsLoading = true;
+
+                Vector3 center = MapsService.Coords.FromLatLngToVector3(currentPosition);
+
+                Vector3 NorthEastCorner = center + new Vector3(distance, 0f, distance);
+                LatLng NorthEastLatLng = MapsService.Coords.FromVector3ToLatLng(NorthEastCorner);
+
+                Vector3 SouthWestCorner = center + new Vector3(-distance, 0f, -distance);
+                LatLng SouthWestLatLng = MapsService.Coords.FromVector3ToLatLng(SouthWestCorner);
+
+                WorldDataRequest wdr = new WorldDataRequest();
+                wdr.CopyFrom(SouthWestLatLng, NorthEastLatLng);
+
+                StartCoroutine(ServerManager.PostWorldData(wdr, OnWorldDataLoaded, OnError));
+            }
+        }
+
+        /// <summary>
+        ///     Creates all new spawn locations for the game from the World Data provided
+        ///     by the server.
+        /// </summary>
+        /// <param name="worldData">World Data</param>
+        private void CreateNewLocations(WorldData worldData)
+        {
+            // Render the new data on the map:
+            // Only render the playable locations that are within range of the loaded map.
+            // The API returns all locations within the overlapping cells - which may be way larger
+            // than our map.
+            CreateAssets(WorldService.GetInstance().GetMinions(),
+                MinionPrefab,
+                PlayableLocationsContainer);
+            CreateAssets(WorldService.GetInstance().GetTowers(), TowerPrefab,
+                PlayableLocationsContainer);
+            CreateAssets(WorldService.GetInstance().GetChests(), ChestPrefab,
+                PlayableLocationsContainer);
+            CreateAssets(WorldService.GetInstance().GetEnergyStations(),
+                EnergyStationPrefab,
+                PlayableLocationsContainer);
+        }
+
+        /// <summary>
+        ///     This helper class creates all gameobjects based on the given collection
+        ///     of spawn locations.
+        /// </summary>
+        /// <param name="collection">A collection of spawn locations</param>
+        /// <param name="prefab">The prefab to instantiate for each location</param>
+        /// <param name="container">The container that holds all created gameobjects</param>
+        /// <returns>The amount of created assets</returns>
+        private int CreateAssets(
+            IEnumerable<SpawnLocation> collection,
+            GameObject prefab,
+            Transform container)
+        {
+            int numberOfObjectsCreated = 0;
+            foreach (SpawnLocation loc in collection)
+            {
+                if (loc.snappedPoint != null)
+                {
+                    Vector3 pos = MapsService.Coords.FromLatLngToVector3(
+                        new LatLng(loc.snappedPoint.latitude, loc.snappedPoint.longitude));
+                    // Do we already have this object in our scene?
+                    if (!_spawnedGameObjects.ContainsKey(loc.id))
+                    {
+                        GameObject go =
+                            Instantiate(prefab, container);
+                        go.transform.position = pos;
+
+                        // The reference to placeId allows us to find the associated data
+                        // through WorldService
+                        go.name = loc.id;
+
+                        BaseSpawnLocationController sl =
+                            go.GetComponent<BaseSpawnLocationController>();
+                        Assert.IsNotNull(sl);
+                        sl.Init(loc.id);
+
+                        _spawnedGameObjects.Add(loc.id, go);
+                        numberOfObjectsCreated++;
+                    }
+                }
+            }
+
+            return numberOfObjectsCreated;
+        }
+
+        /// <summary>
+        ///     Checks if start conditions are met. Dispatches a game ready event if they are.
+        /// </summary>
+        private void CheckStartConditions()
+        {
+            if (_startupCheckList.Count == 0 && !_gameStarted)
+            {
+                GameReady?.Invoke();
+                _gameStarted = true;
+            }
+        }
+
+        /// <summary>
+        /// Triggered when world data is loaded successfully.
+        /// Note that by world data we imply all game specific locations as opposed to maps data
+        /// loaded through the Maps Unity SDK.
+        /// </summary>
+        /// <param name="worldData">World Data</param>
+        private void OnWorldDataLoaded(WorldData worldData)
+        {
+            // Init the playerservice with the new batch of data
+            WorldService.GetInstance().Init(worldData);
+
+            // Init gameobjects on the map
+            IEnumerable<string> keysFromWorldData =
+                WorldService.GetInstance().GetSpawnLocationsIds();
+
+            // Delete all gameobjects not on the new list
+            int deletedEntries = 0;
+            List<string> missingKeysFromLocalCache =
+                new List<string>(_spawnedGameObjects.Keys.Except(keysFromWorldData));
+            foreach (string k in missingKeysFromLocalCache)
+            {
+                Destroy(_spawnedGameObjects[k].gameObject);
+                _spawnedGameObjects.Remove(k);
+                deletedEntries++;
+            }
+
+            // Add all new locations
+            CreateNewLocations(worldData);
+
+            // Show/hide objects based on distance from avatar
+            foreach (string k in _spawnedGameObjects.Keys)
+            {
+                SpawnLocation sl = WorldService.GetInstance().GetSpawnLocation(k);
+                Vector3 pos = MapsService.Coords.FromLatLngToVector3(
+                    new LatLng(sl.snappedPoint.latitude, sl.snappedPoint.longitude));
+
+                _spawnedGameObjects[k].SetActive(Vector3.Distance(Avatar.transform.position, pos) <=
+                                                MaxDistance);
+            }
+
+            _startupCheckList.Remove(PLAYABLE_LOCATIONS_INITIALIZED);
+            CheckStartConditions();
+
+            _worldDataIsLoading = false;
+        }
+
+        /// <summary>
+        /// Triggered when any server call fails with errors.
+        /// </summary>
+        /// <param name="errorMessage">An error message</param>
+        private void OnError(string errorMessage)
+        {
+            Debug.LogError(errorMessage);
+            if (_worldDataIsLoading)
+            {
+                _worldDataIsLoading = false;
+            }
+
+            // Dispatches an event to the game. This eventually bubbles up to the user interface.
+            GameLoadingError?.Invoke(errorMessage);
+        }
+
+        /// <summary>
+        ///     Clears all children of a transform
+        /// </summary>
+        /// <param name="container">A gameobject container</param>
+        private void ClearContainer(Transform container)
+        {
+            foreach (Transform child in container)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+
+        /// <summary>
+        ///     Adds a Squasher MonoBehaviour to the supplied GameObject.
+        /// </summary>
+        /// <remarks>
+        ///     The Squasher MonoBehaviour reduced the vertical scale of the GameObject's transform
+        ///     when a building object is nearby.
+        /// </remarks>
+        /// <param name="target">The GameObject to which to add the Squasher behaviour.</param>
+        private void AddSquasher(GameObject target)
+        {
+            Squasher squasher = target.AddComponent<Squasher>();
+            squasher.Target = Avatar.transform;
+            squasher.Near = SquashNear;
+            squasher.Far = SquashFar;
+            squasher.MaximumSquashing = MaximumSquash;
+        }
     }
-
-    #region event listeners
-
-    /// <summary>
-    /// Triggered by the UI when a new game needs to be created.
-    /// This event listener resets player and world data.
-    ///
-    /// </summary>
-    public void OnNewGame() {
-      Debug.Log("OnNewGame+++");
-
-      this.SpawnedGameObjects.Clear();
-
-      // Clear the world
-      ClearContainer(PlayableLocationsContainer);
-
-      GameStarted = false;
-
-      PlayerService.GetInstance().data = new PlayerData();
-      WorldService.GetInstance().data = new WorldData();
-
-      // Maps data stay the same (we are at the same location)PLAYER_DATA_INITIALIZED,
-      StartupCheckList = new List<string> {PLAYABLE_LOCATIONS_INITIALIZED};
-
-      // Reset Player data
-
-      StartCoroutine(ServerManager.PostPlayerData(null, data => {
-        PlayerService.GetInstance().data = data;
-        StartupCheckList.Remove(PLAYER_DATA_INITIALIZED);
-        CheckStartConditions();
-      }, s => { Debug.LogError(s); }));
-
-
-      StartCoroutine(ServerManager.DeleteWorldData(data => {
-        // Generate new world
-        UpdateWorldData(LatLng, MaxDistance);
-      }, s => { Debug.LogError(s); }));
-    }
-
-    public void OnShowWorld() {
-      Debug.Log("OnShowWorld+++");
-      Avatar.gameObject.SetActive(true);
-      GetComponent<DynamicMapsUpdater>().enabled = true;
-
-      mainCamera.enabled = true;
-      battleCamera.enabled = false;
-
-      // Good time to do a server sync
-      SyncData();
-    }
-
-    public void OnShowBattleground() {
-      Debug.Log("OnShowBattleground+++");
-      Avatar.gameObject.SetActive(false);
-      GetComponent<DynamicMapsUpdater>().enabled = false;
-
-      mainCamera.enabled = false;
-      battleCamera.enabled = true;
-    }
-
-    public void OnMapLoadStart() {
-      // We've moved enough to restart a new map
-
-      // Get all game objects near our avatar (us)
-      // Note that we position the camera at the current GPS coordinates, so the Avatar position is slightly offset.
-      // At start, the Avatar is positioned at the origin of the world space, which coincide with the floating origin lat lng.
-      var avatarLatLng = MapsService.Coords.FromVector3ToLatLng(Avatar.transform.position);
-      UpdateWorldData(avatarLatLng, MaxDistance);
-    }
-
-    private void OnWorldDataLoaded(WorldData wd) {
-      // Init the playerservice with the new batch of data
-      WorldService.GetInstance().Init(wd);
-
-      // Init gameobjects on the map
-      var keysFromWorldData = WorldService.GetInstance().GetSpawnLocationsIds();
-
-      // Delete all gameobjects not on the new list
-      var deletedEntries = 0;
-      var missingKeysFromLocalCache =
-        new List<string>(SpawnedGameObjects.Keys.Except(keysFromWorldData));
-      foreach (var k in missingKeysFromLocalCache) {
-        Destroy(SpawnedGameObjects[k].gameObject);
-        SpawnedGameObjects.Remove(k);
-        deletedEntries++;
-      }
-
-      Debug.Log("Deleted " + deletedEntries);
-
-      // Add all new locations
-      CreateNewLocations(wd);
-
-      // Show/hide objects based on distance from avatar
-      foreach (var k in SpawnedGameObjects.Keys) {
-        var sl = WorldService.GetInstance().GetSpawnLocation(k);
-        var pos = MapsService.Coords.FromLatLngToVector3(
-          new LatLng(sl.snappedPoint.latitude, sl.snappedPoint.longitude));
-
-        SpawnedGameObjects[k].SetActive(Vector3.Distance(Avatar.transform.position, pos) <=
-                                        MaxDistance);
-      }
-
-      StartupCheckList.Remove(PLAYABLE_LOCATIONS_INITIALIZED);
-      CheckStartConditions();
-
-      WorldDataIsLoading = false;
-    }
-
-    private void OnError(string errMsg) {
-      Debug.LogError(errMsg);
-      if (WorldDataIsLoading) {
-        WorldDataIsLoading = false;
-      }
-      GameLoadingError?.Invoke(errMsg);
-    }
-
-    #endregion
-
-    #region utils
-
-    /// <summary>
-    /// Clears all children of a transform
-    /// </summary>
-    /// <param name="container"></param>
-    private void ClearContainer(Transform container) {
-      foreach (Transform child in container) Destroy(child.gameObject);
-    }
-
-    /// <summary>
-    ///   Adds a Squasher MonoBehaviour to the supplied GameObject.
-    /// </summary>
-    /// <remarks>
-    ///   The Squasher MonoBehaviour reduced the vertical scale of the GameObject's transform
-    ///   when a building object is nearby.
-    /// </remarks>
-    /// <param name="go">The GameObject to which to add the Squasher behaviour.</param>
-    private void AddSquasher(GameObject go) {
-      var squasher = go.AddComponent<Squasher>();
-      squasher.Target = Avatar.transform;
-      squasher.Near = SquashNear;
-      squasher.Far = SquashFar;
-      squasher.MaximumSquashing = MaximumSquash;
-    }
-
-    #endregion
-  }
 }

@@ -13,17 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google.Maps.Demos.Zoinkies {
-  /// <summary>
-  /// Model that provides information about restored energy.
-  /// </summary>
-  public class EnergyData {
-    public string id{ get; set; }
-    public int amountRestored{ get; set; }
-    public override string ToString() {
-      return "{Id: " + id +
-             " AmountRestored: " + amountRestored +
-             "}";
+
+namespace Google.Maps.Demos.Zoinkies
+{
+    /// <summary>
+    ///     Model that provides information about restored energy.
+    /// </summary>
+    public class EnergyData
+    {
+        /// <summary>
+        /// Unique identifier for the location.
+        /// </summary>
+        public string id { get; set; }
+        /// <summary>
+        /// The amount of energy restored.
+        /// </summary>
+        public int amountRestored { get; set; }
+
+        public override string ToString()
+        {
+            return "{Id: " + id +
+                   " AmountRestored: " + amountRestored +
+                   "}";
+        }
     }
-  }
 }

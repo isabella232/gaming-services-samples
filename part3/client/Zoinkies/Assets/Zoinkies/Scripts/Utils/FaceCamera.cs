@@ -16,16 +16,24 @@
 
 using UnityEngine;
 
-namespace Google.Maps.Demos.Zoinkies {
-
-    public class FaceCamera : MonoBehaviour {
-        // Always look at the camera
-        void Update() {
+namespace Google.Maps.Demos.Zoinkies
+{
+    /// <summary>
+    /// A helper script to turn objects so that the same side always faces the camera.
+    /// </summary>
+    public class FaceCamera : MonoBehaviour
+    {
+        /// <summary>
+        /// Rotate the object to always look at the camera
+        /// </summary>
+        void Update()
+        {
             // Rotate around the (z) axis.
-            if (Camera.main != null) {
-                this.transform.LookAt(Camera.main.transform, Camera.main.transform.up);
-                this.transform.rotation =
-                    Quaternion.Euler(0, this.transform.rotation.eulerAngles.y, 0);
+            if (Camera.main != null)
+            {
+                transform.LookAt(Camera.main.transform, Camera.main.transform.up);
+                transform.rotation =
+                    Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
             }
         }
     }

@@ -13,22 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System.Collections.Generic;
 
-namespace Google.Maps.Demos.Zoinkies {
-
-  /// <summary>
-  /// Models a rewards list of items.
-  /// </summary>
-  public class RewardsData {
+namespace Google.Maps.Demos.Zoinkies
+{
     /// <summary>
-    /// List of items
+    ///     Models a rewards list of items.
     /// </summary>
-    public List<Item> items{ get; set; }
+    public class RewardsData
+    {
+        /// <summary>
+        ///     List of items
+        /// </summary>
+        public List<Item> items { get; set; }
 
-    public RewardsData() {
-      items = new List<Item>();
-
+        public RewardsData()
+        {
+            items = new List<Item>();
+        }
     }
-  }
 }

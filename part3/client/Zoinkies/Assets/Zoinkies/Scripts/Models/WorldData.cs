@@ -13,36 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Google.Maps.Demos.Zoinkies {
-
+namespace Google.Maps.Demos.Zoinkies
+{
     /// <summary>
-    /// Keeps track of all game locations.
+    ///     Keeps track of all game locations.
     /// </summary>
-    public class WorldData {
+    public class WorldData
+    {
         /// <summary>
-        /// List of spawn locations
+        ///     List of spawn locations
         /// </summary>
         public Dictionary<string, SpawnLocation> locations { get; set; }
 
         /// <summary>
-        /// Current server time
+        ///     Current server time
         /// </summary>
         public string currentServerTime { get; set; }
 
-        public WorldData() {
+        public WorldData()
+        {
             locations = new Dictionary<string, SpawnLocation>();
             currentServerTime = DateTime.UtcNow.ToString();
         }
 
-        public override string ToString() {
+        public override string ToString()
+        {
             StringBuilder sb = new StringBuilder();
             sb.Append("Locations: \n");
-            foreach (SpawnLocation loc in locations.Values) {
-                sb.Append(loc.ToString() + " \t");
+            foreach (SpawnLocation loc in locations.Values)
+            {
+                sb.Append(loc + " \t");
             }
 
             sb.Append("----------------------");

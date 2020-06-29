@@ -13,112 +13,186 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Google.Maps.Demos.Zoinkies {
+namespace Google.Maps.Demos.Zoinkies
+{
+    /// <summary>
+    ///     This class represents a mini inventory for a specific collection of game items.
+    ///     Game items could be weapons, body armors or event character types.
+    ///     The controller keeps track of the actual inventory of the item type and
+    ///     provides support for navigating forward and backward through the inventory.
+    /// </summary>
+    /// <remarks>
+    ///     Some collections might be empty. When this happens, both navigation buttons
+    ///     are disabled, and no item is shown.  If later an item is added to this inventory
+    ///     but isn't selected, we still display an empty visual but the navigation buttons
+    ///     are now enabled.
+    /// </remarks>
+    public class MicroInventoryController : MonoBehaviour
+    {
 
-    public class MicroInventoryController : MonoBehaviour {
+        /// <summary>
+        ///     Reference to the inventory of items
+        /// </summary>
+        public List<ItemView> ItemsCollection;
 
-        public ItemGO ItemGOPrefab;
-        public List<ItemGO> ItemGOs;
+        /// <summary>
+        ///     Reference to the top items container
+        /// </summary>
         public GameObject ItemsContainer;
+
+        /// <summary>
+        ///     Reference to the item view prefab
+        /// </summary>
+        public ItemView ItemViewPrefab;
+
+        /// <summary>
+        ///     Reference to the left arrow (cycles through the collection backward)
+        /// </summary>
         public Button LeftArrow;
+
+        /// <summary>
+        ///     Reference to the right arrow (cycles through the collection forward)
+        /// </summary>
         public Button RightArrow;
 
+        /// <summary>
+        ///     Event triggered if the selection has changed
+        /// </summary>
         public Action<string> SelectionChanged;
 
-        private ItemGO CurrentSelection;
+        /// <summary>
+        ///     Reference to the current selection
+        /// </summary>
+        private ItemView _currentSelection;
 
-        // Start is called before the first frame update
-        void Start() {
-            ItemGOs = new List<ItemGO>();
-
-
+        /// <summary>
+        ///     Initializes an empty collection of items
+        /// </summary>
+        private void Start()
+        {
+            ItemsCollection = new List<ItemView>();
         }
 
-        public void InitItems(List<Item> selection, string id) {
+        /// <summary>
+        ///     Initializes the micro inventory with a new selection and a selected element.
+        /// </summary>
+        /// <param name="choices">The new selection</param>
+        /// <param name="selectedItemId">The selected item</param>
+        public void InitItems(List<Item> choices, string selectedItemId)
+        {
             // Delete current items
-            foreach (Transform child in ItemsContainer.transform) {
+            foreach (Transform child in ItemsContainer.transform)
+            {
                 Destroy(child.gameObject);
             }
 
-            ItemGOs.Clear();
+            ItemsCollection.Clear();
 
-            if (selection != null) {
-                foreach (var i in selection) {
-                    ItemGO itemGO = Instantiate(ItemGOPrefab, ItemsContainer.transform);
-                    itemGO.Init(i);
-                    ItemGOs.Add(itemGO);
+            if (choices != null)
+            {
+                foreach (Item i in choices)
+                {
+                    ItemView itemView = Instantiate(ItemViewPrefab, ItemsContainer.transform);
+                    itemView.Init(i);
+                    ItemsCollection.Add(itemView);
 
-                    itemGO.gameObject.SetActive(i.id == id);
-                    if (i.id == id) {
-                        CurrentSelection = itemGO;
+                    itemView.gameObject.SetActive(i.id == selectedItemId);
+                    if (i.id == selectedItemId)
+                    {
+                        _currentSelection = itemView;
                     }
-
                 }
             }
 
-            LeftArrow.interactable = ItemGOs.Count > 0;
-            RightArrow.interactable = ItemGOs.Count > 0;
+            LeftArrow.interactable = ItemsCollection.Count > 0;
+            RightArrow.interactable = ItemsCollection.Count > 0;
         }
 
-        public void SetItem(string id) {
-
-            if (CurrentSelection != null) {
-                CurrentSelection.gameObject.SetActive(false);
+        /// <summary>
+        ///     Triggered when the left button is touched
+        /// </summary>
+        public void OnShowPrevious()
+        {
+            if (ItemsCollection.Count == 0)
+            {
+                return;
             }
 
-            ItemGO selection = ItemGOs.Find(s => s.Id == id);
-            if (selection != null) {
-                CurrentSelection = selection;
-                CurrentSelection.gameObject.SetActive(true);
+            if (_currentSelection == null)
+            {
+                SetItem(ItemsCollection[0].Id);
+                return;
+            }
+
+            // Get index of current selection (if any)
+            int idx = ItemsCollection.IndexOf(_currentSelection);
+            if (idx >= 0)
+            {
+                idx--;
+                if (idx < 0)
+                {
+                    idx = ItemsCollection.Count - 1;
+                }
+
+                SetItem(ItemsCollection[idx].Id);
+            }
+        }
+
+        /// <summary>
+        ///     Triggered when the next button is touched
+        /// </summary>
+        public void OnShowNext()
+        {
+            if (ItemsCollection.Count == 0)
+            {
+                return;
+            }
+
+            if (_currentSelection == null)
+            {
+                SetItem(ItemsCollection[0].Id);
+                return;
+            }
+
+            // Get index of current selection (if any)
+            int idx = ItemsCollection.IndexOf(_currentSelection);
+            if (idx >= 0)
+            {
+                idx++;
+                if (idx >= ItemsCollection.Count)
+                {
+                    idx = 0;
+                }
+
+                SetItem(ItemsCollection[idx].Id);
+            }
+        }
+
+        /// <summary>
+        ///     Sets the active item to the item identified by the provided id.
+        /// </summary>
+        /// <param name="selectedItemId"></param>
+        private void SetItem(string selectedItemId)
+        {
+            if (_currentSelection != null)
+            {
+                _currentSelection.gameObject.SetActive(false);
+            }
+
+            ItemView selection = ItemsCollection.Find(s => s.Id == selectedItemId);
+            if (selection != null)
+            {
+                _currentSelection = selection;
+                _currentSelection.gameObject.SetActive(true);
 
                 // Send new selected id
-                SelectionChanged?.Invoke(id);
-            }
-        }
-
-        public void OnShowPrevious() {
-            Debug.Log("Prev");
-            if (ItemGOs.Count == 0) {
-                return;
-            }
-
-            if (CurrentSelection == null) {
-                SetItem(ItemGOs[0].Id);
-                return;
-            }
-
-            // Get index of current selection (if any)
-            int idx = ItemGOs.IndexOf(CurrentSelection);
-            if (idx >= 0) {
-                idx--;
-                if (idx < 0) idx = ItemGOs.Count - 1;
-                SetItem(ItemGOs[idx].Id);
-            }
-        }
-
-        public void OnShowNext() {
-            Debug.Log("Next");
-            if (ItemGOs.Count == 0) {
-                return;
-            }
-
-            if (CurrentSelection == null) {
-                SetItem(ItemGOs[0].Id);
-                return;
-            }
-
-            // Get index of current selection (if any)
-            int idx = ItemGOs.IndexOf(CurrentSelection);
-            if (idx >= 0) {
-                idx++;
-                if (idx >= ItemGOs.Count) idx = 0;
-                SetItem(ItemGOs[idx].Id);
+                SelectionChanged?.Invoke(selectedItemId);
             }
         }
     }

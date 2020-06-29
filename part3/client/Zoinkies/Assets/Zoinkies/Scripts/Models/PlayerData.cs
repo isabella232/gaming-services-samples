@@ -13,113 +13,137 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System;
+
 using System.Collections.Generic;
 using System.Text;
 
-namespace Google.Maps.Demos.Zoinkies {
+namespace Google.Maps.Demos.Zoinkies
+{
+    /// <summary>
+    ///     Models a player stats and inventory.
+    /// </summary>
+    public class PlayerData
+    {
+        /// <summary>
+        /// Generated device Id provided by user
+        /// </summary>
+        public long id { get; set; }
 
- /// <summary>
- /// Models a player stats and inventory.
- /// </summary>
- public class PlayerData {
-  /**
-   * Generated device Id provided by user
-   */
-  public long id { get; set; }
+        /// <summary>
+        /// Player's avatar name
+        /// </summary>
+        public string name { get; set; }
 
-  /**
-   * Player's avatar name
-   */
-  public string name { get; set; }
+        /// <summary>
+        /// Equipped weapon. Empty or null means nothing equipped.
+        /// </summary>
+        public string equippedWeapon { get; set; }
 
-  /**
-   * Equipped weapon. Empty or null means nothing equipped.
-   */
-  public string equippedWeapon { get; set; }
+        /// <summary>
+        /// Equipped shield. Empty or null means nothing equipped.
+        /// </summary>
+        public string equippedShield { get; set; }
 
-  /**
-   * Equipped shield. Empty or null means nothing equipped.
-   */
-  public string equippedShield { get; set; }
+        /// <summary>
+        /// Equipped helmet. Empty or null means nothing equipped.
+        /// </summary>
+        public string equippedHelmet { get; set; }
 
-  /**
-   * Equipped helmet. Empty or null means nothing equipped.
-   */
-  public string equippedHelmet { get; set; }
+        /// <summary>
+        /// Equipped bodyarmor. Empty or null means nothing equipped.
+        /// </summary>
+        public string equippedBodyArmor { get; set; }
 
-  /**
-   * Equipped bodyarmor. Empty or null means nothing equipped.
-   */
-  public string equippedBodyArmor { get; set; }
+        /// <summary>
+        /// Avatar's current energy level
+        /// </summary>
+        public int energyLevel { get; set; }
 
-  /**
-   * Avatar's current energy level
-   */
-  public int energyLevel { get; set; }
+        /// <summary>
+        /// Avatar's max energy level
+        /// </summary>
+        public int maxEnergyLevel { get; set; }
 
-  /**
-   * Avatar's max energy level
-   */
-  public int maxEnergyLevel { get; set; }
+        /// <summary>
+        /// The Player's character type
+        /// </summary>
+        public string characterType { get; set; }
 
-  /**
-   * The Player's character type
-   */
-  public string characterType { get; set; }
+        /// <summary>
+        /// Items Inventory
+        /// </summary>
+        public List<Item> inventory { get; set; }
 
-  /**
-   * items Inventory
-   */
-  public List<Item> inventory { get; set; }
+        public PlayerData()
+        {
+        }
 
-  public PlayerData() {
+        public PlayerData(
+            long id,
+            string name,
+            string characterType,
+            int energyLevel,
+            int maxEnergyLevel,
+            string equippedWeapon,
+            string equippedHelmet,
+            string equippedBodyArmor,
+            string equippedShield,
+            List<Item> inventory)
+        {
+            this.id = id;
+            this.name = name;
+            this.characterType = characterType;
+            this.energyLevel = energyLevel;
+            this.maxEnergyLevel = maxEnergyLevel;
+            this.equippedWeapon = equippedWeapon;
+            this.equippedHelmet = equippedHelmet;
+            this.equippedBodyArmor = equippedBodyArmor;
+            this.equippedShield = equippedShield;
+            this.inventory = inventory;
+        }
 
-  }
+        public PlayerData Clone()
+        {
+            return new PlayerData(
+                id,
+                name,
+                characterType,
+                energyLevel,
+                maxEnergyLevel,
+                equippedWeapon,
+                equippedHelmet,
+                equippedBodyArmor,
+                equippedShield,
+                new List<Item>(inventory)
+                );
+        }
 
-  public PlayerData(String name,
-   string CharacterType,
-   int EnergyLevel,
-   int MaxEnergyLevel,
-   string EquippedWeapon,
-   string EquippedHelmet,
-   string EquippedBodyArmor,
-   string EquippedShield,
-   List<Item> Inventory) {
-   this.name = name;
-   this.characterType = CharacterType;
-   this.energyLevel = EnergyLevel;
-   this.maxEnergyLevel = MaxEnergyLevel;
-   this.equippedWeapon = EquippedWeapon;
-   this.equippedHelmet = EquippedHelmet;
-   this.equippedBodyArmor = EquippedBodyArmor;
-   this.equippedShield = EquippedShield;
-   this.inventory = Inventory;
-  }
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("User{" + "name=" + name + ", "
+                      + "characterType:" + characterType + ", "
+                      + "EnergyLevel:" + energyLevel + ", "
+                      + "MaxEnergyLevel:" + maxEnergyLevel + ", "
+                      + "EquippedWeapon:" + equippedWeapon + ", "
+                      + "EquippedHelmet:" + equippedHelmet + ", "
+                      + "EquippedBodyArmor:" + equippedBodyArmor + ", "
+                      + "EquippedShield:" + equippedShield + ", "
+                      + "Inventory=");
+            if (inventory != null)
+            {
+                foreach (Item i in inventory)
+                {
+                    sb.Append(i + " \n");
+                }
+            }
+            else
+            {
+                sb.Append("Empty \n");
+            }
 
-  public override string ToString() {
-   StringBuilder sb = new StringBuilder();
-   sb.Append("User{" + "name=" + this.name + ", "
-             + "characterType:" + this.characterType + ", "
-             + "EnergyLevel:" + this.energyLevel + ", "
-             + "MaxEnergyLevel:" + this.maxEnergyLevel + ", "
-             + "EquippedWeapon:" + this.equippedWeapon + ", "
-             + "EquippedHelmet:" + this.equippedHelmet + ", "
-             + "EquippedBodyArmor:" + this.equippedBodyArmor + ", "
-             + "EquippedShield:" + this.equippedShield + ", "
-             + "Inventory=");
-   if (inventory != null) {
-    foreach (Item i in inventory) {
-     sb.Append(i + " \n");
+            sb.Append("}");
+            return sb.ToString();
+        }
     }
-   }
-   else {
-    sb.Append("Empty \n");
-   }
-
-   sb.Append("}");
-   return sb.ToString();
-  }
- }
 }
-
