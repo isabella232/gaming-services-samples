@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using LitJson;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace Google.Maps.Demos.Zoinkies {
 
   /// <summary>
-  /// Server manager that makes all REST API calls to the game server.
+  /// Server manager placeholder. Right now it only returns static data.
   /// </summary>
   public class ServerManager : MonoBehaviour {
 
@@ -45,7 +43,7 @@ namespace Google.Maps.Demos.Zoinkies {
     /// <summary>
     /// Returns the player data.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Player Data</returns>
     public PlayerData GetPlayerData() {
 
       PlayerData data = new PlayerData();
@@ -74,7 +72,7 @@ namespace Google.Maps.Demos.Zoinkies {
     /// <summary>
     /// Returns a unique identifier for this player/device
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The generated id</returns>
     public String GetUserId() {
       // Retrieves a user Id from player prefs or generate a new one if can't be found.
       if (!PlayerPrefs.HasKey(GameConstants.PLAYER_ID)) {

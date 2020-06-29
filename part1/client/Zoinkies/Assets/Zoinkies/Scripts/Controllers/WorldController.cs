@@ -13,289 +13,328 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System;
-using System.Collections;
+
 using System.Collections.Generic;
-using System.Linq;
-using Google.Maps;
-using Google.Maps.Coord;
 using Google.Maps.Examples;
 using Google.Maps.Examples.Shared;
 using Google.Maps.Feature.Style;
-using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Events;
 
-namespace Google.Maps.Demos.Zoinkies {
-
-  /// <summary>
-  /// This class initializes reference, player, map data.
-  /// It also manages the creation and maintenance of spawned game objects.
-  ///
-  /// </summary>
-  public class WorldController : BaseMapLoader {
-
-    #region properties
-
+namespace Google.Maps.Demos.Zoinkies
+{
     /// <summary>
-    /// Dispatched to the game when Reference Data, World Data and Player Data
-    /// are initialized.
+    ///     This class initializes reference, player, map data.
+    ///     It also manages the creation and maintenance of spawned game objects.
     /// </summary>
-    public UnityEvent GameReady;
+    public class WorldController : BaseMapLoader
+    {
+        /// <summary>
+        ///     Reference to avatar
+        /// </summary>
+        public GameObject Avatar;
 
-    /// <summary>
-    /// Reference to the main camera
-    /// </summary>
-    public Camera mainCamera;
+        /// <summary>
+        ///     Dispatched to the game when Reference Data, World Data and Player Data
+        ///     are initialized.
+        /// </summary>
+        public UnityEvent GameReady;
 
-    /// <summary>
-    /// Reference to the server Manager, responsible for all REST calls.
-    /// </summary>
-    public ServerManager ServerManager;
+        /// <summary>
+        ///     Reference to ground material
+        /// </summary>
+        public Material GroundMaterial;
 
-    /// <summary>
-    /// Reference to avatar
-    /// </summary>
-    public GameObject Avatar;
+        /// <summary>
+        ///     Reference to the main camera
+        /// </summary>
+        public Camera MainCamera;
 
-    /// <summary>
-    /// Reference to ground material
-    /// </summary>
-    public Material GroundMaterial;
+        /// <summary>
+        ///     The vertical scaling factor applied at maximum squashing.
+        /// </summary>
+        public float MaximumSquash = 0.1f;
 
-    /// <summary>
-    /// Reference to roads material
-    /// </summary>
-    public Material RoadsMaterial;
+        /// <summary>
+        ///     Reference to roads material
+        /// </summary>
+        public Material RoadsMaterial;
 
-    /// <summary>
-    /// Reference to building walls material
-    /// </summary>
-    public Material BuildingsWallMaterial;
+        /// <summary>
+        ///     Reference to list of building walls materials
+        /// </summary>
+        public List<Material> BuildingsWallMaterials;
 
-    /// <summary>
-    /// Reference to building roof material
-    /// </summary>
-    public Material BuildingsRoofMaterial;
+        /// <summary>
+        ///     Reference to list of building roof materials
+        /// </summary>
+        public List<Material> BuildingsRoofMaterials;
 
-    /// <summary>
-    ///   Distance inside which buildings will be completely squashed (<see cref="MaximumSquash" />)
-    /// </summary>
-    public float SquashNear = 50;
+        /// <summary>
+        ///     Reference to material for modeled structures
+        /// </summary>
+        public Material ModeledBuildingsMaterial;
 
-    /// <summary>
-    ///   Distance outside which buildings will not be squashed.
-    /// </summary>
-    public float SquashFar = 200;
+        /// <summary>
+        ///     Reference to the server Manager, responsible for all REST calls.
+        /// </summary>
+        public ServerManager ServerManager;
 
-    /// <summary>
-    ///   The vertical scaling factor applied at maximum squashing.
-    /// </summary>
-    public float MaximumSquash = 0.1f;
+        /// <summary>
+        ///     Distance outside which buildings will not be squashed.
+        /// </summary>
+        public float SquashFar = 200;
 
-    /// <summary>
-    /// Indicates if we have acquired a GPS Location
-    /// </summary>
-    [ReadOnly] [SerializeField] private bool hasGPSLocation;
+        /// <summary>
+        ///     Distance inside which buildings will be completely squashed (<see cref="MaximumSquash" />)
+        /// </summary>
+        public float SquashNear = 50;
 
-    /// <summary>
-    /// Indicates if the floating origin has been set
-    /// </summary>
-    private bool FloatingOriginIsSet;
+        /// <summary>
+        ///     Setup milestone: Reference data loaded and initialized.
+        /// </summary>
+        private const string REFERENCE_DATA_INITIALIZED = "REFERENCE_DATA_INITIALIZED";
 
-    /// <summary>
-    /// Reference to the styles options applied to loaded map features
-    /// </summary>
-    private GameObjectOptions ZoinkiesStylesOptions;
+        /// <summary>
+        ///     Setup milestone: Player data loaded and initialized.
+        /// </summary>
+        private const string PLAYER_DATA_INITIALIZED = "PLAYER_DATA_INITIALIZED";
 
-    /// <summary>
-    /// Keeps track of startup milestones
-    /// </summary>
-    private List<String> StartupCheckList;
+        /// <summary>
+        ///     Setup milestone: Map data loaded and initialized.
+        /// </summary>
+        private const string MAP_INITIALIZED = "MAP_INITIALIZED";
 
-    /// <summary>
-    /// Setup milestone: Reference data loaded and initialized.
-    /// </summary>
-    private static string REFERENCE_DATA_INITIALIZED = "REFERENCE_DATA_INITIALIZED";
+        /// <summary>
+        ///     Indicates if the floating origin has been set
+        /// </summary>
+        private bool _floatingOriginIsSet;
 
-    /// <summary>
-    /// Setup milestone: Player data loaded and initialized.
-    /// </summary>
-    private static string PLAYER_DATA_INITIALIZED = "PLAYER_DATA_INITIALIZED";
+        /// <summary>
+        ///     Indicates if the game has started
+        /// </summary>
+        private bool _gameStarted;
 
-    /// <summary>
-    /// Setup milestone: Map data loaded and initialized.
-    /// </summary>
-    private static string MAP_INITIALIZED = "MAP_INITIALIZED";
+        /// <summary>
+        ///     Keeps track of startup milestones
+        /// </summary>
+        private List<string> _startupCheckList;
 
-    /// <summary>
-    /// Indicates if the game has started
-    /// </summary>
-    private bool GameStarted;
+        /// <summary>
+        ///     Reference to the styles options applied to loaded map features
+        /// </summary>
+        private GameObjectOptions _zoinkiesStylesOptions;
 
-    #endregion
+        /// <summary>
+        ///     Sets up the setup milestones list.
+        ///     Loads reference data and player data.
+        /// </summary>
+        void Awake()
+        {
+            _gameStarted = false;
 
-    /// <summary>
-    /// Sets up the setup milestones list.
-    /// Loads reference data and player data.
-    /// </summary>
-    private void Awake() {
+            // Initialize start up check list
+            _startupCheckList = new List<string>
+            {
+                REFERENCE_DATA_INITIALIZED,
+                PLAYER_DATA_INITIALIZED,
+                MAP_INITIALIZED
+            };
 
-      // Initialize start up check list
-      StartupCheckList = new List<string> {
-        REFERENCE_DATA_INITIALIZED,
-        PLAYER_DATA_INITIALIZED,
-        MAP_INITIALIZED
-      };
+            // Load and initialize Reference Data
+            ReferenceService.GetInstance().Init(ServerManager.GetReferenceData());
+            _startupCheckList.Remove(REFERENCE_DATA_INITIALIZED);
 
-      // Load and initialize Reference Data
-      ReferenceService.GetInstance().Init(ServerManager.GetReferenceData());
-      StartupCheckList.Remove(REFERENCE_DATA_INITIALIZED);
+            // Load and initialize Player Data
+            PlayerService.GetInstance().Init(ServerManager.GetPlayerData());
+            _startupCheckList.Remove(PLAYER_DATA_INITIALIZED);
 
-      // Load and initialize Player Data
-      PlayerService.GetInstance().Init(ServerManager.GetPlayerData());
-      StartupCheckList.Remove(PLAYER_DATA_INITIALIZED);
+            LoadOnStart = false;
 
-      CheckStartConditions();
+            //CheckStartConditions();
+        }
+
+        /// <summary>
+        ///     Performs the initial Map load
+        /// </summary>
+        protected override void Start()
+        {
+            Assert.IsNotNull(MainCamera);
+            Assert.IsNotNull(ServerManager);
+            Assert.IsNotNull(Avatar);
+            base.Start();
+
+            if (BuildingsRoofMaterials.Count == 0
+                || BuildingsWallMaterials.Count == 0
+                || BuildingsRoofMaterials.Count != BuildingsWallMaterials.Count)
+            {
+                throw new System.Exception("We expect at least one wall " +
+                                           "and one roof material.");
+            }
+        }
+
+        /// <summary>
+        ///     Triggered by the UI when a new game needs to be created.
+        ///     This event listener resets player and world data.
+        /// </summary>
+        public void OnNewGame()
+        {
+            _gameStarted = false;
+            _startupCheckList = new List<string> {PLAYER_DATA_INITIALIZED, MAP_INITIALIZED};
+
+            // Load and initialize Player Data
+            PlayerService.GetInstance().Init(ServerManager.GetPlayerData());
+            _startupCheckList.Remove(PLAYER_DATA_INITIALIZED);
+
+            // Reload Maps
+            LoadMap();
+        }
+
+        public void OnShowWorld()
+        {
+            Avatar.gameObject.SetActive(true);
+            GetComponent<DynamicMapsUpdater>().enabled = true;
+            MainCamera.enabled = true;
+        }
+
+        // We consider that the game is loaded when:
+        // Reference data and player data are initialized
+        // and the Map region is loaded.
+        private void CheckStartConditions()
+        {
+            if (_startupCheckList.Count == 0 && !_gameStarted)
+            {
+                GameReady?.Invoke();
+                _gameStarted = true;
+            }
+        }
+
+        /// <summary>
+        ///     Initializes the style options for this game, by setting materials to roads, buildings
+        ///     and water areas.
+        /// </summary>
+        protected override void InitStylingOptions()
+        {
+            _zoinkiesStylesOptions = ExampleDefaults.DefaultGameObjectOptions;
+
+            // The default maps shader has a glossy property that allows the sky to reflect on it.
+            Material waterMaterial =
+                ExampleDefaults.DefaultGameObjectOptions.RegionStyle.FillMaterial;
+            waterMaterial.color = new Color(0.4274509804f, 0.7725490196f, 0.8941176471f);
+
+            _zoinkiesStylesOptions.ModeledStructureStyle = new ModeledStructureStyle.Builder
+            {
+                Material = ModeledBuildingsMaterial
+            }.Build();
+
+            _zoinkiesStylesOptions.RegionStyle = new RegionStyle.Builder
+            {
+                FillMaterial = GroundMaterial
+            }.Build();
+
+            _zoinkiesStylesOptions.AreaWaterStyle = new AreaWaterStyle.Builder
+            {
+                FillMaterial = waterMaterial
+            }.Build();
+
+            _zoinkiesStylesOptions.LineWaterStyle = new LineWaterStyle.Builder
+            {
+                Material = waterMaterial
+            }.Build();
+
+            _zoinkiesStylesOptions.SegmentStyle = new SegmentStyle.Builder
+            {
+                Material = RoadsMaterial
+            }.Build();
+
+            if (RenderingStyles == null)
+            {
+                RenderingStyles = _zoinkiesStylesOptions;
+            }
+        }
+
+        /// <summary>
+        ///     Adds some squashing behavior to all extruded structures.
+        ///     Basically, we squash everything around our Avatar so that generated game items can be seen
+        ///     from a distance.
+        /// </summary>
+        protected override void InitEventListeners()
+        {
+            base.InitEventListeners();
+
+            if (MapsService == null)
+            {
+                return;
+            }
+
+            // Apply a pre-creation listener that picks a random style for extruded buildings
+            MapsService.Events.ExtrudedStructureEvents.WillCreate.AddListener(
+                e =>
+                {
+                    int i = Random.Range(0, BuildingsRoofMaterials.Count);
+                    e.Style = new ExtrudedStructureStyle.Builder
+                    {
+                        RoofMaterial = BuildingsRoofMaterials[i],
+                        WallMaterial = BuildingsWallMaterials[i]
+                    }.Build();
+                });
+
+            // Apply a pre-creation listener that picks a random style for modeled buildings
+            // In this game, modeled buildings are plain and unicolor.
+            MapsService.Events.ModeledStructureEvents.WillCreate.AddListener(
+                e =>
+                {
+                    int i = Random.Range(0, BuildingsRoofMaterials.Count);
+                    e.Style = new ModeledStructureStyle.Builder
+                    {
+                        Material = BuildingsRoofMaterials[i]
+                    }.Build();
+                });
+
+            // Apply a post-creation listener that adds the squashing MonoBehaviour
+            // to each building.
+            MapsService.Events.ExtrudedStructureEvents.DidCreate.AddListener(
+                e => { AddSquasher(e.GameObject); });
+
+            // Apply a post-creation listener that adds the squashing MonoBehaviour
+            // to each building.
+            MapsService.Events.ModeledStructureEvents.DidCreate.AddListener(
+                e => { AddSquasher(e.GameObject); });
+
+            // Apply a post-creation listener that move road segments up to prevent  .
+            MapsService.Events.SegmentEvents.DidCreate.AddListener(
+                e =>
+                {
+                    // Move y position up to prevent z-fighting with water areas;
+                    e.GameObject.transform.position += new Vector3(0f, 0.01f, 0f);
+                });
+
+            MapsService.Events.MapEvents.Loaded.AddListener(arg0 =>
+            {
+                if (!_gameStarted)
+                {
+                    _startupCheckList.Remove(MAP_INITIALIZED);
+                    CheckStartConditions();
+                }
+            });
+        }
+
+        /// <summary>
+        ///     Adds a Squasher MonoBehaviour to the supplied GameObject.
+        /// </summary>
+        /// <remarks>
+        ///     The Squasher MonoBehaviour reduced the vertical scale of the GameObject's transform
+        ///     when a building object is nearby.
+        /// </remarks>
+        /// <param name="go">The GameObject to which to add the Squasher behaviour.</param>
+        private void AddSquasher(GameObject go)
+        {
+            Squasher squasher = go.AddComponent<Squasher>();
+            squasher.Target = Avatar.transform;
+            squasher.Near = SquashNear;
+            squasher.Far = SquashFar;
+            squasher.MaximumSquashing = MaximumSquash;
+        }
     }
-
-    /// <summary>
-    /// Performs the initial Map load
-    /// </summary>
-    protected override void Start() {
-      Assert.IsNotNull(mainCamera);
-      Assert.IsNotNull(ServerManager);
-      Assert.IsNotNull(Avatar);
-      base.Start();
-      // Load Initial Map
-      LoadMap();
-    }
-
-    /// <summary>
-    /// Initializes the style options for this game, by setting materials to roads, buildings
-    /// and water areas.
-    ///
-    /// </summary>
-    protected override void InitStylingOptions() {
-      ZoinkiesStylesOptions = ExampleDefaults.DefaultGameObjectOptions;
-
-      // The default maps shader has a glossy property that allows the sky to reflect on it. Cool.
-      Material waterMaterial = ExampleDefaults.DefaultGameObjectOptions.RegionStyle.FillMaterial;
-      waterMaterial.color = new Color(0.4274509804f, 0.7725490196f, 0.8941176471f);
-
-      ZoinkiesStylesOptions.ExtrudedStructureStyle = new ExtrudedStructureStyle.Builder {
-        RoofMaterial = BuildingsRoofMaterial,
-        WallMaterial = BuildingsWallMaterial
-      }.Build();
-
-      ZoinkiesStylesOptions.ModeledStructureStyle = new ModeledStructureStyle.Builder {
-        Material = BuildingsWallMaterial
-      }.Build();
-
-      ZoinkiesStylesOptions.RegionStyle = new RegionStyle.Builder {
-        FillMaterial = GroundMaterial
-      }.Build();
-
-      ZoinkiesStylesOptions.AreaWaterStyle = new AreaWaterStyle.Builder {
-        FillMaterial = waterMaterial
-      }.Build();
-
-      ZoinkiesStylesOptions.LineWaterStyle = new LineWaterStyle.Builder {
-        Material = waterMaterial
-      }.Build();
-
-      ZoinkiesStylesOptions.SegmentStyle = new SegmentStyle.Builder {
-        Material = RoadsMaterial
-      }.Build();
-
-      if (RenderingStyles == null) RenderingStyles = ZoinkiesStylesOptions;
-    }
-
-    /// <summary>
-    /// Adds some squashing behavior to all extruded structures.
-    /// Basically, we squash everything around our Avatar so that generated game items can be seen
-    /// from a distance.
-    /// </summary>
-    protected override void InitEventListeners() {
-      base.InitEventListeners();
-
-      if (MapsService == null) return;
-
-      // Apply a post-creation listener that adds the squashing MonoBehaviour to each building.
-      MapsService.Events.ExtrudedStructureEvents.DidCreate.AddListener(
-        e => { AddSquasher(e.GameObject); });
-
-      // Apply a post-creation listener that adds the squashing MonoBehaviour to each building.
-      MapsService.Events.ModeledStructureEvents.DidCreate.AddListener(
-        e => { AddSquasher(e.GameObject); });
-
-      MapsService.Events.MapEvents.Loaded.AddListener(arg0 => {
-        StartupCheckList.Remove(MAP_INITIALIZED);
-        CheckStartConditions();
-      });
-    }
-
-    #region event listeners
-
-    /// <summary>
-    /// Triggered by the UI when a new game needs to be created.
-    /// This event listener resets player and world data.
-    ///
-    /// </summary>
-    public void OnNewGame() {
-      Debug.Log("OnNewGame+++");
-
-      GameStarted = false;
-      StartupCheckList = new List<string> {PLAYER_DATA_INITIALIZED, MAP_INITIALIZED};
-
-      //PlayerService.GetInstance().data = new PlayerData();
-      // Load and initialize Player Data
-      PlayerService.GetInstance().Init(ServerManager.GetPlayerData());
-      StartupCheckList.Remove(PLAYER_DATA_INITIALIZED);
-
-      // Reload Maps
-      LoadMap();
-    }
-
-    public void OnShowWorld() {
-      Debug.Log("OnShowWorld+++");
-      Avatar.gameObject.SetActive(true);
-      GetComponent<DynamicMapsUpdater>().enabled = true;
-      mainCamera.enabled = true;
-    }
-
-
-    #endregion
-
-    #region utils
-
-    // We consider that the game is loaded when:
-    // Reference data and player data are initialized
-    // and the Map region is loaded.
-    private void CheckStartConditions() {
-      if (StartupCheckList.Count == 0 && !GameStarted) {
-        GameReady?.Invoke();
-        GameStarted = true;
-      }
-    }
-
-    /// <summary>
-    ///   Adds a Squasher MonoBehaviour to the supplied GameObject.
-    /// </summary>
-    /// <remarks>
-    ///   The Squasher MonoBehaviour reduced the vertical scale of the GameObject's transform
-    ///   when a building object is nearby.
-    /// </remarks>
-    /// <param name="go">The GameObject to which to add the Squasher behaviour.</param>
-    private void AddSquasher(GameObject go) {
-      var squasher = go.AddComponent<Squasher>();
-      squasher.Target = Avatar.transform;
-      squasher.Near = SquashNear;
-      squasher.Far = SquashFar;
-      squasher.MaximumSquashing = MaximumSquash;
-    }
-
-    #endregion
-  }
 }

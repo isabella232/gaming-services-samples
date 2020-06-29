@@ -17,38 +17,65 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Google.Maps.Demos.Zoinkies {
+namespace Google.Maps.Demos.Zoinkies
+{
+    /// <summary>
+    /// Helper class to shake the screen when hit
+    /// </summary>
+    public class ShakeScreen : MonoBehaviour
+    {
+        /// <summary>
+        /// How long it shakes
+        /// </summary>
+        public float Duration = 1.0f; //
+        /// <summary>
+        /// How intensive it shakes
+        /// </summary>
+        public float Magnitude = 1.0f;
+        /// <summary>
+        /// The object to shake
+        /// </summary>
+        private GameObject _target;
 
-    public class ShakeScreen : MonoBehaviour {
-        [SerializeField] private float duration = 1.0f; //how fast it shakes
-        [SerializeField] private float magnitude = 1.0f; //how much it shakes
-
-        private GameObject target; // object to shake
-
-        public IEnumerator Shake(float duration, float magnitude) {
-            if (target == null)
+        /// <summary>
+        /// Shakes the target object for the given duration and with the given magnitude
+        /// </summary>
+        /// <param name="duration">The duration of the shake</param>
+        /// <param name="magnitude">The magnitude of the shake</param>
+        /// <returns>An enumerator to a coroutine</returns>
+        public IEnumerator Shake(float duration, float magnitude)
+        {
+            if (_target == null)
+            {
                 yield return null;
+            }
 
-            Vector3 orignalPosition = target.transform.position;
+            Vector3 transformPosition = _target.transform.position;
             float elapsed = 0f;
 
-            while (elapsed < duration) {
-                float x = orignalPosition.x + Random.Range(-1f, 1f) * magnitude;
-                float y = orignalPosition.y + Random.Range(-1f, 1f) * magnitude;
+            while (elapsed < duration)
+            {
+                float x = transformPosition.x + Random.Range(-1f, 1f) * magnitude;
+                float y = transformPosition.y + Random.Range(-1f, 1f) * magnitude;
 
-                transform.position = new Vector3(x, y, 0f); //-10f);
+                transform.position = new Vector3(x, y, 0f);
                 elapsed += Time.deltaTime;
                 yield return 0;
             }
 
-            transform.position = orignalPosition;
+            transform.position = transformPosition;
         }
 
-        public void Shake(GameObject t, float d) {
-            Debug.Log("Shake");
-            this.duration = d;
-            this.target = t;
-            StartCoroutine(Shake(duration, magnitude));
+        /// <summary>
+        /// Starts the shake animation
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="duration"></param>
+        public void Shake(GameObject target, float duration)
+        {
+            Duration = duration;
+            _target = target;
+            StartCoroutine(Shake(Duration, Magnitude));
         }
     }
 }

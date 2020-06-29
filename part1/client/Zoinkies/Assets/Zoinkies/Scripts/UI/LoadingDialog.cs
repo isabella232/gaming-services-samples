@@ -14,29 +14,43 @@
  * limitations under the License.
  */
 
-using System;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
 
-namespace Google.Maps.Demos.Zoinkies {
-
-    public class LoadingDialog : BaseView {
-        public Image Spinner;
-
+namespace Google.Maps.Demos.Zoinkies
+{
+    /// <summary>
+    /// This class handles the loading animation.
+    /// When active, it displays a glass panel that blocks events to the UI.
+    /// </summary>
+    public class LoadingDialog : BaseView
+    {
+        /// <summary>
+        /// The rotation speed of the busy visual
+        /// </summary>
         public float RotationSpeed = 50f;
 
-        private Action callback;
+        /// <summary>
+        /// A reference to the busy visual
+        /// </summary>
+        public Image Spinner;
 
-        void Start() {
+        /// <summary>
+        /// Checks the validity of the attributes
+        /// </summary>
+        void Start()
+        {
             Assert.IsNotNull(Spinner);
         }
 
-        // Init is called once per frame
-        void Update() {
+        /// <summary>
+        /// Rotates the spinner
+        /// </summary>
+        void Update()
+        {
             // Rotate spinner if available
             Spinner.rectTransform.Rotate(Vector3.forward, -RotationSpeed * Time.deltaTime);
-
         }
     }
 }

@@ -13,28 +13,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using UnityEngine;
 
-namespace Google.Maps.Demos.Zoinkies {
-
+namespace Google.Maps.Demos.Zoinkies
+{
     /// <summary>
-    /// This class handles zoom in/zoom out while in the Editor
+    ///     This class handles zoom in/zoom out while in the Editor
     /// </summary>
-    public class ZoomInOut : MonoBehaviour {
+    public class ZoomInOut : MonoBehaviour
+    {
+        /// <summary>
+        /// Reference to the active camera
+        /// </summary>
         public Camera Camera;
 
-        // Init is called once per frame
-        void Update() {
-            if (Input.GetKey(KeyCode.Q)) {
+        /// <summary>
+        /// Maximum field of view for the main camera
+        /// </summary>
+        public float MaximumFieldOfView = 110f;
+
+        /// <summary>
+        /// Minimum field of view for the main camera
+        /// </summary>
+        public float MinimumFieldOfView = 25f;
+
+        /// <summary>
+        /// Updates the field of view when some keyboard keys are activated.
+        /// </summary>
+        void Update()
+        {
+            if (Input.GetKey(KeyCode.Q))
+            {
                 // Zoom in
                 Camera.fieldOfView += 1;
-                Camera.fieldOfView = Mathf.Min(110f, Camera.fieldOfView);
+                Camera.fieldOfView = Mathf.Min(MaximumFieldOfView, Camera.fieldOfView);
             }
 
-            if (Input.GetKey(KeyCode.E)) {
+            if (Input.GetKey(KeyCode.E))
+            {
                 // Zoom out
                 Camera.fieldOfView -= 1;
-                Camera.fieldOfView = Mathf.Max(25f, Camera.fieldOfView);
+                Camera.fieldOfView = Mathf.Max(MinimumFieldOfView, Camera.fieldOfView);
             }
         }
     }

@@ -14,29 +14,63 @@
  * limitations under the License.
  */
 
+using System.Collections;
 using UnityEngine;
 
-namespace Google.Maps.Demos.Zoinkies {
-
-    public class SplashView : BaseView {
+namespace Google.Maps.Demos.Zoinkies
+{
+    /// <summary>
+    /// This view handles the splash screen.
+    /// It uses the main spaceship as an idle animation until all initial data is loaded
+    /// and the game is ready to start.
+    /// </summary>
+    public class SplashView : BaseView
+    {
+        /// <summary>
+        /// A reference to the spaceship animator
+        /// </summary>
         public Animator SpaceShipAnimator;
 
-        // Start is called before the first frame update
-        void OnEnable() {
-            if (SpaceShipAnimator != null) {
+        /// <summary>
+        /// Plays the spaceship animation
+        /// </summary>
+        void OnEnable()
+        {
+            if (SpaceShipAnimator != null)
+            {
                 SpaceShipAnimator.enabled = true;
-                //SpaceShipAnimator.Play("SpaceShipIdle");
             }
         }
 
-        void OnDisable() {
-            if (SpaceShipAnimator != null) {
+        /// <summary>
+        /// Stops the spaceship animation
+        /// </summary>
+        void OnDisable()
+        {
+            if (SpaceShipAnimator != null)
+            {
                 SpaceShipAnimator.enabled = false;
             }
         }
 
-        public void OnGameReady() {
-            // Close the view
+        /// <summary>
+        /// Triggered when a game ready event is received from other game components.
+        /// Closes the splash screen when this happens.
+        /// </summary>
+        public void OnGameReady()
+        {
+            StartCoroutine(DelayedStart());
+        }
+
+        /// <summary>
+        /// Allows the player into the experience after a few seconds.
+        /// </summary>
+        /// <returns>An enumerator</returns>
+        private IEnumerator DelayedStart()
+        {
+            yield return new WaitForSeconds(2);
+
+            // Close the view after a few seconds to allow the rendering of all map features
             OnClose?.Invoke();
         }
     }

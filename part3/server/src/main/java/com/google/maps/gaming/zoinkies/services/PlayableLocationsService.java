@@ -68,7 +68,7 @@ public class PlayableLocationsService {
   /**
    * API key providing access to PlayableLocation API
    */
-  private final String API_KEY = "YOUR API KEY HERE";
+  private final String API_KEY = "AIzaSyAZc7i2gq-bv-xYy2Ou2eNDPDUxf5bIQEo"; //"YOUR API KEY HERE";
   /**
    * Default parameters for object type when querying playable locations API
    */
