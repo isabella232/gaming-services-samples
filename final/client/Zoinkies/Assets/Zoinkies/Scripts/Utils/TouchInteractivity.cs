@@ -57,7 +57,7 @@ namespace Google.Maps.Demos.Zoinkies
             if ((Input.touchCount > 0) && (Input.GetTouch(0).phase == TouchPhase.Began)
                 && !EventSystem.current.IsPointerOverGameObject(Input.touches[0].fingerId))
             {
-                ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
+                Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
             #endif
                 if (Physics.Raycast(ray, out hit, 1000.0f))
                 {

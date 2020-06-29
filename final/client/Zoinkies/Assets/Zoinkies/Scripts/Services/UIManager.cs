@@ -102,6 +102,13 @@ namespace Google.Maps.Demos.Zoinkies
         /// </summary>
         private BaseView _currentView;
 
+        private const float STATUS_MESSAGE_TIMEOUT = 3f;
+
+        private float _statusMessageTimeCounter = 0f;
+
+        private bool _showStatusMessage = false;
+
+
         /// <summary>
         ///     Initializes callbacks and initializes the splash screen.
         /// </summary>
@@ -129,6 +136,24 @@ namespace Google.Maps.Demos.Zoinkies
 
             // Show first screen
             OnNewGame();
+        }
+
+        /// <summary>
+        /// Display a status message for a limited amount of time.
+        /// </summary>
+        void Update()
+        {
+            if (_showStatusMessage)
+            {
+                _statusMessageTimeCounter += Time.deltaTime;
+                if (_statusMessageTimeCounter > STATUS_MESSAGE_TIMEOUT)
+                {
+                    _statusMessageTimeCounter = 0f;
+                    _showStatusMessage = false;
+                    StatusMsg.text = "";
+                }
+            }
+
         }
 
         /// <summary>
@@ -244,6 +269,8 @@ namespace Google.Maps.Demos.Zoinkies
         public void OnError(string errorMsg)
         {
             StatusMsg.text = errorMsg;
+            _showStatusMessage = true;
+            _statusMessageTimeCounter = 0f;
         }
 
         /// <summary>
