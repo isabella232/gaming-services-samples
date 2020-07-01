@@ -20,24 +20,46 @@ package com.google.maps.gaming.zoinkies.models.playablelocations;
  * @see https://developers.google.com/maps/documentation/gaming/reference/playable_locations/rest
  *
  */
-public class PLSpacingOptions {
-  private int min_spacing_meters;
-  private PLPointType PlPointType;
+public class ErrorMsg {
+  /**
+   * Error code eventually returned by the query to playable locations
+   */
+  private long error_code;
 
-  public int getMin_spacing_meters() {
-    return min_spacing_meters;
+  /**
+   * Getter for error_code
+   * @return
+   */
+  public long getError_code() {
+    return error_code;
   }
 
-  public void setMin_spacing_meters(int min_spacing_meters) {
-    this.min_spacing_meters = min_spacing_meters;
+  /**
+   * Setter for error_code
+   * @param error_code
+   */
+  public void setError_code(long error_code) {
+    this.error_code = error_code;
   }
 
-  public PLPointType getPlPointType() {
-    return PlPointType;
+  /**
+   * Error message eventually returned by the query to playable locations
+   */
+  private String error_msg;
+
+  /**
+   * Getter for error_msg
+   * @return
+   */
+  public String getError_msg() {
+    return error_msg;
   }
 
-  public void setPlPointType(
-      PLPointType plPointType) {
-    PlPointType = plPointType;
+  /**
+   * Setter for error_msg
+   * @param error_msg
+   */
+  public void setError_msg(String error_msg) {
+    this.error_msg = error_msg;
   }
 }

@@ -31,8 +31,8 @@ import com.google.maps.gaming.zoinkies.models.ReferenceItem;
 import com.google.maps.gaming.zoinkies.models.RewardsData;
 import com.google.maps.gaming.zoinkies.models.SpawnLocation;
 import com.google.maps.gaming.zoinkies.models.WorldData;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLLatLng;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLLocation;
+import com.google.maps.gaming.zoinkies.models.playablelocations.LatLng;
+import com.google.maps.gaming.zoinkies.models.playablelocations.Location;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -455,7 +455,7 @@ public class GameService {
      *
      * @return
      */
-  public SpawnLocation CreateRandomSpawnLocation(PLLocation loc) throws Exception {
+  public SpawnLocation CreateRandomSpawnLocation(Location loc) throws Exception {
 
     if (loc == null) {
       throw new Exception("Invalid location data found while creating random spawn location!");
@@ -474,7 +474,7 @@ public class GameService {
           "Invalid Lat Lng coordinates found while creating random spawn location!");
     }
 
-    PLLatLng point = loc.getSnappedPoint()==null?loc.getCenterPoint():loc.getSnappedPoint();
+    LatLng point = loc.getSnappedPoint()==null?loc.getCenterPoint():loc.getSnappedPoint();
 
     SpawnLocation location = new SpawnLocation();
     location.setSnappedPoint(point);

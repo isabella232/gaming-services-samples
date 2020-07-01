@@ -33,10 +33,9 @@ import com.google.maps.gaming.zoinkies.models.RewardsData;
 import com.google.maps.gaming.zoinkies.models.SpawnLocation;
 import com.google.maps.gaming.zoinkies.models.WorldData;
 import com.google.maps.gaming.zoinkies.models.WorldDataRequest;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLLatLng;
+import com.google.maps.gaming.zoinkies.models.playablelocations.LatLng;
 import java.time.Duration;
 import java.util.List;
-import javax.validation.constraints.AssertTrue;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -623,8 +622,8 @@ public class TestRestServices {
    */
   private WorldDataRequest CreateWorldDataRequest() {
     WorldDataRequest request = new WorldDataRequest();
-    request.setNortheast(new PLLatLng(48.8583701, 2.2944813));
-    request.setSouthwest(new PLLatLng(48.8446743,2.2488194));
+    request.setNortheast(new LatLng(48.8583701, 2.2944813));
+    request.setSouthwest(new LatLng(48.8446743,2.2488194));
     return request;
   }
   // endregion

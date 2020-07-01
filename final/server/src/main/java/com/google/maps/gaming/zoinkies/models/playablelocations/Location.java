@@ -20,12 +20,12 @@ package com.google.maps.gaming.zoinkies.models.playablelocations;
  * @see https://developers.google.com/maps/documentation/gaming/reference/playable_locations/rest
  *
  */
-public class PLLocation {
+public class Location {
   private String name;
   private String placeId;
   private String plusCode;
-  private PLLatLng centerPoint;
-  private PLLatLng snappedPoint;
+  private LatLng centerPoint;
+  private LatLng snappedPoint;
   private String[] types;
 
   // Reference to the parent S2CellId used for housekeeping
@@ -55,20 +55,20 @@ public class PLLocation {
     this.plusCode = plusCode;
   }
 
-  public PLLatLng getCenterPoint() {
+  public LatLng getCenterPoint() {
     return centerPoint;
   }
 
-  public void setCenterPoint(PLLatLng centerPoint) {
+  public void setCenterPoint(LatLng centerPoint) {
     this.centerPoint = centerPoint;
   }
 
-  public PLLatLng getSnappedPoint() {
+  public LatLng getSnappedPoint() {
     return snappedPoint;
   }
 
   public void setSnappedPoint(
-      PLLatLng snappedPoint) {
+      LatLng snappedPoint) {
     this.snappedPoint = snappedPoint;
   }
 

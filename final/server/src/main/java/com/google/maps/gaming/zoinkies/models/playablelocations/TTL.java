@@ -20,24 +20,14 @@ package com.google.maps.gaming.zoinkies.models.playablelocations;
  * @see https://developers.google.com/maps/documentation/gaming/reference/playable_locations/rest
  *
  */
-public class PLRequest {
-  private PLAreaFilter areaFilter;
-  private PLCriteria[] criteria;
+public class TTL {
+  private long seconds;
 
-  public PLAreaFilter getAreaFilter() {
-    return areaFilter;
+  public long getSeconds() {
+    return seconds;
   }
 
-  public void setAreaFilter(
-      PLAreaFilter areaFilter) {
-    this.areaFilter = areaFilter;
-  }
-
-  public PLCriteria[] getCriteria() {
-    return criteria;
-  }
-
-  public void setCriteria(PLCriteria[] criteria) {
-    this.criteria = criteria;
+  public void setSeconds(long seconds) {
+    this.seconds = seconds;
   }
 }

@@ -17,11 +17,11 @@ package com.google.maps.gaming.zoinkies;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLCriteria;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLFieldMask;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLFilter;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLLatLng;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLResponse;
+import com.google.maps.gaming.zoinkies.models.playablelocations.Criteria;
+import com.google.maps.gaming.zoinkies.models.playablelocations.FieldMask;
+import com.google.maps.gaming.zoinkies.models.playablelocations.Filter;
+import com.google.maps.gaming.zoinkies.models.playablelocations.LatLng;
+import com.google.maps.gaming.zoinkies.models.playablelocations.Response;
 import com.google.maps.gaming.zoinkies.services.PlayableLocationsService;
 import java.util.HashMap;
 import org.junit.jupiter.api.Test;
@@ -43,10 +43,10 @@ public class TestPlayableLocations {
   @Test
   public void TestPlayableLocationsRequest() throws Exception {
 
-    PLLatLng hi = new PLLatLng(37.2797796, -122.02596153);
-    PLLatLng lo = new PLLatLng(37.2618133,-122.0485384);
+    LatLng hi = new LatLng(37.2797796, -122.02596153);
+    LatLng lo = new LatLng(37.2618133,-122.0485384);
 
-    PLResponse response = PlayableLocationsService.RequestPlayableLocations(lo,hi,
+    Response response = PlayableLocationsService.RequestPlayableLocations(lo,hi,
         GetPLDefaultCriteria(), new HashMap<>());
     assertThat(response).isNotNull();
     assertThat(response.getLocationsPerGameObjectType()).isNotNull();
@@ -57,13 +57,13 @@ public class TestPlayableLocations {
         .getLocations().length).isEqualTo(14);
   }
 
-  private PLCriteria[] GetPLDefaultCriteria() {
-    PLCriteria[] plc = new PLCriteria[1];
-    plc[0] = new PLCriteria();
+  private Criteria[] GetPLDefaultCriteria() {
+    Criteria[] plc = new Criteria[1];
+    plc[0] = new Criteria();
     plc[0].setGame_object_type(0);
-    plc[0].setFilter( new PLFilter());
+    plc[0].setFilter( new Filter());
     plc[0].getFilter().setMax_location_count(2);
-    plc[0].setFields_to_return( new PLFieldMask());
+    plc[0].setFields_to_return( new FieldMask());
     plc[0].getFields_to_return().setPaths( new String[]{"snapped_point", "place_id", "types"});
     return plc;
   }

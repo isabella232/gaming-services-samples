@@ -24,11 +24,11 @@ import com.google.cloud.firestore.WriteResult;
 import com.google.maps.gaming.zoinkies.models.WorldDataRequest;
 import com.google.maps.gaming.zoinkies.models.SpawnLocation;
 import com.google.maps.gaming.zoinkies.models.WorldData;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLCriteria;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLFieldMask;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLFilter;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLLocation;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLResponse;
+import com.google.maps.gaming.zoinkies.models.playablelocations.Criteria;
+import com.google.maps.gaming.zoinkies.models.playablelocations.FieldMask;
+import com.google.maps.gaming.zoinkies.models.playablelocations.Filter;
+import com.google.maps.gaming.zoinkies.models.playablelocations.Location;
+import com.google.maps.gaming.zoinkies.models.playablelocations.Response;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.concurrent.ExecutionException;
@@ -120,14 +120,14 @@ public class WorldService {
 
     // Query playable locations for the given zone - and only when the overlapping cell
     // isn't in our cache.
-    PLResponse response = PlayableLocationsService.RequestPlayableLocations(
+    Response response = PlayableLocationsService.RequestPlayableLocations(
         WorldDataRequest.getSouthwest(),
         WorldDataRequest.getNortheast(),
         GetPLDefaultCriteria(),
         data.getS2CellsTTL()
     );
 
-    for (PLLocation plloc:response.getLocationsPerGameObjectType().get("0").getLocations()) {
+    for (Location plloc:response.getLocationsPerGameObjectType().get("0").getLocations()) {
       // Generate a location key.
       // We use the playable location name as it is unique and always available
       // whether the playable location is generated or not.
@@ -206,13 +206,13 @@ public class WorldService {
    *
    * @return a List of Criteria for the query to Playable Locations API
    */
-  private PLCriteria[] GetPLDefaultCriteria() {
-    PLCriteria[] plc = new PLCriteria[1];
-    plc[0] = new PLCriteria();
+  private Criteria[] GetPLDefaultCriteria() {
+    Criteria[] plc = new Criteria[1];
+    plc[0] = new Criteria();
     plc[0].setGame_object_type(0);
-    plc[0].setFilter(new PLFilter());
+    plc[0].setFilter(new Filter());
     plc[0].getFilter().setMax_location_count(50);
-    plc[0].setFields_to_return(new PLFieldMask());
+    plc[0].setFields_to_return(new FieldMask());
     plc[0].getFields_to_return().setPaths(new String[]{"snapped_point", "place_id", "types"});
     return plc;
   }

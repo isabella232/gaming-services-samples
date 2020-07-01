@@ -20,31 +20,26 @@ package com.google.maps.gaming.zoinkies.models.playablelocations;
  * @see https://developers.google.com/maps/documentation/gaming/reference/playable_locations/rest
  *
  */
-public class PLLatLng {
-  private double latitude;
-  private double longitude;
+public class AreaFilter {
 
-  public PLLatLng() {
+  /**
+   * The S2 Cell Id of the area that we extract playable locations from.
+   */
+  private String s2CellId;
+
+  /**
+   * Getter for S2CellId
+   * @return
+   */
+  public String getS2CellId() {
+    return s2CellId;
   }
 
-  public PLLatLng(double latitude, double longitude) {
-    this.latitude = latitude;
-    this.longitude = longitude;
-  }
-
-  public double getLatitude() {
-    return latitude;
-  }
-
-  public void setLatitude(double latitude) {
-    this.latitude = latitude;
-  }
-
-  public double getLongitude() {
-    return longitude;
-  }
-
-  public void setLongitude(double longitude) {
-    this.longitude = longitude;
+  /**
+   * Setter for S2CellId
+   * @param s2CellId
+   */
+  public void setS2CellId(String s2CellId) {
+    this.s2CellId = s2CellId;
   }
 }

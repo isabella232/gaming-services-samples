@@ -15,31 +15,23 @@
  */
 package com.google.maps.gaming.zoinkies.models.playablelocations;
 
-import java.util.Map;
-
 /**
- * POJO classes to map the json request / response to the playable locations REST API.
+ * Enumeration of point types to map the json request / response to the playable locations REST API.
  * @see https://developers.google.com/maps/documentation/gaming/reference/playable_locations/rest
  *
  */
-public class PLResponse {
-  private Map<String, PLLocations> locationsPerGameObjectType;
-  private String ttl;
+public enum PointType {
+  /// <summary>Unspecified point type. Do not use this value.</summary>
+  Unspecified,
 
-  public String getTtl() {
-    return ttl;
-  }
+  /// <summary>
+  /// The geographic coordinates correspond to the center of the location.
+  /// </summary>
+  CenterPoint,
 
-  public void setTtl(String ttl) {
-    this.ttl = ttl;
-  }
-
-  public Map<String, PLLocations> getLocationsPerGameObjectType() {
-    return locationsPerGameObjectType;
-  }
-
-  public void setLocationsPerGameObjectType(
-      Map<String, PLLocations> locationsPerGameObjectType) {
-    this.locationsPerGameObjectType = locationsPerGameObjectType;
-  }
+  /// <summary>
+  /// The geographic coordinates correspond to the location snapped to the
+  /// sidewalk of the nearest road (when a nearby road exists).
+  /// </summary>
+  SnappedPoint,
 }

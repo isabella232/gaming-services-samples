@@ -20,14 +20,31 @@ package com.google.maps.gaming.zoinkies.models.playablelocations;
  * @see https://developers.google.com/maps/documentation/gaming/reference/playable_locations/rest
  *
  */
-public class PLLocations {
-  private PLLocation[] locations;
+public class LatLng {
+  private double latitude;
+  private double longitude;
 
-  public PLLocation[] getLocations() {
-    return locations;
+  public LatLng() {
   }
 
-  public void setLocations(PLLocation[] locations) {
-    this.locations = locations;
+  public LatLng(double latitude, double longitude) {
+    this.latitude = latitude;
+    this.longitude = longitude;
+  }
+
+  public double getLatitude() {
+    return latitude;
+  }
+
+  public void setLatitude(double latitude) {
+    this.latitude = latitude;
+  }
+
+  public double getLongitude() {
+    return longitude;
+  }
+
+  public void setLongitude(double longitude) {
+    this.longitude = longitude;
   }
 }

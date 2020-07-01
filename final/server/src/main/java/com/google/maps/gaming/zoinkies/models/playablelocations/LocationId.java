@@ -20,14 +20,26 @@ package com.google.maps.gaming.zoinkies.models.playablelocations;
  * @see https://developers.google.com/maps/documentation/gaming/reference/playable_locations/rest
  *
  */
-public class PLTTL {
-  private long seconds;
+public class LocationId {
 
-  public long getSeconds() {
-    return seconds;
+  private String PlaceId;
+  private String plus_code;
+  private LocationId() {
   }
 
-  public void setSeconds(long seconds) {
-    this.seconds = seconds;
+  public String getPlaceId() {
+    return PlaceId;
+  }
+
+  public void setPlaceId(String placeId) {
+    PlaceId = placeId;
+  }
+
+  public String getPlus_code() {
+    return plus_code;
+  }
+
+  public void setPlus_code(String plus_code) {
+    this.plus_code = plus_code;
   }
 }

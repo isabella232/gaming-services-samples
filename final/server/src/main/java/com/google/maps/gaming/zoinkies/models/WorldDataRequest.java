@@ -15,7 +15,7 @@
  */
 package com.google.maps.gaming.zoinkies.models;
 
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLLatLng;
+import com.google.maps.gaming.zoinkies.models.playablelocations.LatLng;
 
 /**
  * A POJO class used to keep track of the client's world request.
@@ -23,22 +23,22 @@ import com.google.maps.gaming.zoinkies.models.playablelocations.PLLatLng;
  * within the overlapping S2 cells.
  */
 public class WorldDataRequest {
-  private PLLatLng northeast;
-  private PLLatLng southwest;
+  private LatLng northeast;
+  private LatLng southwest;
 
-  public PLLatLng getNortheast() {
+  public LatLng getNortheast() {
     return northeast;
   }
 
-  public void setNortheast(PLLatLng northeast) {
+  public void setNortheast(LatLng northeast) {
     this.northeast = northeast;
   }
 
-  public PLLatLng getSouthwest() {
+  public LatLng getSouthwest() {
     return southwest;
   }
 
-  public void setSouthwest(PLLatLng southwest) {
+  public void setSouthwest(LatLng southwest) {
     this.southwest = southwest;
   }
 }

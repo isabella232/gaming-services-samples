@@ -16,22 +16,30 @@
 package com.google.maps.gaming.zoinkies.models.playablelocations;
 
 /**
- * Enumeration of point types to map the json request / response to the playable locations REST API.
+ * POJO classes to map the json request / response to the playable locations REST API.
  * @see https://developers.google.com/maps/documentation/gaming/reference/playable_locations/rest
  *
  */
-public enum PLPointType {
-  /// <summary>Unspecified point type. Do not use this value.</summary>
-  Unspecified,
+public class FieldMask {
 
-  /// <summary>
-  /// The geographic coordinates correspond to the center of the location.
-  /// </summary>
-  CenterPoint,
+  /**
+   * A collection of paths
+   */
+  private String[] paths;
 
-  /// <summary>
-  /// The geographic coordinates correspond to the location snapped to the
-  /// sidewalk of the nearest road (when a nearby road exists).
-  /// </summary>
-  SnappedPoint,
+  /**
+   * Getter for paths
+   * @return
+   */
+  public String[] getPaths() {
+    return paths;
+  }
+
+  /**
+   * Setter for paths
+   * @param paths
+   */
+  public void setPaths(String[] paths) {
+    this.paths = paths;
+  }
 }

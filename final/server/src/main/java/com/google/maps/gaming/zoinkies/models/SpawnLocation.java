@@ -15,7 +15,7 @@
  */
 package com.google.maps.gaming.zoinkies.models;
 
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLLatLng;
+import com.google.maps.gaming.zoinkies.models.playablelocations.LatLng;
 
 /**
  * A POJO class to keep track of spawn locations details.
@@ -54,7 +54,7 @@ public class SpawnLocation {
   /**
    * The Latitude Location of this game location.
    */
-  private PLLatLng snappedPoint;
+  private LatLng snappedPoint;
   /**
    * The S2CellId from which this location was created.
    */
@@ -69,7 +69,7 @@ public class SpawnLocation {
       String respawn_time,
       int number_of_keys_to_activate,
       String key_type_id,
-      PLLatLng snappedPoint) {
+      LatLng snappedPoint) {
     this.id = id;
     this.active = active;
     this.object_type_id = object_type_id;
@@ -136,12 +136,12 @@ public class SpawnLocation {
     this.respawn_time = respawn_time;
   }
 
-  public PLLatLng getSnappedPoint() {
+  public LatLng getSnappedPoint() {
     return snappedPoint;
   }
 
   public void setSnappedPoint(
-      PLLatLng snappedPoint) {
+      LatLng snappedPoint) {
     this.snappedPoint = snappedPoint;
   }
 

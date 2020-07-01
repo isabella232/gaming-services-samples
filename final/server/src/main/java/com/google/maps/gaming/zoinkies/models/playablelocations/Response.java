@@ -15,19 +15,31 @@
  */
 package com.google.maps.gaming.zoinkies.models.playablelocations;
 
+import java.util.Map;
+
 /**
  * POJO classes to map the json request / response to the playable locations REST API.
  * @see https://developers.google.com/maps/documentation/gaming/reference/playable_locations/rest
  *
  */
-public class PLFieldMask {
-  private String[] paths;
+public class Response {
+  private Map<String, Locations> locationsPerGameObjectType;
+  private String ttl;
 
-  public String[] getPaths() {
-    return paths;
+  public String getTtl() {
+    return ttl;
   }
 
-  public void setPaths(String[] paths) {
-    this.paths = paths;
+  public void setTtl(String ttl) {
+    this.ttl = ttl;
+  }
+
+  public Map<String, Locations> getLocationsPerGameObjectType() {
+    return locationsPerGameObjectType;
+  }
+
+  public void setLocationsPerGameObjectType(
+      Map<String, Locations> locationsPerGameObjectType) {
+    this.locationsPerGameObjectType = locationsPerGameObjectType;
   }
 }

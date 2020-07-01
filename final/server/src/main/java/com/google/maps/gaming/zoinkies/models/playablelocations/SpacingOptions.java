@@ -20,14 +20,24 @@ package com.google.maps.gaming.zoinkies.models.playablelocations;
  * @see https://developers.google.com/maps/documentation/gaming/reference/playable_locations/rest
  *
  */
-public class PLAreaFilter {
-  private String s2CellId;
+public class SpacingOptions {
+  private int min_spacing_meters;
+  private PointType pointType;
 
-  public String getS2CellId() {
-    return s2CellId;
+  public int getMin_spacing_meters() {
+    return min_spacing_meters;
   }
 
-  public void setS2CellId(String s2CellId) {
-    this.s2CellId = s2CellId;
+  public void setMin_spacing_meters(int min_spacing_meters) {
+    this.min_spacing_meters = min_spacing_meters;
+  }
+
+  public PointType getPointType() {
+    return pointType;
+  }
+
+  public void setPointType(
+      PointType pointType) {
+    this.pointType = pointType;
   }
 }

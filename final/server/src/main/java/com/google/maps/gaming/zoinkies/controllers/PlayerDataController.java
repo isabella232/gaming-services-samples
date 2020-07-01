@@ -16,6 +16,7 @@
 package com.google.maps.gaming.zoinkies.controllers;
 
 import com.google.maps.gaming.zoinkies.services.GameService;
+import com.google.maps.gaming.zoinkies.services.PlayerService;
 import com.google.maps.gaming.zoinkies.models.PlayerData;
 import java.util.concurrent.ExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,27 +35,33 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PlayerDataController {
 
+  /**
+   * A reference to the player service
+   */
   @Autowired
-  private com.google.maps.gaming.zoinkies.services.PlayerService PlayerService;
-
-  @Autowired
-  private GameService GameService;
+  private PlayerService playerService;
 
   /**
-   * Returns the data associated to the player identified by the given id.
-   * @param Id
-   * @return
+   * A reference to the game service
+   */
+  @Autowired
+  private GameService gameService;
+
+  /**
+   * Returns the data associated to the player identified by the given user id.
+   * @param id
+   * @return the updated Player Data
    */
   @GetMapping("/users/{id}")
-  public ResponseEntity<PlayerData> GetUser(@PathVariable("id") String Id) {
+  public ResponseEntity<PlayerData> getUser(@PathVariable("id") String id) {
     // The provided Id must be valid
-    if (Id == null || Id.isEmpty()) {
+    if (id == null || id.isEmpty()) {
       return ResponseEntity.badRequest().build();
     }
     PlayerData data = null;
     // Check if this record already exist
     try {
-      data = PlayerService.GetPlayerData(Id);
+      data = playerService.GetPlayerData(id);
     } catch (Exception e) {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -68,47 +75,47 @@ public class PlayerDataController {
   /**
    * Creates or updates a player data record.
    *
-   * @param Id the Unique identifier for this player
+   * @param id the Unique identifier for this player
    * @return the updated Player Data
    */
   @PostMapping(path = "/users/{id}", consumes = "application/json", produces = "application/json")
-  public ResponseEntity<PlayerData>  CreateUser(@PathVariable("id") String Id,
-      @RequestBody(required=false) PlayerData PlayerData) {
+  public ResponseEntity<PlayerData> createUser(@PathVariable("id") String id,
+      @RequestBody(required=false) PlayerData playerData) {
     // The provided Id must be valid
-    if (Id == null || Id.isEmpty()) {
+    if (id == null || id.isEmpty()) {
       return ResponseEntity.badRequest().build();
     }
     // The provided Id must be valid
+    // If this is an update, we only update stats
+    // Inventory remains as is
+    // We also check that items assignments are valid
+    // and revert to current value if not
     try {
-      if (PlayerData == null) {
-        PlayerData = GameService.CreateNewUser();
+      if (playerData == null) {
+        playerData = gameService.CreateNewUser();
       } else {
-        // If this is an update, we only update stats
-        PlayerData current = PlayerService.GetPlayerData(Id);
+        PlayerData current = playerService.GetPlayerData(id);
         if (current != null) {
-          // Inventory remains as is
-          PlayerData.setInventory(current.getInventory());
-          // Check that items assignments are valid
-          // Revert to current value if not
-          if (PlayerData.getEquippedBodyArmor() != null
-              && !PlayerData.hasInventoryItem(PlayerData.getEquippedBodyArmor())) {
-            PlayerData.setEquippedBodyArmor(current.getEquippedBodyArmor());
+          playerData.setInventory(current.getInventory());
+          if (playerData.getEquippedBodyArmor() != null
+              && !playerData.hasInventoryItem(playerData.getEquippedBodyArmor())) {
+            playerData.setEquippedBodyArmor(current.getEquippedBodyArmor());
           }
-          if (PlayerData.getEquippedHelmet() != null
-              && !PlayerData.hasInventoryItem(PlayerData.getEquippedHelmet())) {
-            PlayerData.setEquippedHelmet(current.getEquippedHelmet());
+          if (playerData.getEquippedHelmet() != null
+              && !playerData.hasInventoryItem(playerData.getEquippedHelmet())) {
+            playerData.setEquippedHelmet(current.getEquippedHelmet());
           }
-          if (PlayerData.getEquippedShield() != null
-              && !PlayerData.hasInventoryItem(PlayerData.getEquippedShield())) {
-            PlayerData.setEquippedShield(current.getEquippedShield());
+          if (playerData.getEquippedShield() != null
+              && !playerData.hasInventoryItem(playerData.getEquippedShield())) {
+            playerData.setEquippedShield(current.getEquippedShield());
           }
-          if (PlayerData.getEquippedWeapon() != null
-              && !PlayerData.hasInventoryItem(PlayerData.getEquippedWeapon())) {
-            PlayerData.setEquippedWeapon(current.getEquippedWeapon());
+          if (playerData.getEquippedWeapon() != null
+              && !playerData.hasInventoryItem(playerData.getEquippedWeapon())) {
+            playerData.setEquippedWeapon(current.getEquippedWeapon());
           }
         }
       }
-      PlayerData = PlayerService.UpdatePlayerData(Id, PlayerData);
+      playerData = playerService.UpdatePlayerData(id, playerData);
     } catch (ExecutionException e) {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -116,21 +123,21 @@ public class PlayerDataController {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-    return ResponseEntity.ok(PlayerData);
+    return ResponseEntity.ok(playerData);
   }
 
   /**
    * Deletes everything recorded for this player, including cached world data.
-   * @param Id
-   * @return
+   * @param id
+   * @return the id of the deleted user
    */
   @DeleteMapping("/users/{id}")
-  public ResponseEntity<String> DeleteUser(@PathVariable("id") String Id) {
+  public ResponseEntity<String> deleteUser(@PathVariable("id") String id) {
     // The provided Id must be valid
-    if (Id == null || Id.isEmpty()) {
+    if (id == null || id.isEmpty()) {
       return ResponseEntity.badRequest().build();
     }
-    PlayerService.RemoveUserData(Id);
-    return new ResponseEntity<>(Id, HttpStatus.OK);
+    playerService.RemoveUserData(id);
+    return new ResponseEntity<>(id, HttpStatus.OK);
   }
 }
