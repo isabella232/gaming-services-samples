@@ -21,21 +21,44 @@ package com.google.maps.gaming.zoinkies.models.playablelocations;
  *
  */
 public class SpacingOptions {
+  /**
+   * The minimum spacing between two locations in meters
+   */
   private int min_spacing_meters;
-  private PointType pointType;
 
+  /**
+   * Getter for min_spacing_meters
+   * @return
+   */
   public int getMin_spacing_meters() {
     return min_spacing_meters;
   }
 
+  /**
+   * Setter for min_spacing_meters
+   * @param min_spacing_meters
+   */
   public void setMin_spacing_meters(int min_spacing_meters) {
     this.min_spacing_meters = min_spacing_meters;
   }
 
+  /**
+   * The point type
+   */
+  private PointType pointType;
+
+  /**
+   * Getter for pointType
+   * @return
+   */
   public PointType getPointType() {
     return pointType;
   }
 
+  /**
+   * Setter for pointType
+   * @param pointType
+   */
   public void setPointType(
       PointType pointType) {
     this.pointType = pointType;

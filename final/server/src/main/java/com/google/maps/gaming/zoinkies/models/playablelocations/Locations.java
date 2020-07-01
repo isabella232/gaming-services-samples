@@ -21,12 +21,24 @@ package com.google.maps.gaming.zoinkies.models.playablelocations;
  *
  */
 public class Locations {
+
+  /**
+   * An array of locations
+   */
   private Location[] locations;
 
+  /**
+   * Getter for locations
+   * @return
+   */
   public Location[] getLocations() {
     return locations;
   }
 
+  /**
+   * Setter for locations
+   * @param locations
+   */
   public void setLocations(Location[] locations) {
     this.locations = locations;
   }

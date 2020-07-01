@@ -21,70 +21,151 @@ package com.google.maps.gaming.zoinkies.models.playablelocations;
  *
  */
 public class Location {
-  private String name;
-  private String placeId;
-  private String plusCode;
-  private LatLng centerPoint;
-  private LatLng snappedPoint;
-  private String[] types;
-
-  // Reference to the parent S2CellId used for housekeeping
+  /**
+   * Reference to the parent S2CellId used for housekeeping
+   */
   private String S2CellId;
 
+  /**
+   * Getter for s2CellId
+   * @return
+   */
+  public String getS2CellId() {
+    return S2CellId;
+  }
+
+  /**
+   * Setter for s2CellId
+   * @param s2CellId
+   */
+  public void setS2CellId(String s2CellId) {
+    S2CellId = s2CellId;
+  }
+
+  /**
+   * Unique identifier of a playable location
+   */
+  private String name;
+
+  /**
+   * Getter for name
+   * @return
+   */
   public String getName() {
     return name;
   }
 
+  /**
+   * Setter for name
+   * @param name
+   */
   public void setName(String name) {
     this.name = name;
   }
 
+  /**
+   * PlaceId is the unique identifier for non-generated playable locations
+   */
+  private String placeId;
+
+  /**
+   * Getter for placeId
+   * @return
+   */
   public String getPlaceId() {
     return placeId;
   }
 
+  /**
+   * Setter for placeId
+   * @param placeId
+   */
   public void setPlaceId(String placeId) {
     this.placeId = placeId;
   }
 
+  /**
+   * PlusCode is the unique identifier for generated playable locations
+   */
+  private String plusCode;
+
+  /**
+   * Getter for plusCode
+   * @return
+   */
   public String getPlusCode() {
     return plusCode;
   }
 
+  /**
+   * Setter for plusCode
+   * @param plusCode
+   */
   public void setPlusCode(String plusCode) {
     this.plusCode = plusCode;
   }
 
+  /**
+   * Latitude longitude of the center point of a playable location
+   */
+  private LatLng centerPoint;
+
+  /**
+   * Getter for centerPoint
+   * @return
+   */
   public LatLng getCenterPoint() {
     return centerPoint;
   }
 
+  /**
+   * Setter for centerPoint
+   * @param centerPoint
+   */
   public void setCenterPoint(LatLng centerPoint) {
     this.centerPoint = centerPoint;
   }
 
+  /**
+   * Snapped point if the playable location to the closest road segment edge
+   */
+  private LatLng snappedPoint;
+
+  /**
+   * Getter for snappedPoint
+   * @return
+   */
   public LatLng getSnappedPoint() {
     return snappedPoint;
   }
 
+  /**
+   * Setter for snappedPoint
+   * @param snappedPoint
+   */
   public void setSnappedPoint(
       LatLng snappedPoint) {
     this.snappedPoint = snappedPoint;
   }
 
+  /**
+   * Collection of types
+   */
+  private String[] types;
+
+  /**
+   * Getter for types
+   * @return
+   */
   public String[] getTypes() {
     return types;
   }
 
+  /**
+   * Setter for types
+   * @param types
+   */
   public void setTypes(String[] types) {
     this.types = types;
-  }
-
-  public String getS2CellId() {
-    return S2CellId;
-  }
-
-  public void setS2CellId(String s2CellId) {
-    S2CellId = s2CellId;
   }
 }

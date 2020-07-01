@@ -21,30 +21,62 @@ package com.google.maps.gaming.zoinkies.models.playablelocations;
  *
  */
 public class LatLng {
+
+  /**
+   * The latitude of a playable location
+   */
   private double latitude;
-  private double longitude;
 
-  public LatLng() {
-  }
-
-  public LatLng(double latitude, double longitude) {
-    this.latitude = latitude;
-    this.longitude = longitude;
-  }
-
+  /**
+   * The getter for latitude
+   * @return
+   */
   public double getLatitude() {
     return latitude;
   }
 
+  /**
+   * The setter for latitude
+   * @param latitude
+   */
   public void setLatitude(double latitude) {
     this.latitude = latitude;
   }
 
+  /**
+   * The longitude of a playable location
+   */
+  private double longitude;
+
+  /**
+   * The getter for longitude
+   * @return
+   */
   public double getLongitude() {
     return longitude;
   }
 
+  /**
+   * The setter for longitude
+   * @param longitude
+   */
   public void setLongitude(double longitude) {
+    this.longitude = longitude;
+  }
+
+  /**
+   * Default constructor
+   */
+  public LatLng() {
+  }
+
+  /**
+   * A constructor that takes a latitude and longitude doubles as input parameters
+   * @param latitude
+   * @param longitude
+   */
+  public LatLng(double latitude, double longitude) {
+    this.latitude = latitude;
     this.longitude = longitude;
   }
 }

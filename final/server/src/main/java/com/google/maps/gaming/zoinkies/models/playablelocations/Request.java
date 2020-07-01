@@ -21,22 +21,45 @@ package com.google.maps.gaming.zoinkies.models.playablelocations;
  *
  */
 public class Request {
+  /**
+   * Area filter for the request
+   */
   private AreaFilter areaFilter;
-  private Criteria[] criteria;
 
+  /**
+   * Getter for areaFilter
+   * @return
+   */
   public AreaFilter getAreaFilter() {
     return areaFilter;
   }
 
+  /**
+   * Setter for areaFilter
+   * @param areaFilter
+   */
   public void setAreaFilter(
       AreaFilter areaFilter) {
     this.areaFilter = areaFilter;
   }
 
+  /**
+   * Collection of criteria for the request
+   */
+  private Criteria[] criteria;
+
+  /**
+   * Getter for criteria
+   * @return
+   */
   public Criteria[] getCriteria() {
     return criteria;
   }
 
+  /**
+   * Setter for criteria
+   * @param criteria
+   */
   public void setCriteria(Criteria[] criteria) {
     this.criteria = criteria;
   }

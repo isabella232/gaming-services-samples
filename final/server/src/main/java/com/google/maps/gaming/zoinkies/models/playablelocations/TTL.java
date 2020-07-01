@@ -21,12 +21,24 @@ package com.google.maps.gaming.zoinkies.models.playablelocations;
  *
  */
 public class TTL {
+
+  /**
+   * The time to live in seconds
+   */
   private long seconds;
 
+  /**
+   * Getter for seconds
+   * @return
+   */
   public long getSeconds() {
     return seconds;
   }
 
+  /**
+   * Setter for seconds
+   * @param seconds
+   */
   public void setSeconds(long seconds) {
     this.seconds = seconds;
   }

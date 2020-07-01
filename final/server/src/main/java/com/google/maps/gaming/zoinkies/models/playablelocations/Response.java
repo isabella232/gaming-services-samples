@@ -23,23 +23,48 @@ import java.util.Map;
  *
  */
 public class Response {
+  /**
+   * Map of locations per game object type.
+   * The key is the game object type.
+   * The value is a collection of playable locations.
+   */
   private Map<String, Locations> locationsPerGameObjectType;
-  private String ttl;
 
-  public String getTtl() {
-    return ttl;
-  }
-
-  public void setTtl(String ttl) {
-    this.ttl = ttl;
-  }
-
+  /**
+   * Getter for locationsPerGameObjectType
+   * @return
+   */
   public Map<String, Locations> getLocationsPerGameObjectType() {
     return locationsPerGameObjectType;
   }
 
+  /**
+   * Setter for locationsPerGameObjectType
+   * @param locationsPerGameObjectType
+   */
   public void setLocationsPerGameObjectType(
       Map<String, Locations> locationsPerGameObjectType) {
     this.locationsPerGameObjectType = locationsPerGameObjectType;
+  }
+
+  /**
+   * The time to live of the playable location
+   */
+  private String ttl;
+
+  /**
+   * Getter for ttl
+   * @return
+   */
+  public String getTtl() {
+    return ttl;
+  }
+
+  /**
+   * Setter for ttl
+   * @param ttl
+   */
+  public void setTtl(String ttl) {
+    this.ttl = ttl;
   }
 }
