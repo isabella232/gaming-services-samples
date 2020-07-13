@@ -63,13 +63,13 @@ public class GameService {
    * A reference to the world service
    */
   @Autowired
-  WorldService WorldService;
+  WorldService worldService;
 
   /**
    * A reference to the player service
    */
   @Autowired
-  PlayerService PlayerService;
+  PlayerService playerService;
 
   /**
    * Keeps a reference to game data after being loaded from the resources folder.
@@ -135,7 +135,7 @@ public class GameService {
    */
   private void checkLocationStatus(String Id, String LocationId) throws Exception{
 
-    WorldData worldData = WorldService.getWorldData(Id);
+    WorldData worldData = worldService.getWorldData(Id);
     if (!worldData.getLocations().containsKey(LocationId)) {
       throw new Exception("Location Id " + LocationId + " not found!");
     }
@@ -155,7 +155,7 @@ public class GameService {
         // Reactive the location
         location.setActive(true);
         location.setRespawn_time(null);
-        WorldService.setWorldData(Id,worldData);
+        worldService.setWorldData(Id,worldData);
       }
     }
   }
@@ -187,7 +187,7 @@ public class GameService {
       SpawnLocation location = WorldData.getLocations().get(LocationId);
       location.setActive(false);
       location.setRespawn_time(Instant.now().plus(refItem.getRespawnDuration()).toString());
-      WorldService.setWorldData(UserId, WorldData);
+      worldService.setWorldData(UserId, WorldData);
     }
   }
 
@@ -210,7 +210,7 @@ public class GameService {
    */
   public BattleSummaryData getBattleSummaryData(String Id, String LocationId,
       Boolean Winner) throws Exception {
-    WorldData worldData = WorldService.getWorldData(Id);
+    WorldData worldData = worldService.getWorldData(Id);
     if (!worldData.getLocations().containsKey(LocationId)) {
       throw new Exception("Location Id " + LocationId + " not found!");
     }
@@ -227,7 +227,7 @@ public class GameService {
       if (refItem == null) {
         throw new Exception("Can't find reference Item for " + location.getObject_type_id() + "!");
       }
-      PlayerData playerData = PlayerService.getPlayerData(Id);
+      PlayerData playerData = playerService.getPlayerData(Id);
       RewardsData rewardsData;
 
       if (Winner) {
@@ -244,6 +244,7 @@ public class GameService {
           data.setWonTheGame(true); // Hurray!
         }
       } else {
+        // The player looses a gold key in this case, only if they have one in the inventory.
         rewardsData = new RewardsData();
         List<Item> keys = playerData.getInventoryItems(GameConstants.GOLD_KEY);
         if (keys.size() > 0) {
@@ -258,11 +259,11 @@ public class GameService {
       }
       data.setRewards(rewardsData);
       data.getRewards().setId(LocationId);
-      PlayerService.updatePlayerData(Id,playerData);
+      playerService.updatePlayerData(Id,playerData);
       if (refItem.getRespawnDuration() != null) {
         location.setActive(false);
         location.setRespawn_time(Instant.now().plus(refItem.getRespawnDuration()).toString());
-        WorldService.setWorldData(Id, worldData);
+        worldService.setWorldData(Id, worldData);
       }
     }
     return data;
@@ -279,7 +280,7 @@ public class GameService {
    * @throws Exception
    */
   public BattleData getBattleData(String Id, String LocationId) throws Exception {
-    WorldData worldData = WorldService.getWorldData(Id);
+    WorldData worldData = worldService.getWorldData(Id);
     if (!worldData.getLocations().containsKey(LocationId)) {
       throw new Exception("Location Id " + LocationId + " not found!");
     }
@@ -324,7 +325,7 @@ public class GameService {
       // Location is unlocked
       // Update location
       // Update Player Data
-      PlayerData playerData = PlayerService.getPlayerData(Id);
+      PlayerData playerData = playerService.getPlayerData(Id);
        ReferenceItem ri = getReferenceData().getReferenceItem(GameConstants.DIAMOND_KEY);
       if (ri == null)
         throw new Exception("Reference item " + GameConstants.DIAMOND_KEY + " not found!");
@@ -334,8 +335,8 @@ public class GameService {
         items.get(0).setQuantity(items.get(0).getQuantity()
             - location.getNumber_of_keys_to_activate());
         location.setNumber_of_keys_to_activate(0);
-        WorldService.setWorldData(Id,worldData);
-        PlayerService.updatePlayerData(Id, playerData);
+        worldService.setWorldData(Id,worldData);
+        playerService.updatePlayerData(Id, playerData);
       } else {
         throw new NotEnoughResourcesToUnlockException("Not enough Diamond keys to unlock tower!");
       }
@@ -362,7 +363,7 @@ public class GameService {
    * @throws Exception
    */
   public EnergyData getEnergyStationData(String Id, String LocationId) throws Exception {
-    WorldData worldData = WorldService.getWorldData(Id);
+    WorldData worldData = worldService.getWorldData(Id);
     if (!worldData.getLocations().containsKey(LocationId)) {
       throw new Exception("Location Id " + LocationId + " not found!");
     }
@@ -371,7 +372,7 @@ public class GameService {
     // Get World Data
     checkLocationStatus(Id,LocationId);
     // Get PlayerData
-    PlayerData playerData = PlayerService.getPlayerData(Id);
+    PlayerData playerData = playerService.getPlayerData(Id);
     int energy = playerData.getMaxEnergyLevel() - playerData.getEnergyLevel();
     playerData.setEnergyLevel(playerData.getMaxEnergyLevel());
     // Refill all energy points
@@ -379,7 +380,7 @@ public class GameService {
     data.setId(LocationId);
     data.setAmountRestored(energy);
     // Update Player Data
-    PlayerService.updatePlayerData(Id, playerData);
+    playerService.updatePlayerData(Id, playerData);
     // Change station status and start respawning
     startRespawiningLocation(GameConstants.ENERGY_STATION, Id, LocationId, worldData);
     return data;
@@ -399,14 +400,14 @@ public class GameService {
     // Check pre-requisites:
     // - Chest must be in active mode and not respawning
     // Get World Data
-    WorldData worldData = WorldService.getWorldData(Id);
+    WorldData worldData = worldService.getWorldData(Id);
     if (!worldData.getLocations().containsKey(LocationId)) {
       throw new Exception("Location Id " + LocationId + " not found!");
     }
     checkLocationStatus(Id,LocationId);
     SpawnLocation location = worldData.getLocations().get(LocationId);
     // Get PlayerData
-    PlayerData playerData = PlayerService.getPlayerData(Id);
+    PlayerData playerData = playerService.getPlayerData(Id);
     // - Player must have enough gold keys
     ReferenceData referenceData = getReferenceData();
     ReferenceItem ri = referenceData.getReferenceItem(GameConstants.GOLD_KEY);
@@ -441,7 +442,7 @@ public class GameService {
     }
 
     // Update Player Data
-    PlayerService.updatePlayerData(Id, playerData);
+    playerService.updatePlayerData(Id, playerData);
 
     return data;
   }

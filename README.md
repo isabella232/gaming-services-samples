@@ -62,6 +62,9 @@ appengine {  // App Engine tasks configuration
 
 1. You must be authenticated locally to access the services in the GCP Project.
 This can be done by following the instructions on this page:
+https://cloud.google.com/docs/authentication/getting-started
+
+Installing gcloud locally can also be useful to setup the active project and local user.
 https://cloud.google.com/source-repositories/docs/authentication#authenticate-using-the-cloud-sdk
 
 1. Run the following commands from the CLI:

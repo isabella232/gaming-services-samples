@@ -34,6 +34,7 @@ import com.google.maps.gaming.zoinkies.models.SpawnLocation;
 import com.google.maps.gaming.zoinkies.models.WorldData;
 import com.google.maps.gaming.zoinkies.models.WorldDataRequest;
 import com.google.maps.gaming.zoinkies.models.playablelocations.LatLng;
+import com.google.maps.gaming.zoinkies.services.*;
 import java.time.Duration;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -51,34 +52,34 @@ public class TestRestServices {
   @Autowired
   private MockMvc mockMvc;
   @Autowired
-  private com.google.maps.gaming.zoinkies.services.GameService GameService;
+  private GameService gameService;
   @Autowired
-  private com.google.maps.gaming.zoinkies.services.PlayerService PlayerService;
+  private com.google.maps.gaming.zoinkies.services.PlayerService playerService;
 
-  private String Id = "1234e91f-ce9c-4fa9-ac52-0f7079ce1234";
+  private String deviceId = "1234e91f-ce9c-4fa9-ac52-0f7079ce1234";
 
   @Test
-  public void TestReferenceDataRead() throws Exception {
+  public void testReferenceDataRead() throws Exception {
     this.mockMvc.perform(get("/references")).andDo(print()).andExpect(status().isOk());
   }
 
   @Test
-  public void TestDataCache() throws Exception {
-    DeleteWorldData();
+  public void testDataCache() throws Exception {
+    deleteWorldData();
 
-    System.out.println("Creating world " + Id);
-    CreateWorldData();
+    System.out.println("Creating world " + deviceId);
+    createWorldData();
 
-    System.out.println("Check cache " + Id);
-    CheckDataCache();
+    System.out.println("Check cache " + deviceId);
+    checkDataCache();
 
-    System.out.println("Deleting world " + Id);
-    DeleteWorldData();
+    System.out.println("Deleting world " + deviceId);
+    deleteWorldData();
 
   }
 
-  private void CheckDataCache() throws Exception {
-    WorldData data = GetWorldData();
+  private void checkDataCache() throws Exception {
+    WorldData data = getWorldData();
     Assert.isTrue(data.getS2CellsTTL().size() > 0,
         "There should be a few cell ids in this list.");
 
@@ -102,35 +103,35 @@ public class TestRestServices {
    * @throws Exception
    */
   @Test
-  public void TestWorldDataCRUD() throws Exception {
+  public void testWorldDataCRUD() throws Exception {
     // 1 Create
-    System.out.println("Creating world " + Id);
-    CreateWorldData();
+    System.out.println("Creating world " + deviceId);
+    createWorldData();
     // 2 Read
-    System.out.println("Reading world " + Id);
-    GetWorldData();
+    System.out.println("Reading world " + deviceId);
+    getWorldData();
     // 4 Delete
-    System.out.println("Deleting world " + Id);
-    DeleteWorldData();
+    System.out.println("Deleting world " + deviceId);
+    deleteWorldData();
   }
   @Test
-  public void TestEnergyStation() throws Exception {
+  public void testEnergyStation() throws Exception {
     // 0 - Delete User and World data in case of leftovers from previous failures
-    DeleteWorldData();
-    DeletePlayerData();
+    deleteWorldData();
+    deletePlayerData();
 
     // 1 Create User and World data
-    CreatePlayerData("Johnny");
-    CreateWorldData();
+    createPlayerData("Johnny");
+    createWorldData();
 
     // 2 Get some battle damage
-    PlayerData playerData = GetPlayerData("Johnny");
+    PlayerData playerData = getPlayerData("Johnny");
     playerData.setEnergyLevel(5);
-    PlayerService.updatePlayerData(Id, playerData);
+    playerService.updatePlayerData(deviceId, playerData);
 
     // 3 Restore energy - search for a station
     // Search for a chest in our spawn locations
-    WorldData data = GetWorldData();
+    WorldData data = getWorldData();
     SpawnLocation location = null;
     for (String locationId:data.getLocations().keySet()) {
       if (data.getLocations().get(locationId).getObject_type_id()
@@ -139,27 +140,27 @@ public class TestRestServices {
         break;
       }
     }
-    EnergyData energy = GetEnergyData(location.getId());
+    EnergyData energy = getEnergyData(location.getId());
     Assert.isTrue(energy.getAmountRestored() == 75,
         "Restore amount is incorrect.");
 
     // Cleanup
-    DeleteWorldData();
-    DeletePlayerData();
+    deleteWorldData();
+    deletePlayerData();
   }
 
   @Test
-  public void TestGeneralBattlePlayerWinsGame() throws Exception {
+  public void testGeneralBattlePlayerWinsGame() throws Exception {
     // 0 - Delete User and World data in case of leftovers from previous failures
-    DeleteWorldData();
-    DeletePlayerData();
+    deleteWorldData();
+    deletePlayerData();
 
     // 1 Create User and World data
-    CreatePlayerData("Johnny");
-    CreateWorldData();
+    createPlayerData("Johnny");
+    createWorldData();
 
     // Battle minions - search for a minion
-    WorldData data = GetWorldData();
+    WorldData data = getWorldData();
     SpawnLocation location = null;
     for (String locationId:data.getLocations().keySet()) {
       if (data.getLocations().get(locationId).getObject_type_id().equals(GameConstants.TOWER)) {
@@ -169,19 +170,19 @@ public class TestRestServices {
     }
 
     // Add enough freed leader so we are short of one to win the game
-    PlayerData PlayerData = PlayerService.getPlayerData(Id);
+    PlayerData PlayerData = playerService.getPlayerData(deviceId);
     PlayerData.addInventoryItem(new Item(GameConstants.FREED_LEADERS,
         GameConstants.FREED_LEADERS_TO_WIN-1));
     PlayerData.addInventoryItem(new Item(GameConstants.DIAMOND_KEY,5));
-    PlayerService.updatePlayerData(Id,PlayerData);
+    playerService.updatePlayerData(deviceId,PlayerData);
 
-    BattleData battleData = GetBattleData(location.getId());
+    BattleData battleData = getBattleData(location.getId());
     System.out.println(battleData);
     Assert.isTrue(battleData.getOpponentTypeId().equals(GameConstants.GENERAL),
         "The opponent should be general.");
 
     Boolean winner = true; // Player
-    BattleSummaryData BattleSummaryData = GetBattleSummaryData(location.getId(), winner);
+    BattleSummaryData BattleSummaryData = getBattleSummaryData(location.getId(), winner);
     System.out.println(BattleSummaryData);
     Assert.isTrue(BattleSummaryData.getWinner() == winner,
         "The opponent should be the player.");
@@ -200,22 +201,22 @@ public class TestRestServices {
         "The player should have won the game.");
 
     // Cleanup
-    DeleteWorldData();
-    DeletePlayerData();
+    deleteWorldData();
+    deletePlayerData();
   }
 
   @Test
-  public void TestMinionBattleMinionWins() throws Exception {
+  public void testMinionBattleMinionWins() throws Exception {
     // 0 - Delete User and World data in case of leftovers from previous failures
-    DeleteWorldData();
-    DeletePlayerData();
+    deleteWorldData();
+    deletePlayerData();
 
     // 1 Create User and World data
-    CreatePlayerData("Johnny");
-    CreateWorldData();
+    createPlayerData("Johnny");
+    createWorldData();
 
     // Battle minions - search for a minion
-    WorldData data = GetWorldData();
+    WorldData data = getWorldData();
     SpawnLocation location = null;
     for (String locationId:data.getLocations().keySet()) {
       if (data.getLocations().get(locationId).getObject_type_id().equals(GameConstants.MINION)) {
@@ -225,19 +226,20 @@ public class TestRestServices {
     }
 
     // Add a gold key - which will be lost
-    PlayerData PlayerData = PlayerService.getPlayerData(Id);
+    PlayerData PlayerData = playerService.getPlayerData(deviceId);
     PlayerData.addInventoryItem(new Item(GameConstants.GOLD_KEY,1));
+    playerService.updatePlayerData(deviceId,PlayerData);
 
-    BattleData battleData = GetBattleData(location.getId());
+    BattleData battleData = getBattleData(location.getId());
     System.out.println(battleData);
     Assert.isTrue(battleData.getOpponentTypeId().equals(GameConstants.MINION),
         "The opponent should be minion.");
 
     Boolean winner = false; // Minion
-    BattleSummaryData BattleSummaryData = GetBattleSummaryData(location.getId(), winner);
+    BattleSummaryData BattleSummaryData = getBattleSummaryData(location.getId(), winner);
     System.out.println(BattleSummaryData);
     Assert.isTrue(BattleSummaryData.getWinner() == winner,
-        "The opponent should be minion.");
+        "The winner should be minion.");
     List<Item> items = BattleSummaryData.getRewards().getItems();
 
     Item key = null;
@@ -251,22 +253,22 @@ public class TestRestServices {
         "The player should have lost one gold key.");
 
     // Cleanup
-    DeleteWorldData();
-    DeletePlayerData();
+    deleteWorldData();
+    deletePlayerData();
   }
 
   @Test
-  public void TestMinionBattleMinionLoses() throws Exception {
+  public void testMinionBattleMinionLoses() throws Exception {
     // 0 - Delete User and World data in case of leftovers from previous failures
-    DeleteWorldData();
-    DeletePlayerData();
+    deleteWorldData();
+    deletePlayerData();
 
     // 1 Create User and World data
-    CreatePlayerData("Johnny");
-    CreateWorldData();
+    createPlayerData("Johnny");
+    createWorldData();
 
     // Battle minions - search for a minion
-    WorldData data = GetWorldData();
+    WorldData data = getWorldData();
     SpawnLocation location = null;
     for (String locationId:data.getLocations().keySet()) {
       if (data.getLocations().get(locationId).getObject_type_id().equals(GameConstants.MINION)) {
@@ -274,13 +276,13 @@ public class TestRestServices {
         break;
       }
     }
-    BattleData battleData = GetBattleData(location.getId());
+    BattleData battleData = getBattleData(location.getId());
     System.out.println(battleData);
     Assert.isTrue(battleData.getOpponentTypeId().equals(GameConstants.MINION),
         "The opponent should be minion.");
 
     Boolean winner = true; // Player
-    BattleSummaryData BattleSummaryData = GetBattleSummaryData(location.getId(), winner);
+    BattleSummaryData BattleSummaryData = getBattleSummaryData(location.getId(), winner);
     System.out.println(BattleSummaryData);
     Assert.isTrue(BattleSummaryData.getWinner() == winner,
         "The opponent should be minion.");
@@ -296,28 +298,28 @@ public class TestRestServices {
         "The player should have won one gold key.");
 
     // Cleanup
-    DeleteWorldData();
-    DeletePlayerData();
+    deleteWorldData();
+    deletePlayerData();
   }
 
   @Test
-  public void TestChestRewardsWithRespawing() throws Exception {
+  public void testChestRewardsWithRespawing() throws Exception {
     // 0 - Delete User and World data in case of leftovers from previous failures
-    DeleteWorldData();
-    DeletePlayerData();
+    deleteWorldData();
+    deletePlayerData();
 
     // 1 Create User and World data
-    CreatePlayerData("Johnny");
-    CreateWorldData();
+    createPlayerData("Johnny");
+    createWorldData();
 
     // 2 Get World and Player Data
     // Grant ourselves a few gold keys to unlock the chest
-    PlayerData playerData = GetPlayerData("Johnny");
+    PlayerData playerData = getPlayerData("Johnny");
     playerData.getInventory().add(new Item(GameConstants.GOLD_KEY,10));
-    PlayerService.updatePlayerData(Id, playerData);
+    playerService.updatePlayerData(deviceId, playerData);
 
     // Search for a chest in our spawn locations
-    WorldData data = GetWorldData();
+    WorldData data = getWorldData();
     SpawnLocation chest = null;
     for (String locationId:data.getLocations().keySet()) {
       if (data.getLocations().get(locationId).getObject_type_id().equals(GameConstants.CHEST)) {
@@ -328,7 +330,7 @@ public class TestRestServices {
 
     if (chest != null) {
       System.out.println("Trying to activate Chest at locationId: " + chest.getId());
-      RewardsData rewards = GetChestRewards(chest.getId());
+      RewardsData rewards = getChestRewards(chest.getId());
       Boolean haveKey = false;
       // Search for a diamond key
       for (Item i:rewards.getItems()) {
@@ -341,15 +343,15 @@ public class TestRestServices {
 
       // Try to open the chest a 2nd time
       System.out.println("Trying to activate Chest at locationId: " + chest.getId() + " a 2nd time");
-      GetRespawingChest(chest.getId());
+      getRespawingChest(chest.getId());
 
     } else {
       System.out.println("No chest in all spawned locations? Unlucky we are, aren't we?");
     }
 
     // Delete User and World data
-    DeleteWorldData();
-    DeletePlayerData();
+    deleteWorldData();
+    deletePlayerData();
 
   }
 
@@ -359,22 +361,22 @@ public class TestRestServices {
      * @throws Exception
      */
   @Test
-  public void TestChestRewards() throws Exception {
+  public void testChestRewards() throws Exception {
     // 0 - Delete User and World data in case of leftovers from previous failures
-    DeleteWorldData();
-    DeletePlayerData();
+    deleteWorldData();
+    deletePlayerData();
 
     // 1 Create User and World data
-    CreatePlayerData("Johnny");
-    CreateWorldData();
+    createPlayerData("Johnny");
+    createWorldData();
 
     // 2 Get World and Player Data
     // Grant ourselves a few gold keys to unlock the chest
-    PlayerData playerData = GetPlayerData("Johnny");
+    PlayerData playerData = getPlayerData("Johnny");
     playerData.getInventory().add(new Item(GameConstants.GOLD_KEY,10));
-    PlayerService.updatePlayerData(Id, playerData);
+    playerService.updatePlayerData(deviceId, playerData);
 
-    WorldData data = GetWorldData();
+    WorldData data = getWorldData();
     // Search for a chest in our spawn locations
     SpawnLocation chest = null;
     for (String locationId:data.getLocations().keySet()) {
@@ -385,7 +387,7 @@ public class TestRestServices {
     }
     if (chest != null) {
       System.out.println("Trying to activate Chest at locationId: " + chest.getId());
-      RewardsData rewards = GetChestRewards(chest.getId());
+      RewardsData rewards = getChestRewards(chest.getId());
       Boolean haveKey = false;
       // Search for a diamond key
       for (Item i:rewards.getItems()) {
@@ -397,7 +399,7 @@ public class TestRestServices {
       Assert.isTrue(haveKey, "Diamond Key not found in chest rewards!");
 
       // Assert that there is now a diamond key in the player's inventory
-      playerData = GetPlayerData("Johnny");
+      playerData = getPlayerData("Johnny");
       haveKey = false;
       for (Item i:playerData.getInventory()) {
         if (i.getId().equals(GameConstants.DIAMOND_KEY)) {
@@ -412,8 +414,8 @@ public class TestRestServices {
     }
 
     // Delete User and World data
-    DeleteWorldData();
-    DeletePlayerData();
+    deleteWorldData();
+    deletePlayerData();
   }
 
   /**
@@ -425,19 +427,19 @@ public class TestRestServices {
    * @throws Exception
    */
   @Test
-  public void TestPlayerDataCRUD() throws Exception{
+  public void testPlayerDataCRUD() throws Exception{
     // 1 Create
     System.out.println("Creating record John Doe");
-    CreatePlayerData("John Doe");
+    createPlayerData("John Doe");
     // 2 Read
     System.out.println("Reading record John Doe");
-    GetPlayerData("John Doe");
+    getPlayerData("John Doe");
     // 3 Update
     System.out.println("Updating record to Toto");
-    CreatePlayerData("Toto");
+    createPlayerData("Toto");
     // 4 Delete
     System.out.println("Deleting record Toto");
-    DeletePlayerData();
+    deletePlayerData();
   }
 
   // region util functions
@@ -446,11 +448,11 @@ public class TestRestServices {
    * Returns the world data for the test user
    * @throws Exception
    */
-  private WorldData GetWorldData() throws Exception {
+  private WorldData getWorldData() throws Exception {
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.registerModule(new JavaTimeModule());
 
-    MvcResult result = this.mockMvc.perform(get("/worlds/{id}",Id)).andDo(print())
+    MvcResult result = this.mockMvc.perform(get("/worlds/{id}", deviceId)).andDo(print())
         .andExpect(status().isOk()).andReturn();
     WorldData data = objectMapper.readValue(result.getResponse().getContentAsString(),
         WorldData.class);
@@ -462,22 +464,22 @@ public class TestRestServices {
    * Creates or updates the world data for the test user
    * @throws Exception
    */
-  private void CreateWorldData() throws Exception {
-    WorldDataRequest request = CreateWorldDataRequest();
+  private void createWorldData() throws Exception {
+    WorldDataRequest request = createWorldDataRequest();
 
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.registerModule(new JavaTimeModule());
 
     String json = objectMapper.writeValueAsString(request);
-    this.mockMvc.perform(post("/worlds/{id}",Id)
+    this.mockMvc.perform(post("/worlds/{id}", deviceId)
         .contentType("application/json").content(json)).andDo(print()).andExpect(status().isOk());
   }
   /**
    * Delete the world data for the test user
    * @throws Exception
    */
-  private void DeleteWorldData() throws Exception {
-    this.mockMvc.perform(delete("/worlds/{id}",Id)).andDo(print()).andExpect(status()
+  private void deleteWorldData() throws Exception {
+    this.mockMvc.perform(delete("/worlds/{id}", deviceId)).andDo(print()).andExpect(status()
         .isOk());
   }
 
@@ -485,9 +487,9 @@ public class TestRestServices {
    *
    * @throws Exception
    */
-  private void GetRespawingChest(String locationId) throws Exception {
+  private void getRespawingChest(String locationId) throws Exception {
 
-    this.mockMvc.perform(post("/chests/{id}/{locationId}",Id,locationId))
+    this.mockMvc.perform(post("/chests/{id}/{locationId}", deviceId,locationId))
         .andDo(print())
         .andExpect(status()
             .isNoContent());
@@ -497,9 +499,9 @@ public class TestRestServices {
    *
    * @throws Exception
    */
-  private BattleData GetBattleData(String locationId) throws Exception {
+  private BattleData getBattleData(String locationId) throws Exception {
 
-    MvcResult results = this.mockMvc.perform(post("/battle/{id}/{locationId}",Id,
+    MvcResult results = this.mockMvc.perform(post("/battle/{id}/{locationId}", deviceId,
         locationId))
         .andDo(print())
         .andExpect(status()
@@ -520,10 +522,10 @@ public class TestRestServices {
    * @return
    * @throws Exception
    */
-  private BattleSummaryData GetBattleSummaryData(String locationId, Boolean winnerIs)
+  private BattleSummaryData getBattleSummaryData(String locationId, Boolean winnerIs)
       throws Exception {
     MvcResult results = this.mockMvc.perform(post("/battlesummary/{id}/{locationId}",
-        Id,locationId).param("winner",winnerIs.toString()))
+        deviceId,locationId).param("winner",winnerIs.toString()))
         .andDo(print())
         .andExpect(status()
             .isOk())
@@ -539,10 +541,10 @@ public class TestRestServices {
    *
    * @throws Exception
    */
-  private EnergyData GetEnergyData(String locationId) throws Exception {
+  private EnergyData getEnergyData(String locationId) throws Exception {
 
     MvcResult results = this.mockMvc.perform(post("/energystation/{id}/{locationId}",
-        Id,locationId))
+        deviceId,locationId))
         .andDo(print())
         .andExpect(status()
             .isOk())
@@ -560,10 +562,10 @@ public class TestRestServices {
    *
    * @throws Exception
    */
-  private RewardsData GetChestRewards(String locationId) throws Exception {
+  private RewardsData getChestRewards(String locationId) throws Exception {
 
     MvcResult results = this.mockMvc.perform(post("/chests/{id}/{locationId}",
-        Id,locationId))
+        deviceId,locationId))
         .andDo(print())
         .andExpect(status()
             .isOk())
@@ -582,8 +584,8 @@ public class TestRestServices {
    * @param newName new player name
    * @throws Exception
    */
-  private PlayerData GetPlayerData(String newName) throws Exception {
-    MvcResult results = this.mockMvc.perform(get("/users/{id}",Id)).andDo(print()).
+  private PlayerData getPlayerData(String newName) throws Exception {
+    MvcResult results = this.mockMvc.perform(get("/users/{id}", deviceId)).andDo(print()).
         andExpect(status().isOk())
         .andExpect(content().string(containsString(newName))).andReturn();
 
@@ -598,12 +600,12 @@ public class TestRestServices {
    * Update the player's data - update the name attribute of the record
    * @throws Exception
    */
-  private void CreatePlayerData(String newName) throws Exception {
-    PlayerData newData = GameService.createNewUser();
+  private void createPlayerData(String newName) throws Exception {
+    PlayerData newData = gameService.createNewUser();
     newData.setName(newName);
 
     String json = new ObjectMapper().writeValueAsString(newData);
-    this.mockMvc.perform(post("/users/{id}",Id)
+    this.mockMvc.perform(post("/users/{id}", deviceId)
         .contentType("application/json").content(json)).andDo(print()).andExpect(status().isOk());
   }
 
@@ -611,8 +613,8 @@ public class TestRestServices {
    * Delete the player's data
    * @throws Exception
    */
-  private void DeletePlayerData() throws Exception {
-    this.mockMvc.perform(delete("/users/{id}",Id)).andDo(print()).andExpect(status()
+  private void deletePlayerData() throws Exception {
+    this.mockMvc.perform(delete("/users/{id}", deviceId)).andDo(print()).andExpect(status()
         .isOk());
   }
 
@@ -620,7 +622,7 @@ public class TestRestServices {
    * Util function that returns a world data request.
    * @return
    */
-  private WorldDataRequest CreateWorldDataRequest() {
+  private WorldDataRequest createWorldDataRequest() {
     WorldDataRequest request = new WorldDataRequest();
     request.setNortheast(new LatLng(48.8583701, 2.2944813));
     request.setSouthwest(new LatLng(48.8446743,2.2488194));

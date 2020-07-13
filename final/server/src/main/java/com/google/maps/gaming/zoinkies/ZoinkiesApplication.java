@@ -32,7 +32,7 @@ public class ZoinkiesApplication {
    * Reference to the Firestore service
    */
   @Autowired
-  Firestore Firestore;
+  Firestore firestore;
 
   public static void main(String[] args) {
     SpringApplication.run(ZoinkiesApplication.class, args);

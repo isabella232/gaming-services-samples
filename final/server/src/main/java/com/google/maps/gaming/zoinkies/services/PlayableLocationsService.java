@@ -15,8 +15,6 @@
  */
 package com.google.maps.gaming.zoinkies.services;
 
-import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.geometry.S2CellId;
 import com.google.common.geometry.S2CellUnion;
@@ -32,6 +30,7 @@ import com.google.maps.gaming.zoinkies.models.playablelocations.Location;
 import com.google.maps.gaming.zoinkies.models.playablelocations.Locations;
 import com.google.maps.gaming.zoinkies.models.playablelocations.Request;
 import com.google.maps.gaming.zoinkies.models.playablelocations.Response;
+import com.sun.tools.javac.util.Convert;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,14 +81,13 @@ public class PlayableLocationsService {
    * @return A Playable Location Response
    */
   public Response requestPlayableLocations(LatLng loLatLng, LatLng hiLatLng,
-      Criteria[] criteria, HashMap<String, String> PLCache) throws Exception {
+      Criteria[] criteria, HashMap<String, String> PlayableLocationsCache) throws Exception {
 
     RestTemplate restTemplate = new RestTemplate();
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.add("x-goog-api-key", API_KEY);
 
-    // Build query
     Request req = new Request();
     req.setAreaFilter(new AreaFilter());
     if (criteria == null) {
@@ -100,19 +98,19 @@ public class PlayableLocationsService {
 
     // Configure a region coverer, which will help us get all overlapping S2 cells on the
     // given Lat Lng rectangle
-    S2RegionCoverer rc = new S2RegionCoverer();
-    rc.setMinLevel(this.S2_CELL_LEVEL);
-    rc.setMaxLevel(this.S2_CELL_MAX_LEVEL);
+    S2RegionCoverer regionCoverer = new S2RegionCoverer();
+    regionCoverer.setMinLevel(this.S2_CELL_LEVEL);
+    regionCoverer.setMaxLevel(this.S2_CELL_MAX_LEVEL);
 
     // Get the two opposite corners in degrees.
     S2LatLng lo = S2LatLng.fromDegrees(loLatLng.getLatitude(),loLatLng.getLongitude());
     S2LatLng hi = S2LatLng.fromDegrees(hiLatLng.getLatitude(),hiLatLng.getLongitude());
 
     // Define the Lat Lng Rectangle
-    S2LatLngRect r = new S2LatLngRect(lo,hi);
+    S2LatLngRect latLngRect = new S2LatLngRect(lo,hi);
 
     // Get all cells that are covering the provided area
-    S2CellUnion cu = rc.getCovering(r);
+    S2CellUnion cellUnion = regionCoverer.getCovering(latLngRect);
 
     Response combinedResponse = new Response();
     String objectType = Integer.toString(GAME_OBJECT_TYPE_SPAWN_LOCATIONS);
@@ -124,43 +122,48 @@ public class PlayableLocationsService {
 
     // For each overlapping cell, query playable locations API and merge results into
     // a combined response.
-    for (S2CellId id:cu.cellIds()){
+    // If we've already queried a cell, check its TTL.
+    // If the TTL is still valid, skip that cell as we've already handled the playable locations
+    // within.
+    for (S2CellId id:cellUnion.cellIds()){
 
-      // Have we already queried this cell?
-      if (PLCache != null && PLCache.containsKey(id)) {
-        // Check TTL
-        Duration duration = Duration.parse(PLCache.get(id));
+      String cellIdString = Long.toUnsignedString(id.id());
+      if (PlayableLocationsCache != null && PlayableLocationsCache.containsKey(cellIdString)) {
+        Duration duration = Duration.parse(PlayableLocationsCache.get(cellIdString));
         if (duration.getSeconds() > 0) {
-          // Yes and the playable locations in that cell haven't expired yet
-          // Move to next cell.
           continue;
         }
       }
-      req.getAreaFilter().setS2CellId(Long.toUnsignedString(id.id()));
+
+      // The code below handles cells that haven't been processed yet as they are missing
+      // from our cache.
+      // All playable locations returned within that cell are tagged with a cell id.
+      req.getAreaFilter().setS2CellId(cellIdString);
 
       String reqJson = objectMapper.writeValueAsString(req);
       HttpEntity<String> request = new HttpEntity<String>(reqJson, headers);
 
-      String plResponse = restTemplate.postForObject(PLAYABLE_LOCATION_URL, request, String.class);
-      assertNotNull(plResponse);
+      String playableLocationsResponse = restTemplate.postForObject(PLAYABLE_LOCATION_URL, request,
+          String.class);
+      if (playableLocationsResponse == null) {
+        throw new Exception("Received an invalid playableLocationsResponse! (null)");
+      }
 
-      Response response = objectMapper.readValue(plResponse, Response.class);
+      Response response = objectMapper.readValue(playableLocationsResponse, Response.class);
       combinedResponse.setTtl(response.getTtl());
 
-      // Tag all locations with the initial S2Cell Id
       for (Location loc: response.getLocationsPerGameObjectType().get(objectType).getLocations()){
         loc.setS2CellId(req.getAreaFilter().getS2CellId());
       }
 
-      List locations = Arrays.asList(
-          response.getLocationsPerGameObjectType().get(objectType).getLocations());
-
-      combinedLocations.addAll(locations);
+      combinedLocations.addAll(Arrays.asList(
+          response.getLocationsPerGameObjectType().get(objectType).getLocations()));
 
       // Update the cache
-      if (PLCache != null && !PLCache.containsKey(req.getAreaFilter().getS2CellId())
+      if (PlayableLocationsCache != null && !PlayableLocationsCache.containsKey(
+          req.getAreaFilter().getS2CellId())
           && response.getTtl() != null && !response.getTtl().isEmpty()) {
-        PLCache.put(req.getAreaFilter().getS2CellId(),"PT" + response.getTtl());
+        PlayableLocationsCache.put(req.getAreaFilter().getS2CellId(),"PT" + response.getTtl());
       }
     }
 

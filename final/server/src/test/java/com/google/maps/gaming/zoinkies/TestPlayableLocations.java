@@ -32,7 +32,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class TestPlayableLocations {
 
   @Autowired
-  PlayableLocationsService PlayableLocationsService;
+  PlayableLocationsService playableLocationsService;
 
   /**
    * This test picks 2 playable locations for each S2 cells overlapping the Lat Lng Rectangle
@@ -41,12 +41,12 @@ public class TestPlayableLocations {
    * @throws Exception
    */
   @Test
-  public void TestPlayableLocationsRequest() throws Exception {
+  public void testPlayableLocationsRequest() throws Exception {
 
     LatLng hi = new LatLng(37.2797796, -122.02596153);
     LatLng lo = new LatLng(37.2618133,-122.0485384);
 
-    Response response = PlayableLocationsService.requestPlayableLocations(lo,hi,
+    Response response = playableLocationsService.requestPlayableLocations(lo,hi,
         GetPLDefaultCriteria(), new HashMap<>());
     assertThat(response).isNotNull();
     assertThat(response.getLocationsPerGameObjectType()).isNotNull();

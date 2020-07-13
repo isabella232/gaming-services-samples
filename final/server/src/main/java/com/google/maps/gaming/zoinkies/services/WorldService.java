@@ -20,7 +20,6 @@ import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.WriteResult;
 import com.google.maps.gaming.zoinkies.models.WorldDataRequest;
 import com.google.maps.gaming.zoinkies.models.SpawnLocation;
 import com.google.maps.gaming.zoinkies.models.WorldData;
@@ -49,19 +48,19 @@ public class WorldService {
    * A reference to the Firestore service
    */
   @Autowired
-  Firestore Firestore;
+  Firestore firestore;
 
   /**
    * A reference to the game service
    */
   @Autowired
-  GameService GameService;
+  GameService gameService;
 
   /**
    * A reference to the playable locations service
    */
   @Autowired
-  PlayableLocationsService PlayableLocationsService;
+  PlayableLocationsService playableLocationsService;
 
   /**
    * If it doesn't exist, create one
@@ -74,7 +73,7 @@ public class WorldService {
    */
   public WorldData getWorldData(String Id) throws ExecutionException, InterruptedException {
     ApiFuture<DocumentSnapshot> documentSnapshotApiFuture =
-        this.Firestore.document("worlds/" + Id).get();
+        this.firestore.document("worlds/" + Id).get();
     WorldData data = null;
     DocumentSnapshot document = documentSnapshotApiFuture.get();
     if (document.exists()) {
@@ -93,10 +92,10 @@ public class WorldService {
   public void setWorldData(String Id, WorldData worldData)
       throws ExecutionException, InterruptedException {
     ApiFuture<DocumentSnapshot> documentSnapshotApiFuture =
-        this.Firestore.document("worlds/" + Id).get();
+        this.firestore.document("worlds/" + Id).get();
     DocumentSnapshot document = documentSnapshotApiFuture.get();
     if (document.exists()) {
-      this.Firestore.document("worlds/" + Id).set(worldData).get();
+      this.firestore.document("worlds/" + Id).set(worldData).get();
     }
   }
 
@@ -120,7 +119,7 @@ public class WorldService {
 
     // Query playable locations for the given zone - and only when the overlapping cell
     // isn't in our cache.
-    Response response = PlayableLocationsService.requestPlayableLocations(
+    Response response = playableLocationsService.requestPlayableLocations(
         WorldDataRequest.getSouthwest(),
         WorldDataRequest.getNortheast(),
         getDefaultCriteria(),
@@ -133,16 +132,16 @@ public class WorldService {
       // whether the playable location is generated or not.
       String locationId = plloc.getName().replace("/", "_");
 
-      // If we don't  have this location in the database, generate a new one
+      // If we don't have this location in the database, generate a new one.
+      // otherwise we check the time to live field.
+      // If the TTL has expired, we create a new spawn location.
       if (!data.getLocations().containsKey(locationId)) {
-        // spawn a new location
-        SpawnLocation sl = GameService.createRandomSpawnLocation(plloc);
+        SpawnLocation sl = gameService.createRandomSpawnLocation(plloc);
         sl.setS2CellId(plloc.getS2CellId());
         data.getLocations().put(locationId, sl);
         updateNeeded = true;
       }
       else {
-        // Check the TTL
         String S2CellId = data.getLocations().get(locationId).getS2CellId();
         if (S2CellId != null
             && !S2CellId.isEmpty()
@@ -150,8 +149,7 @@ public class WorldService {
 
           Duration duration = Duration.parse(data.getS2CellsTTL().get(S2CellId));
           if (duration.getSeconds() <= 0) {
-            // Update this location from the world as it has expired
-            SpawnLocation sl = GameService.createRandomSpawnLocation(plloc);
+            SpawnLocation sl = gameService.createRandomSpawnLocation(plloc);
             sl.setS2CellId(plloc.getS2CellId());
             data.getLocations().put(locationId, sl);
             updateNeeded = true;
@@ -160,9 +158,9 @@ public class WorldService {
       }
     }
 
-    // Check if any respawning locations need to be unlocked
+    // Check if any respawning locations need to be unlocked.
     for (SpawnLocation location:data.getLocations().values()) {
-      // Check timestamp progress
+      // Check timestamp progress.
       if (location.getRespawn_time() != null) {
         Instant t = Instant.parse(location.getRespawn_time());
         if (t.compareTo(Instant.now()) <= 0) {
@@ -173,9 +171,9 @@ public class WorldService {
       }
     }
 
-    // Create/Update the world document
+    // Create or Update the world document.
     if (updateNeeded) {
-      WriteResult writeResult = this.Firestore.document("worlds/" + Id).set(data).get();
+      this.firestore.document("worlds/" + Id).set(data).get();
     }
 
     // Return the final set
@@ -187,7 +185,7 @@ public class WorldService {
    * @param Id The User Id
    */
   public void removeWorldData(String Id) {
-    CollectionReference users = this.Firestore.collection("worlds");
+    CollectionReference users = this.firestore.collection("worlds");
     Iterable<DocumentReference> documentReferences = users.listDocuments();
     documentReferences.forEach(documentReference -> {
       if (documentReference.getId().equals(Id)) {

@@ -15,6 +15,7 @@
  */
 package com.google.maps.gaming.zoinkies.models;
 
+import com.google.common.geometry.S2CellId;
 import java.time.Instant;
 import java.util.HashMap;
 
