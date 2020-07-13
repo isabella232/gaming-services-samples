@@ -24,60 +24,92 @@ public class LootRefItem {
    * Chances to find this item in the table
    */
   private double weight;
-  /**
-   * Type of item (the id is reconcile in the game reference data.
-   */
-  private String objectTypeId;
-  /**
-   * Min quantity awarded
-   */
-  private int minQuantity;
-  /**
-   * Max quantity awarded
-   */
-  private int maxQuantity;
 
-  public LootRefItem(
-      String objectTypeId,
-      double weight,
-      int minQuantity,
-      int maxQuantity
-  ) {
-    this.objectTypeId = objectTypeId;
-    this.weight = weight;
-    this.minQuantity = minQuantity;
-    this.maxQuantity = maxQuantity;
-  }
-
+  /**
+   * Getter for weight
+   * @return
+   */
   public double getWeight() {
     return weight;
   }
 
+  /**
+   * Setter for weight
+   * @param weight
+   */
   public void setWeight(double weight) {
     this.weight = weight;
   }
+  /**
+   * Type of item (the id is reconcile in the game reference data.
+   */
+  private String id;
 
-  public String getObjectTypeId() {
-    return objectTypeId;
+  /**
+   * Getter for id
+   * @return
+   */
+  public String getId() {
+    return id;
   }
 
-  public void setObjectTypeId(String objectTypeId) {
-    this.objectTypeId = objectTypeId;
+  /**
+   * Setter for id
+   * @param id
+   */
+  public void setId(String id) {
+    this.id = id;
   }
+  /**
+   * Minimum quantity awarded
+   */
+  private int minQuantity;
 
-  public int getMaxQuantity() {
-    return maxQuantity;
-  }
-
-  public void setMaxQuantity(int maxQuantity) {
-    this.maxQuantity = maxQuantity;
-  }
-
+  /**
+   * Getter for minQuantity
+   * @return
+   */
   public int getMinQuantity() {
     return minQuantity;
   }
 
+  /**
+   * Setter for minQuantity
+   * @param minQuantity
+   */
   public void setMinQuantity(int minQuantity) {
     this.minQuantity = minQuantity;
+  }
+  /**
+   * Maximum quantity awarded
+   */
+  private int maxQuantity;
+
+  /**
+   * Getter for maxQuantity
+   * @return
+   */
+  public int getMaxQuantity() {
+    return maxQuantity;
+  }
+
+  /**
+   * Setter for maxQuantity
+   * @param maxQuantity
+   */
+  public void setMaxQuantity(int maxQuantity) {
+    this.maxQuantity = maxQuantity;
+  }
+
+  public LootRefItem(
+      String id,
+      double weight,
+      int minQuantity,
+      int maxQuantity
+  ) {
+    this.id = id;
+    this.weight = weight;
+    this.minQuantity = minQuantity;
+    this.maxQuantity = maxQuantity;
   }
 }

@@ -29,10 +29,43 @@ public class PlayerData {
    * Generated device Id provided by user
    */
   private long Id;
+
+  /**
+   * Getter for the generated id
+   * @return
+   */
+  public long getId() {
+    return Id;
+  }
+
+  /**
+   * Setter for the generated id
+   * @param id
+   */
+  public void setId(long id) {
+    Id = id;
+  }
+
   /**
    * Player's avatar name
    */
   private String Name;
+
+  /**
+   * Getter for avater name.
+   * @return
+   */
+  public String getName() {
+    return this.Name;
+  }
+
+  /**
+   * Setter for avatar name.
+   * @param Name
+   */
+  public void setName(String Name) {
+    this.Name = Name;
+  }
 
   /**
    * Equipped weapon. Empty or null means nothing equipped.
@@ -40,9 +73,41 @@ public class PlayerData {
   private String EquippedWeapon;
 
   /**
+   * Getter for equipped weapon
+   * @return
+   */
+  public String getEquippedWeapon() {
+    return EquippedWeapon;
+  }
+
+  /**
+   * Setter for equipped weapon
+   * @param equippedWeapon
+   */
+  public void setEquippedWeapon(String equippedWeapon) {
+    EquippedWeapon = equippedWeapon;
+  }
+
+  /**
    * Equipped shield. Empty or null means nothing equipped.
    */
   private String EquippedShield;
+
+  /**
+   * Getter for equipped shield
+   * @return
+   */
+  public String getEquippedShield() {
+    return EquippedShield;
+  }
+
+  /**
+   * Setter for equipped shield
+   * @param equippedShield
+   */
+  public void setEquippedShield(String equippedShield) {
+    EquippedShield = equippedShield;
+  }
 
   /**
    * Equipped helmet. Empty or null means nothing equipped.
@@ -50,9 +115,41 @@ public class PlayerData {
   private String EquippedHelmet;
 
   /**
+   * Getter for equipped helmet
+   * @return
+   */
+  public String getEquippedHelmet() {
+    return EquippedHelmet;
+  }
+
+  /**
+   * Setter for equipped helmet
+   * @param equippedHelmet
+   */
+  public void setEquippedHelmet(String equippedHelmet) {
+    EquippedHelmet = equippedHelmet;
+  }
+
+  /**
    * Equipped bodyarmor. Empty or null means nothing equipped.
    */
   private String EquippedBodyArmor;
+
+  /**
+   * Getter for equipped body armor
+   * @return
+   */
+  public String getEquippedBodyArmor() {
+    return EquippedBodyArmor;
+  }
+
+  /**
+   * Setter for equipped body armor
+   * @param equippedBodyArmor
+   */
+  public void setEquippedBodyArmor(String equippedBodyArmor) {
+    EquippedBodyArmor = equippedBodyArmor;
+  }
 
   /**
    * Avatar's current energy level
@@ -60,9 +157,41 @@ public class PlayerData {
   private int EnergyLevel;
 
   /**
+   * Getter for energy level
+   * @return
+   */
+  public int getEnergyLevel() {
+    return EnergyLevel;
+  }
+
+  /**
+   * Setter for energy level
+   * @param energyLevel
+   */
+  public void setEnergyLevel(int energyLevel) {
+    EnergyLevel = energyLevel;
+  }
+
+  /**
    * Avatar's max energy level
    */
   private int MaxEnergyLevel;
+
+  /**
+   * Getter for maximum energy level
+   * @return
+   */
+  public int getMaxEnergyLevel() {
+    return MaxEnergyLevel;
+  }
+
+  /**
+   * Setter for maximum energy level
+   * @param maxEnergyLevel
+   */
+  public void setMaxEnergyLevel(int maxEnergyLevel) {
+    MaxEnergyLevel = maxEnergyLevel;
+  }
 
   /**
    * The Player's character type
@@ -70,14 +199,54 @@ public class PlayerData {
   private String CharacterType;
 
   /**
+   * Getter for character type
+   * @return
+   */
+  public String getCharacterType() {
+    return this.CharacterType;
+  }
+
+  /**
+   * Setter for character type
+   * @param CharacterType
+   */
+  public void setCharacterType(String CharacterType) {
+    this.CharacterType = CharacterType;
+  }
+
+  /**
    * Items Inventory
    */
   private List<Item> Inventory;
 
-  public PlayerData() {
-
+  /**
+   * Getter for inventory
+   * @return
+   */
+  public List<Item> getInventory() {
+    return this.Inventory;
   }
 
+  /**
+   * Setter for inventory
+   * @param Inventory
+   */
+  public void setInventory(List<Item> Inventory) {
+    this.Inventory = Inventory;
+  }
+
+  public PlayerData() {
+  }
+
+  /**
+   * Specialized constructor.
+   *
+   * @param name
+   * @param CharacterType
+   * @param EnergyLevel
+   * @param MaxEnergyLevel
+   * @param Inventory
+   */
   public PlayerData(String name,
       String CharacterType,
       int EnergyLevel,
@@ -90,89 +259,10 @@ public class PlayerData {
     this.Inventory = Inventory;
   }
 
-  // region Getters/Setters
-
-  public long getId() {
-    return Id;
-  }
-
-  public void setId(long id) {
-    Id = id;
-  }
-
-  public String getName() {
-    return this.Name;
-  }
-
-  public void setName(String Name) {
-    this.Name = Name;
-  }
-
-  public String getEquippedBodyArmor() {
-    return EquippedBodyArmor;
-  }
-
-  public void setEquippedBodyArmor(String equippedBodyArmor) {
-    EquippedBodyArmor = equippedBodyArmor;
-  }
-
-  public String getEquippedHelmet() {
-    return EquippedHelmet;
-  }
-
-  public void setEquippedHelmet(String equippedHelmet) {
-    EquippedHelmet = equippedHelmet;
-  }
-
-  public String getEquippedShield() {
-    return EquippedShield;
-  }
-
-  public void setEquippedShield(String equippedShield) {
-    EquippedShield = equippedShield;
-  }
-
-  public String getEquippedWeapon() {
-    return EquippedWeapon;
-  }
-
-  public void setEquippedWeapon(String equippedWeapon) {
-    EquippedWeapon = equippedWeapon;
-  }
-
-  public String getCharacterType() {
-    return this.CharacterType;
-  }
-
-  public void setCharacterType(String CharacterType) {
-    this.CharacterType = CharacterType;
-  }
-
-  public int getEnergyLevel() {
-    return EnergyLevel;
-  }
-
-  public void setEnergyLevel(int energyLevel) {
-    EnergyLevel = energyLevel;
-  }
-
-  public int getMaxEnergyLevel() {
-    return MaxEnergyLevel;
-  }
-
-  public void setMaxEnergyLevel(int maxEnergyLevel) {
-    MaxEnergyLevel = maxEnergyLevel;
-  }
-
-  public List<Item> getInventory() {
-    return this.Inventory;
-  }
-
-  public void setInventory(List<Item> Inventory) {
-    this.Inventory = Inventory;
-  }
-  // endregion
-
+  /**
+   * ToString overload mostly for testing purposes
+   * @return
+   */
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
@@ -266,7 +356,7 @@ public class PlayerData {
   /**
    * Removes the given item from the inventory.
    *
-   * @param item
+   * @param item the item to remove from the inventory
    * @throws Exception
    */
   public void removeInventoryItem(Item item) throws Exception {

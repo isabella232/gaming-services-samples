@@ -28,113 +28,195 @@ public class ReferenceItem {
    * Unique identifier for this object
    */
   private String Id;
-  /**
-   * Friendly name
-   */
-  private String Name;
-  /**
-   * Object type
-   */
-  private String Type;
-  /**
-   * Friendly description
-   */
-  private String Description;
-  /**
-   * Base attack score
-   */
-  private int AttackScore;
-  /**
-   * Base defense score
-   */
-  private int DefenseScore;
-  /**
-   * Base attack cooldown
-   */
-  private Duration Cooldown;
-  /**
-   * Respawn duration. No value indicates the object does not respawn.
-   */
-  private Duration RespawnDuration;
-  /**
-   * Prefab name to be instantiated by the Unity client for this object.
-   */
-  private String Prefab;
 
+  /**
+   * Getter for Id
+   * @return
+   */
   public String getId() {
     return Id;
   }
 
+  /**
+   * Setter for Id
+   * @param id
+   */
   public void setId(String id) {
     Id = id;
   }
 
+  /**
+   * Friendly name
+   */
+  private String Name;
+
+  /**
+   * Getter for name
+   * @return
+   */
   public String getName() {
     return Name;
   }
 
+  /**
+   * Setter for name
+   * @param name
+   */
   public void setName(String name) {
     Name = name;
   }
 
+  /**
+   * Object type
+   */
+  private String Type;
+
+  /**
+   * Getter for type
+   * @return
+   */
   public String getType() {
     return Type;
   }
 
+  /**
+   * Setter for type
+   * @param type
+   */
   public void setType(String type) {
     Type = type;
   }
 
+  /**
+   * Friendly description
+   */
+  private String Description;
+
+  /**
+   * Getter for description
+   * @return
+   */
   public String getDescription() {
     return Description;
   }
 
+  /**
+   * Setter for description
+   * @param description
+   */
   public void setDescription(String description) {
     Description = description;
   }
 
+  /**
+   * Base attack score
+   */
+  private int AttackScore;
+
+  /**
+   * Getter for attack score
+   * @return
+   */
   public int getAttackScore() {
     return AttackScore;
   }
 
+  /**
+   * Setter for attack score
+   * @param attackScore
+   */
   public void setAttackScore(int attackScore) {
     AttackScore = attackScore;
   }
 
+  /**
+   * Base defense score
+   */
+  private int DefenseScore;
+
+  /**
+   * Getter for defense score
+   * @return
+   */
   public int getDefenseScore() {
     return DefenseScore;
   }
 
+  /**
+   * Setter for defense score
+   * @param defenseScore
+   */
   public void setDefenseScore(int defenseScore) {
     DefenseScore = defenseScore;
   }
 
+  /**
+   * Base attack cooldown
+   */
+  private Duration Cooldown;
+
+  /**
+   * Getter for cooldown.
+   * @return
+   */
   @JsonFormat(shape = Shape.STRING)
   public Duration getCooldown() {
     return Cooldown;
   }
 
+  /**
+   * Setter for cooldown
+   * @param cooldown
+   */
   public void setCooldown(Duration cooldown) {
     Cooldown = cooldown;
   }
+  /**
+   * Respawn duration. No value indicates the object does not respawn.
+   */
+  private Duration RespawnDuration;
 
+  /**
+   * Getter for respawn duration
+   * @return
+   */
   @JsonFormat(shape = Shape.STRING)
   public Duration getRespawnDuration() {
     return RespawnDuration;
   }
 
+  /**
+   * Setter for respawn duration
+   * @param respawnDuration
+   */
   public void setRespawnDuration(Duration respawnDuration) {
     RespawnDuration = respawnDuration;
   }
+  /**
+   * Prefab name to be instantiated by the Unity client for this object.
+   */
+  private String Prefab;
 
+  /**
+   * Getter for prefab
+   * @return
+   */
   public String getPrefab() {
     return Prefab;
   }
 
+  /**
+   * Setter for prefab
+   * @param prefab
+   */
   public void setPrefab(String prefab) {
     Prefab = prefab;
   }
 
+  /**
+   * ToString override, mostly for testing purposes.
+   * @return
+   */
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

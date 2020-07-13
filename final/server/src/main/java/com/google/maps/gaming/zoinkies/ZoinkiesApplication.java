@@ -27,10 +27,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 public class ZoinkiesApplication {
-  @Autowired
-  Firestore firestore;
 
-  private String PROJECTID = "musk-samples"; // TODO Removed
+  /**
+   * Reference to the Firestore service
+   */
+  @Autowired
+  Firestore Firestore;
 
   public static void main(String[] args) {
     SpringApplication.run(ZoinkiesApplication.class, args);

@@ -24,23 +24,40 @@ public class EnergyData {
    * Location id
    */
   private String Id;
+
+  /**
+   * Getter for id
+   * @return
+   */
+  public String getId() {
+    return Id;
+  }
+
+  /**
+   * Setter for id
+   * @param id
+   */
+  public void setId(String id) {
+    Id = id;
+  }
+
   /**
    * Amount of energy restored for this player at this location.
    */
   private int AmountRestored;
 
-  public String getId() {
-    return Id;
-  }
-
-  public void setId(String id) {
-    Id = id;
-  }
-
+  /**
+   * Getter for AmountRestored
+   * @return
+   */
   public int getAmountRestored() {
     return AmountRestored;
   }
 
+  /**
+   * Setter for AmountRestored
+   * @param amountRestored
+   */
   public void setAmountRestored(int amountRestored) {
     AmountRestored = amountRestored;
   }

@@ -59,11 +59,17 @@ import org.springframework.stereotype.Service;
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class GameService {
 
+  /**
+   * A reference to the world service
+   */
   @Autowired
-  com.google.maps.gaming.zoinkies.services.WorldService WorldService;
+  WorldService WorldService;
 
+  /**
+   * A reference to the player service
+   */
   @Autowired
-  com.google.maps.gaming.zoinkies.services.PlayerService PlayerService;
+  PlayerService PlayerService;
 
   /**
    * Keeps a reference to game data after being loaded from the resources folder.
@@ -156,7 +162,8 @@ public class GameService {
 
   /**
    * Helper function that sets the duration timestamp on a spawnable location.
-   *
+   * Respawnable items have a duration set in their config.
+   * Updates the World Data.
    * @param ItemId A valid item id
    * @param UserId The player id
    * @param LocationId The location id
@@ -176,12 +183,10 @@ public class GameService {
     ReferenceItem refItem = this.getReferenceData().getReferenceItem(ItemId);
     if (refItem == null)
       throw new Exception("Reference item " + ItemId + " not found!");
-    // Respawnable items have a duration set in their config.
     if (refItem.getRespawnDuration() != null) {
       SpawnLocation location = WorldData.getLocations().get(LocationId);
       location.setActive(false);
       location.setRespawn_time(Instant.now().plus(refItem.getRespawnDuration()).toString());
-      // Update World Data
       WorldService.SetWorldData(UserId, WorldData);
     }
   }
@@ -189,6 +194,13 @@ public class GameService {
   /**
    * Returns the summary of the current battle.
    * There is no cheat code detection in this demo, but this could be a location for it.
+   * Checks that this location isn't already respawning.
+   * Gets the associated reference Item and processes the battle summary.
+   * If the Player wins it generates battle rewards.
+   * Note that rewards vary based on opponent.
+   * Also checks if the game was won.
+   * If Zoinkies win, Player loses one key if they have any.
+   * Updates the inventory and locks the location as the battle has ended.
    *
    * @param Id The unique player id
    * @param LocationId The unique location id
@@ -208,36 +220,31 @@ public class GameService {
     SpawnLocation location = worldData.getLocations().get(LocationId);
     if (location.getObject_type_id().equals(GameConstants.MINION)
         || location.getObject_type_id().equals(GameConstants.TOWER)) {
-      // Check that this location isn't already respawning
+
       CheckLocationStatus(Id,LocationId);
-      // Get the associated reference Item
+
       ReferenceItem refItem = getReferenceData().getReferenceItem(location.getObject_type_id());
       if (refItem == null) {
         throw new Exception("Can't find reference Item for " + location.getObject_type_id() + "!");
       }
       PlayerData playerData = PlayerService.GetPlayerData(Id);
       RewardsData rewardsData;
-      // Process the battle summary
-      if (Winner) { // Player wins
-        // Get battle rewards - 1 key + 1 items depending on who wins
-        // Rewards vary based on opponent
+
+      if (Winner) {
         if (location.getObject_type_id().equals(GameConstants.MINION)) {
           rewardsData = GetRandomMinionBattleRewardsData();
         }
         else {
           rewardsData = GetRandomGeneralBattleRewardsData();
         }
-        // Check if the game is won
         playerData.addAllInventoryItems(rewardsData.getItems());
         List<Item> freedLeaders = playerData.getInventoryItems(GameConstants.FREED_LEADERS);
         if (freedLeaders.size() > 0 && freedLeaders.get(0).getQuantity()
             >= GameConstants.FREED_LEADERS_TO_WIN) {
           data.setWonTheGame(true); // Hurray!
         }
-      } else { // Zoinkies win
+      } else {
         rewardsData = new RewardsData();
-        Item item;
-          // Lose one key if we have any. Update inventory
         List<Item> keys = playerData.getInventoryItems(GameConstants.GOLD_KEY);
         if (keys.size() > 0) {
           int newQty = keys.get(0).getQuantity()-1;
@@ -246,15 +253,12 @@ public class GameService {
           } else {
             keys.get(0).setQuantity(newQty);
           }
+          rewardsData.getItems().add(new Item(GameConstants.GOLD_KEY,-1));
         }
-        // Update "rewards"
-        rewardsData.getItems().add(new Item(GameConstants.GOLD_KEY,-1));
       }
       data.setRewards(rewardsData);
       data.getRewards().setId(LocationId);
-      // Update player data
       PlayerService.UpdatePlayerData(Id,playerData);
-      // Lock the location as the battle has ended.
       if (refItem.getRespawnDuration() != null) {
         location.setActive(false);
         location.setRespawn_time(Instant.now().plus(refItem.getRespawnDuration()).toString());
@@ -281,19 +285,19 @@ public class GameService {
     }
     // Minion or General?
     // Minion - regenerate - grant gold keys
-    // General/towers - no regeneration - grant leaders
-    // - tower disappears afterwards - requires diamond keys
+    // General/towers:
+    //  - no regeneration
+    //  - grants leaders
+    //  - tower disappears afterwards
+    //  - requires diamond keys
     BattleData data = new BattleData();;
     data.setId(LocationId);
-    // Check pre-requisites:
     SpawnLocation location = worldData.getLocations().get(LocationId);
     if (location.getObject_type_id().equals(GameConstants.MINION)) {
       ReferenceItem minionRefItem = getReferenceData().getReferenceItem(GameConstants.MINION);
       if (minionRefItem == null) {
         throw new Exception("Can't find reference data for Minions!");
       }
-      // - Chest must be in active mode and not respawning
-      // Get World Data
       CheckLocationStatus(Id,LocationId);
       data.setOpponentTypeId(GameConstants.MINION);
       data.setPlayerStarts(ThreadLocalRandom.current().nextBoolean());
@@ -313,27 +317,25 @@ public class GameService {
       }
       // Check pre-requisites
       // Get PlayerData
-      PlayerData playerData = PlayerService.GetPlayerData(Id);
       // - Player must have enough gold keys
-      //ReferenceData referenceData = getReferenceData();
-      ReferenceItem ri = getReferenceData().getReferenceItem(GameConstants.DIAMOND_KEY);
-      if (ri == null)
-        throw new Exception("Reference item " + GameConstants.DIAMOND_KEY + " not found!");
       // Consume diamond keys
       // If pre-reqs not met, return custom 20X code
+      // Update player's inventory
+      // Location is unlocked
+      // Update location
+      // Update Player Data
+      PlayerData playerData = PlayerService.GetPlayerData(Id);
+       ReferenceItem ri = getReferenceData().getReferenceItem(GameConstants.DIAMOND_KEY);
+      if (ri == null)
+        throw new Exception("Reference item " + GameConstants.DIAMOND_KEY + " not found!");
       List<Item> items = playerData.getInventoryItems(GameConstants.DIAMOND_KEY);
       if (items.size() > 0 && items.get(0).getQuantity()
           >= location.getNumber_of_keys_to_activate()) {
-        // Update player's inventory
         items.get(0).setQuantity(items.get(0).getQuantity()
             - location.getNumber_of_keys_to_activate());
-        // Location is unlocked
         location.setNumber_of_keys_to_activate(0);
-        // Update location
         WorldService.SetWorldData(Id,worldData);
-        // Update Player Data
         PlayerService.UpdatePlayerData(Id, playerData);
-
       } else {
         throw new NotEnoughResourcesToUnlockException("Not enough Diamond keys to unlock tower!");
       }
@@ -613,7 +615,7 @@ public class GameService {
     for ( LootRefItem lri : selections) {
       currentProb += lri.getWeight();
       if (rand <= currentProb)
-        return new Item(lri.getObjectTypeId(),lri.getMinQuantity());
+        return new Item(lri.getId(),lri.getMinQuantity());
     }
     //will happen if the input's probabilities sums to less than 1
     //throw error here if that's appropriate

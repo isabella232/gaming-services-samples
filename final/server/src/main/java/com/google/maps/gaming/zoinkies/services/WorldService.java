@@ -49,7 +49,7 @@ public class WorldService {
    * A reference to the Firestore service
    */
   @Autowired
-  Firestore firestore;
+  Firestore Firestore;
 
   /**
    * A reference to the game service
@@ -74,7 +74,7 @@ public class WorldService {
    */
   public WorldData GetWorldData(String Id) throws ExecutionException, InterruptedException {
     ApiFuture<DocumentSnapshot> documentSnapshotApiFuture =
-        this.firestore.document("worlds/" + Id).get();
+        this.Firestore.document("worlds/" + Id).get();
     WorldData data = null;
     DocumentSnapshot document = documentSnapshotApiFuture.get();
     if (document.exists()) {
@@ -93,10 +93,10 @@ public class WorldService {
   public void SetWorldData(String Id, WorldData worldData)
       throws ExecutionException, InterruptedException {
     ApiFuture<DocumentSnapshot> documentSnapshotApiFuture =
-        this.firestore.document("worlds/" + Id).get();
+        this.Firestore.document("worlds/" + Id).get();
     DocumentSnapshot document = documentSnapshotApiFuture.get();
     if (document.exists()) {
-      this.firestore.document("worlds/" + Id).set(worldData).get();
+      this.Firestore.document("worlds/" + Id).set(worldData).get();
     }
   }
 
@@ -175,7 +175,7 @@ public class WorldService {
 
     // Create/Update the world document
     if (updateNeeded) {
-      WriteResult writeResult = this.firestore.document("worlds/" + Id).set(data).get();
+      WriteResult writeResult = this.Firestore.document("worlds/" + Id).set(data).get();
       System.out.println("Update time: " + writeResult.getUpdateTime());
     }
 
@@ -188,7 +188,7 @@ public class WorldService {
    * @param Id The User Id
    */
   public void RemoveWorldData(String Id) {
-    CollectionReference users = this.firestore.collection("worlds");
+    CollectionReference users = this.Firestore.collection("worlds");
     Iterable<DocumentReference> documentReferences = users.listDocuments();
     documentReferences.forEach(documentReference -> {
       if (documentReference.getId().equals(Id)) {

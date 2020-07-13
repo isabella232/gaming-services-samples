@@ -34,18 +34,31 @@ public class ReferenceData {
    */
   private List<ReferenceItem> References;
 
-  public ReferenceData() {
-    References = new ArrayList<>();
-  }
-
+  /**
+   * Getter for references
+   * @return
+   */
   public List<ReferenceItem> getReferences() {
     return References;
   }
 
+  /**
+   * Setter for references
+   * @param references
+   */
   public void setReferences(List<ReferenceItem> references) {
     References = references;
   }
 
+  public ReferenceData() {
+    References = new ArrayList<>();
+  }
+
+  /**
+   * Returns the reference item identified by the given id
+   * @param id the unique identifier for this item
+   * @return a ReferenceItem
+   */
   public ReferenceItem getReferenceItem(String id) {
     if (id == null || id.isEmpty()) {
       return null;
@@ -58,6 +71,10 @@ public class ReferenceData {
     return null;
   }
 
+  /**
+   * Outputs all reference data
+   * @return
+   */
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

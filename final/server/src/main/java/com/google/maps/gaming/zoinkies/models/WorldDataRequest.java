@@ -23,22 +23,58 @@ import com.google.maps.gaming.zoinkies.models.playablelocations.LatLng;
  * within the overlapping S2 cells.
  */
 public class WorldDataRequest {
-  private LatLng northeast;
-  private LatLng southwest;
 
+  /**
+   * The North East corner of the Lat Lng rectangle
+   */
+  private LatLng northeast;
+
+  /**
+   * Getter for northeast
+   * @return
+   */
   public LatLng getNortheast() {
     return northeast;
   }
 
+  /**
+   * Setter for northeast
+   * @param northeast
+   */
   public void setNortheast(LatLng northeast) {
     this.northeast = northeast;
   }
 
+  /**
+   * The South West corner of the Lat Lng rectangle
+   */
+  private LatLng southwest;
+
+  /**
+   * Getter for southwest
+   * @return
+   */
   public LatLng getSouthwest() {
     return southwest;
   }
 
+  /**
+   * Setter for southwest
+   * @param southwest
+   */
   public void setSouthwest(LatLng southwest) {
     this.southwest = southwest;
+  }
+
+  /**
+   * ToString override, mostly for testing purposes.
+   * @return
+   */
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("North East corner: " + northeast);
+    sb.append("South West corner: " + southwest);
+    return sb.toString();
   }
 }

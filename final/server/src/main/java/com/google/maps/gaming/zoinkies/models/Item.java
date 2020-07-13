@@ -21,38 +21,61 @@ package com.google.maps.gaming.zoinkies.models;
 public class Item {
 
   /**
-   * Type of object - the key must matched a value in the reference table.
+   * The id of the object as defined in the reference data file.
    */
-  private String ObjectType;
+  private String id;
+
+  /**
+   * Getter for id
+   * @return
+   */
+  public String getId() {
+    return id;
+  }
+
+  /**
+   * Setter for id
+   * @param id
+   */
+  public void setId(String id) {
+    this.id = id;
+  }
   /**
    * Quantity owned.
    */
   private int Quantity;
 
-  public Item() {
-  }
-
-  public Item(String ObjectType, int Quantity) {
-    this.ObjectType = ObjectType;
-    this.Quantity = Quantity;
-  }
-
-  // region Getters/Setters
-  public String getId() {
-    return ObjectType;
-  }
-  public void setId(String ObjectType) {
-    this.ObjectType = ObjectType;
-  }
+  /**
+   * Getter for quantity
+   * @return
+   */
   public int getQuantity() {
     return Quantity;
   }
+
+  /**
+   * Setter for quantity
+   * @param Quantity
+   */
   public void setQuantity(int Quantity) {
     this.Quantity = Quantity;
   }
-  // endregion
+
+  public Item() {
+  }
+
+  /**
+   * A constructor that takes an id and a quantity as parameters
+   * @param id
+   * @param Quantity
+   */
+  public Item(String id, int Quantity) {
+    this.id = id;
+    this.Quantity = Quantity;
+  }
+
   @Override
   public String toString() {
-    return "{Type: " + ObjectType + " Quantity: " + Quantity + "}";
+    return "{Type: " + id + " Quantity: " + Quantity + "}";
   }
 }

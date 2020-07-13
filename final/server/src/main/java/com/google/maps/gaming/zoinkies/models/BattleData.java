@@ -21,92 +21,152 @@ import java.time.Duration;
  * A POJO class to handle the response from the Battle REST API.
  */
 public class BattleData {
-
   /**
    * Unique identifier for the battle location.
    */
   private String Id;
+
+  /**
+   * Getter for Id
+   * @return
+   */
+  public String getId() {
+    return Id;
+  }
+
+  /**
+   * Setter for Id
+   * @param id
+   */
+  public void setId(String id) {
+    Id = id;
+  }
+
   /**
    * Identifier of the opponent (ex: MINION).
    */
   private String OpponentTypeId;
+
+  /**
+   * Getter for OpponentTypeId
+   * @return
+   */
+  public String getOpponentTypeId() {
+    return OpponentTypeId;
+  }
+
+  /**
+   * Setter for OpponentTypeId
+   * @param opponentTypeId
+   */
+  public void setOpponentTypeId(String opponentTypeId) {
+    OpponentTypeId = opponentTypeId;
+  }
   /**
    * Indicates who starts the battle: True-Player False-NPC.
    */
   private Boolean PlayerStarts;
+
+  /**
+   * Getter for PlayerStarts
+   * @return
+   */
+  public Boolean getPlayerStarts() {
+    return PlayerStarts;
+  }
+
+  /**
+   * Setter for PlayerStarts
+   * @param playerStarts
+   */
+  public void setPlayerStarts(Boolean playerStarts) {
+    PlayerStarts = playerStarts;
+  }
   /**
    * Provides the max energy level of the NPC.
    */
   private int EnergyLevel;
+
+  /**
+   * Getter for EnergyLevel
+   * @return
+   */
+  public int getEnergyLevel() {
+    return EnergyLevel;
+  }
+
+  /**
+   * Setter for EnergyLevel
+   * @param energyLevel
+   */
+  public void setEnergyLevel(int energyLevel) {
+    this.EnergyLevel = energyLevel;
+  }
   /**
    * Provides the bonus attack score of the NPC.
    */
   private int MaxAttackScoreBonus;
+
+  /**
+   * Getter for MaxAttackScoreBonus
+   * @return
+   */
+  public int getMaxAttackScoreBonus() {
+    return MaxAttackScoreBonus;
+  }
+
+  /**
+   * Setter for MaxAttackScoreBonus
+   * @param maxAttackScoreBonus
+   */
+  public void setMaxAttackScoreBonus(int maxAttackScoreBonus) {
+    MaxAttackScoreBonus = maxAttackScoreBonus;
+  }
   /**
    * Provides the bonus defense score of the NPC.
    */
   private int MaxDefenseScoreBonus;
+
+  /**
+   * Getter for MaxDefenseScoreBonus
+   * @return
+   */
+  public int getMaxDefenseScoreBonus() {
+    return MaxDefenseScoreBonus;
+  }
+
+  /**
+   * Setter for MaxDefenseScoreBonus
+   * @param maxDefenseScoreBonus
+   */
+  public void setMaxDefenseScoreBonus(int maxDefenseScoreBonus) {
+    MaxDefenseScoreBonus = maxDefenseScoreBonus;
+  }
   /**
    * Provides the cooldown value of the NPC during attacks.
    */
   private Duration Cooldown;
 
-  public String getId() {
-    return Id;
-  }
-
-  public void setId(String id) {
-    Id = id;
-  }
-
-  public Boolean getPlayerStarts() {
-    return PlayerStarts;
-  }
-
-  public void setPlayerStarts(Boolean playerStarts) {
-    PlayerStarts = playerStarts;
-  }
-
+  /**
+   * Getter for Cooldown
+   * @return
+   */
   public Duration getCooldown() {
     return Cooldown;
   }
 
+  /**
+   * Setter for Cooldown
+   * @param cooldown
+   */
   public void setCooldown(Duration cooldown) {
     Cooldown = cooldown;
   }
 
-  public int getEnergyLevel() {
-    return EnergyLevel;
-  }
-
-  public void setEnergyLevel(int energyLevel) {
-    this.EnergyLevel = energyLevel;
-  }
-
-  public int getMaxAttackScoreBonus() {
-    return MaxAttackScoreBonus;
-  }
-
-  public void setMaxAttackScoreBonus(int maxAttackScoreBonus) {
-    MaxAttackScoreBonus = maxAttackScoreBonus;
-  }
-
-  public int getMaxDefenseScoreBonus() {
-    return MaxDefenseScoreBonus;
-  }
-
-  public void setMaxDefenseScoreBonus(int maxDefenseScoreBonus) {
-    MaxDefenseScoreBonus = maxDefenseScoreBonus;
-  }
-
-  public String getOpponentTypeId() {
-    return OpponentTypeId;
-  }
-
-  public void setOpponentTypeId(String opponentTypeId) {
-    OpponentTypeId = opponentTypeId;
-  }
-
+  /**
+   * Implementation of ToString for testing purposes
+   * @return
+   */
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
@@ -117,7 +177,6 @@ public class BattleData {
         + ""+ "MaxAttackScoreBonus:" + this.MaxAttackScoreBonus + ", "
         + ""+ "MaxDefenseScoreBonus:" + this.MaxDefenseScoreBonus + ", "
         + ""+ "OpponentTypeId:" + this.OpponentTypeId);
-
     return sb.toString();
   }
 }
