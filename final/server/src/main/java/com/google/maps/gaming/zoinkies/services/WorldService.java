@@ -72,7 +72,7 @@ public class WorldService {
    * @throws ExecutionException
    * @throws InterruptedException
    */
-  public WorldData GetWorldData(String Id) throws ExecutionException, InterruptedException {
+  public WorldData getWorldData(String Id) throws ExecutionException, InterruptedException {
     ApiFuture<DocumentSnapshot> documentSnapshotApiFuture =
         this.Firestore.document("worlds/" + Id).get();
     WorldData data = null;
@@ -90,7 +90,7 @@ public class WorldService {
    * @throws ExecutionException
    * @throws InterruptedException
    */
-  public void SetWorldData(String Id, WorldData worldData)
+  public void setWorldData(String Id, WorldData worldData)
       throws ExecutionException, InterruptedException {
     ApiFuture<DocumentSnapshot> documentSnapshotApiFuture =
         this.Firestore.document("worlds/" + Id).get();
@@ -108,22 +108,22 @@ public class WorldService {
    * @return WorldData The updated collection of spawn locations.
    * @throws Exception
    */
-  public WorldData GetSpawnLocations(String Id, WorldDataRequest WorldDataRequest)
+  public WorldData getSpawnLocations(String Id, WorldDataRequest WorldDataRequest)
       throws Exception {
 
     Boolean updateNeeded = false;
 
-    WorldData data = GetWorldData(Id);
+    WorldData data = getWorldData(Id);
     if (data == null) {
       data = new WorldData();
     }
 
     // Query playable locations for the given zone - and only when the overlapping cell
     // isn't in our cache.
-    Response response = PlayableLocationsService.RequestPlayableLocations(
+    Response response = PlayableLocationsService.requestPlayableLocations(
         WorldDataRequest.getSouthwest(),
         WorldDataRequest.getNortheast(),
-        GetPLDefaultCriteria(),
+        getDefaultCriteria(),
         data.getS2CellsTTL()
     );
 
@@ -136,7 +136,7 @@ public class WorldService {
       // If we don't  have this location in the database, generate a new one
       if (!data.getLocations().containsKey(locationId)) {
         // spawn a new location
-        SpawnLocation sl = GameService.CreateRandomSpawnLocation(plloc);
+        SpawnLocation sl = GameService.createRandomSpawnLocation(plloc);
         sl.setS2CellId(plloc.getS2CellId());
         data.getLocations().put(locationId, sl);
         updateNeeded = true;
@@ -151,7 +151,7 @@ public class WorldService {
           Duration duration = Duration.parse(data.getS2CellsTTL().get(S2CellId));
           if (duration.getSeconds() <= 0) {
             // Update this location from the world as it has expired
-            SpawnLocation sl = GameService.CreateRandomSpawnLocation(plloc);
+            SpawnLocation sl = GameService.createRandomSpawnLocation(plloc);
             sl.setS2CellId(plloc.getS2CellId());
             data.getLocations().put(locationId, sl);
             updateNeeded = true;
@@ -176,7 +176,6 @@ public class WorldService {
     // Create/Update the world document
     if (updateNeeded) {
       WriteResult writeResult = this.Firestore.document("worlds/" + Id).set(data).get();
-      System.out.println("Update time: " + writeResult.getUpdateTime());
     }
 
     // Return the final set
@@ -187,7 +186,7 @@ public class WorldService {
    * Deletes the world locations associated to the player's game.
    * @param Id The User Id
    */
-  public void RemoveWorldData(String Id) {
+  public void removeWorldData(String Id) {
     CollectionReference users = this.Firestore.collection("worlds");
     Iterable<DocumentReference> documentReferences = users.listDocuments();
     documentReferences.forEach(documentReference -> {
@@ -206,7 +205,7 @@ public class WorldService {
    *
    * @return a List of Criteria for the query to Playable Locations API
    */
-  private Criteria[] GetPLDefaultCriteria() {
+  private Criteria[] getDefaultCriteria() {
     Criteria[] plc = new Criteria[1];
     plc[0] = new Criteria();
     plc[0].setGame_object_type(0);

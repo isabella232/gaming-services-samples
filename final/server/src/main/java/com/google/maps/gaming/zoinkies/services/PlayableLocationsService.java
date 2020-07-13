@@ -81,7 +81,7 @@ public class PlayableLocationsService {
    *
    * @return A Playable Location Response
    */
-  public Response RequestPlayableLocations(LatLng loLatLng, LatLng hiLatLng,
+  public Response requestPlayableLocations(LatLng loLatLng, LatLng hiLatLng,
       Criteria[] criteria, HashMap<String, String> PLCache) throws Exception {
 
     RestTemplate restTemplate = new RestTemplate();
@@ -93,7 +93,7 @@ public class PlayableLocationsService {
     Request req = new Request();
     req.setAreaFilter(new AreaFilter());
     if (criteria == null) {
-      req.setCriteria(GetPLDefaultCriteria());
+      req.setCriteria(getDefaultCriteria());
     } else {
       req.setCriteria(criteria);
     }
@@ -136,14 +136,11 @@ public class PlayableLocationsService {
           continue;
         }
       }
-
-
       req.getAreaFilter().setS2CellId(Long.toUnsignedString(id.id()));
 
       String reqJson = objectMapper.writeValueAsString(req);
-      System.out.println(reqJson);
-
       HttpEntity<String> request = new HttpEntity<String>(reqJson, headers);
+
       String plResponse = restTemplate.postForObject(PLAYABLE_LOCATION_URL, request, String.class);
       assertNotNull(plResponse);
 
@@ -177,7 +174,7 @@ public class PlayableLocationsService {
    *
    * @return an array of Playable Location Criteria
    */
-  private Criteria[] GetPLDefaultCriteria() {
+  private Criteria[] getDefaultCriteria() {
     Criteria[] plc = new Criteria[1];
     plc[0] = new Criteria();
     plc[0].setGame_object_type(GAME_OBJECT_TYPE_SPAWN_LOCATIONS);

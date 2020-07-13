@@ -46,7 +46,7 @@ public class TestPlayableLocations {
     LatLng hi = new LatLng(37.2797796, -122.02596153);
     LatLng lo = new LatLng(37.2618133,-122.0485384);
 
-    Response response = PlayableLocationsService.RequestPlayableLocations(lo,hi,
+    Response response = PlayableLocationsService.requestPlayableLocations(lo,hi,
         GetPLDefaultCriteria(), new HashMap<>());
     assertThat(response).isNotNull();
     assertThat(response.getLocationsPerGameObjectType()).isNotNull();

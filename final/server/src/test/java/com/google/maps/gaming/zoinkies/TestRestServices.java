@@ -126,7 +126,7 @@ public class TestRestServices {
     // 2 Get some battle damage
     PlayerData playerData = GetPlayerData("Johnny");
     playerData.setEnergyLevel(5);
-    PlayerService.UpdatePlayerData(Id, playerData);
+    PlayerService.updatePlayerData(Id, playerData);
 
     // 3 Restore energy - search for a station
     // Search for a chest in our spawn locations
@@ -169,11 +169,11 @@ public class TestRestServices {
     }
 
     // Add enough freed leader so we are short of one to win the game
-    PlayerData PlayerData = PlayerService.GetPlayerData(Id);
+    PlayerData PlayerData = PlayerService.getPlayerData(Id);
     PlayerData.addInventoryItem(new Item(GameConstants.FREED_LEADERS,
         GameConstants.FREED_LEADERS_TO_WIN-1));
     PlayerData.addInventoryItem(new Item(GameConstants.DIAMOND_KEY,5));
-    PlayerService.UpdatePlayerData(Id,PlayerData);
+    PlayerService.updatePlayerData(Id,PlayerData);
 
     BattleData battleData = GetBattleData(location.getId());
     System.out.println(battleData);
@@ -225,7 +225,7 @@ public class TestRestServices {
     }
 
     // Add a gold key - which will be lost
-    PlayerData PlayerData = PlayerService.GetPlayerData(Id);
+    PlayerData PlayerData = PlayerService.getPlayerData(Id);
     PlayerData.addInventoryItem(new Item(GameConstants.GOLD_KEY,1));
 
     BattleData battleData = GetBattleData(location.getId());
@@ -314,7 +314,7 @@ public class TestRestServices {
     // Grant ourselves a few gold keys to unlock the chest
     PlayerData playerData = GetPlayerData("Johnny");
     playerData.getInventory().add(new Item(GameConstants.GOLD_KEY,10));
-    PlayerService.UpdatePlayerData(Id, playerData);
+    PlayerService.updatePlayerData(Id, playerData);
 
     // Search for a chest in our spawn locations
     WorldData data = GetWorldData();
@@ -372,7 +372,7 @@ public class TestRestServices {
     // Grant ourselves a few gold keys to unlock the chest
     PlayerData playerData = GetPlayerData("Johnny");
     playerData.getInventory().add(new Item(GameConstants.GOLD_KEY,10));
-    PlayerService.UpdatePlayerData(Id, playerData);
+    PlayerService.updatePlayerData(Id, playerData);
 
     WorldData data = GetWorldData();
     // Search for a chest in our spawn locations
@@ -599,7 +599,7 @@ public class TestRestServices {
    * @throws Exception
    */
   private void CreatePlayerData(String newName) throws Exception {
-    PlayerData newData = GameService.CreateNewUser();
+    PlayerData newData = GameService.createNewUser();
     newData.setName(newName);
 
     String json = new ObjectMapper().writeValueAsString(newData);

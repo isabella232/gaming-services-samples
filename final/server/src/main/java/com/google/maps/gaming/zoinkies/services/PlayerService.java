@@ -35,7 +35,7 @@ import org.springframework.stereotype.Service;
 public class PlayerService {
 
   @Autowired
-  Firestore firestore;
+  Firestore Firestore;
 
   /**
    * If it doesn't exist, create one
@@ -46,9 +46,9 @@ public class PlayerService {
    * @throws ExecutionException
    * @throws InterruptedException
    */
-  public PlayerData GetPlayerData(String Id) throws ExecutionException, InterruptedException {
+  public PlayerData getPlayerData(String Id) throws ExecutionException, InterruptedException {
     ApiFuture<DocumentSnapshot> documentSnapshotApiFuture =
-        this.firestore.document("users/" + Id).get();
+        this.Firestore.document("users/" + Id).get();
     PlayerData data = null;
     DocumentSnapshot document = documentSnapshotApiFuture.get();
     if (document.exists()) {
@@ -62,8 +62,8 @@ public class PlayerService {
    * @param Id Device generated Id identifying the player.
    * @implNote This function does not remove the world collection associated to the player.
    */
-  public void RemoveUserData(String Id) {
-    CollectionReference users = this.firestore.collection("users");
+  public void removeUserData(String Id) {
+    CollectionReference users = this.Firestore.collection("users");
     Iterable<DocumentReference> documentReferences = users.listDocuments();
     documentReferences.forEach(documentReference -> {
       String id = documentReference.getId();
@@ -87,12 +87,12 @@ public class PlayerService {
    * @throws ExecutionException
    * @throws InterruptedException
    */
-  public PlayerData UpdatePlayerData(String Id, PlayerData newData)
+  public PlayerData updatePlayerData(String Id, PlayerData newData)
       throws ExecutionException, InterruptedException {
     ApiFuture<DocumentSnapshot> documentSnapshotApiFuture =
-        this.firestore.document("users/" + Id).get();
-    this.firestore.document("users/"+Id).set(newData).get();
-    newData = GetPlayerData(Id);
+        this.Firestore.document("users/" + Id).get();
+    this.Firestore.document("users/"+Id).set(newData).get();
+    newData = getPlayerData(Id);
     return newData;
   }
 }

@@ -61,7 +61,7 @@ public class PlayerDataController {
     PlayerData data = null;
     // Check if this record already exist
     try {
-      data = playerService.GetPlayerData(id);
+      data = playerService.getPlayerData(id);
     } catch (Exception e) {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -92,9 +92,9 @@ public class PlayerDataController {
     // and revert to current value if not
     try {
       if (playerData == null) {
-        playerData = gameService.CreateNewUser();
+        playerData = gameService.createNewUser();
       } else {
-        PlayerData current = playerService.GetPlayerData(id);
+        PlayerData current = playerService.getPlayerData(id);
         if (current != null) {
           playerData.setInventory(current.getInventory());
           if (playerData.getEquippedBodyArmor() != null
@@ -115,7 +115,7 @@ public class PlayerDataController {
           }
         }
       }
-      playerData = playerService.UpdatePlayerData(id, playerData);
+      playerData = playerService.updatePlayerData(id, playerData);
     } catch (ExecutionException e) {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -137,7 +137,7 @@ public class PlayerDataController {
     if (id == null || id.isEmpty()) {
       return ResponseEntity.badRequest().build();
     }
-    playerService.RemoveUserData(id);
+    playerService.removeUserData(id);
     return new ResponseEntity<>(id, HttpStatus.OK);
   }
 }

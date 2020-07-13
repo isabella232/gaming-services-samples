@@ -70,7 +70,7 @@ public class WorldDataController {
     WorldData data = null;
     // Check if this record already exist
     try {
-      data = worldService.GetWorldData(id);
+      data = worldService.getWorldData(id);
     } catch (ExecutionException e) {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -99,7 +99,7 @@ public class WorldDataController {
     }
     BattleData data;
     try {
-      data = gameService.GetBattleData(id,locationId);
+      data = gameService.getBattleData(id,locationId);
     } catch (NotEnoughResourcesToUnlockException e) {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -133,7 +133,7 @@ public class WorldDataController {
     }
     BattleSummaryData data;
     try {
-      data = gameService.GetBattleSummaryData(id,locationId,Boolean.parseBoolean(winner));
+      data = gameService.getBattleSummaryData(id,locationId,Boolean.parseBoolean(winner));
     }catch (LocationStillRespawningException e) {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -161,7 +161,7 @@ public class WorldDataController {
     }
     EnergyData data;
     try {
-      data = gameService.GetEnergyStationData(id,locationId);
+      data = gameService.getEnergyStationData(id,locationId);
     } catch (LocationStillRespawningException e) {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -189,7 +189,7 @@ public class WorldDataController {
     }
     RewardsData data = null;
     try {
-      data = gameService.GetChestRewards(id,locationId);
+      data = gameService.getChestRewards(id,locationId);
     } catch (NotEnoughResourcesToUnlockException e) {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -217,7 +217,7 @@ public class WorldDataController {
     }
     WorldData data = null;
     try {
-      data = worldService.GetSpawnLocations(id,worldDataRequest);
+      data = worldService.getSpawnLocations(id,worldDataRequest);
     } catch (Exception e) {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -235,7 +235,7 @@ public class WorldDataController {
     if (id == null || id.isEmpty()) {
       return ResponseEntity.badRequest().build();
     }
-    worldService.RemoveWorldData(id);
+    worldService.removeWorldData(id);
     return new ResponseEntity<>(id, HttpStatus.OK);
   }
 }
