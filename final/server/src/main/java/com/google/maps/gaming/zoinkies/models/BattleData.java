@@ -24,35 +24,35 @@ public class BattleData {
   /**
    * Unique identifier for the battle location.
    */
-  private String Id;
+  private String deviceId;
 
   /**
    * Getter for Id
    * @return
    */
-  public String getId() {
-    return Id;
+  public String getDeviceId() {
+    return deviceId;
   }
 
   /**
    * Setter for Id
-   * @param id
+   * @param deviceId
    */
-  public void setId(String id) {
-    Id = id;
+  public void setDeviceId(String deviceId) {
+    this.deviceId = deviceId;
   }
 
   /**
    * Identifier of the opponent (ex: MINION).
    */
-  private String OpponentTypeId;
+  private String opponentTypeId;
 
   /**
    * Getter for OpponentTypeId
    * @return
    */
   public String getOpponentTypeId() {
-    return OpponentTypeId;
+    return opponentTypeId;
   }
 
   /**
@@ -60,19 +60,19 @@ public class BattleData {
    * @param opponentTypeId
    */
   public void setOpponentTypeId(String opponentTypeId) {
-    OpponentTypeId = opponentTypeId;
+    this.opponentTypeId = opponentTypeId;
   }
   /**
    * Indicates who starts the battle: True-Player False-NPC.
    */
-  private Boolean PlayerStarts;
+  private Boolean playerStarts;
 
   /**
    * Getter for PlayerStarts
    * @return
    */
   public Boolean getPlayerStarts() {
-    return PlayerStarts;
+    return playerStarts;
   }
 
   /**
@@ -80,19 +80,19 @@ public class BattleData {
    * @param playerStarts
    */
   public void setPlayerStarts(Boolean playerStarts) {
-    PlayerStarts = playerStarts;
+    this.playerStarts = playerStarts;
   }
   /**
    * Provides the max energy level of the NPC.
    */
-  private int EnergyLevel;
+  private int energyLevel;
 
   /**
    * Getter for EnergyLevel
    * @return
    */
   public int getEnergyLevel() {
-    return EnergyLevel;
+    return energyLevel;
   }
 
   /**
@@ -100,19 +100,19 @@ public class BattleData {
    * @param energyLevel
    */
   public void setEnergyLevel(int energyLevel) {
-    this.EnergyLevel = energyLevel;
+    this.energyLevel = energyLevel;
   }
   /**
    * Provides the bonus attack score of the NPC.
    */
-  private int MaxAttackScoreBonus;
+  private int maxAttackScoreBonus;
 
   /**
    * Getter for MaxAttackScoreBonus
    * @return
    */
   public int getMaxAttackScoreBonus() {
-    return MaxAttackScoreBonus;
+    return maxAttackScoreBonus;
   }
 
   /**
@@ -120,19 +120,19 @@ public class BattleData {
    * @param maxAttackScoreBonus
    */
   public void setMaxAttackScoreBonus(int maxAttackScoreBonus) {
-    MaxAttackScoreBonus = maxAttackScoreBonus;
+    this.maxAttackScoreBonus = maxAttackScoreBonus;
   }
   /**
    * Provides the bonus defense score of the NPC.
    */
-  private int MaxDefenseScoreBonus;
+  private int maxDefenseScoreBonus;
 
   /**
    * Getter for MaxDefenseScoreBonus
    * @return
    */
   public int getMaxDefenseScoreBonus() {
-    return MaxDefenseScoreBonus;
+    return maxDefenseScoreBonus;
   }
 
   /**
@@ -140,19 +140,19 @@ public class BattleData {
    * @param maxDefenseScoreBonus
    */
   public void setMaxDefenseScoreBonus(int maxDefenseScoreBonus) {
-    MaxDefenseScoreBonus = maxDefenseScoreBonus;
+    this.maxDefenseScoreBonus = maxDefenseScoreBonus;
   }
   /**
    * Provides the cooldown value of the NPC during attacks.
    */
-  private Duration Cooldown;
+  private Duration cooldown;
 
   /**
    * Getter for Cooldown
    * @return
    */
   public Duration getCooldown() {
-    return Cooldown;
+    return cooldown;
   }
 
   /**
@@ -160,7 +160,7 @@ public class BattleData {
    * @param cooldown
    */
   public void setCooldown(Duration cooldown) {
-    Cooldown = cooldown;
+    this.cooldown = cooldown;
   }
 
   /**
@@ -170,13 +170,13 @@ public class BattleData {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("BattleData{" + "Id='" + this.Id + '\'' + ", "
-        + ""+ "PlayerStarts:" + this.PlayerStarts + ", "
-        + ""+ "Cooldown:" + this.Cooldown + ", "
-        + ""+ "EnergyLevel:" + this.EnergyLevel + ", "
-        + ""+ "MaxAttackScoreBonus:" + this.MaxAttackScoreBonus + ", "
-        + ""+ "MaxDefenseScoreBonus:" + this.MaxDefenseScoreBonus + ", "
-        + ""+ "OpponentTypeId:" + this.OpponentTypeId);
+    sb.append("BattleData{" + "Id='" + this.deviceId + '\'' + ", "
+        + ""+ "PlayerStarts:" + this.playerStarts + ", "
+        + ""+ "Cooldown:" + this.cooldown + ", "
+        + ""+ "EnergyLevel:" + this.energyLevel + ", "
+        + ""+ "MaxAttackScoreBonus:" + this.maxAttackScoreBonus + ", "
+        + ""+ "MaxDefenseScoreBonus:" + this.maxDefenseScoreBonus + ", "
+        + ""+ "OpponentTypeId:" + this.opponentTypeId);
     return sb.toString();
   }
 }

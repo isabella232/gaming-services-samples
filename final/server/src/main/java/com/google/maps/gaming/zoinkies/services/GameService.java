@@ -292,7 +292,7 @@ public class GameService {
     //  - tower disappears afterwards
     //  - requires diamond keys
     BattleData data = new BattleData();;
-    data.setId(LocationId);
+    data.setDeviceId(LocationId);
     SpawnLocation location = worldData.getLocations().get(LocationId);
     if (location.getObject_type_id().equals(GameConstants.MINION)) {
       ReferenceItem minionRefItem = getReferenceData().getReferenceItem(GameConstants.MINION);
