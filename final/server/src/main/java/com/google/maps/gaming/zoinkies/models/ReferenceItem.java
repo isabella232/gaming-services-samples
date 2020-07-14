@@ -27,35 +27,35 @@ public class ReferenceItem {
   /**
    * Unique identifier for this object
    */
-  private String Id;
+  private String itemId;
 
   /**
    * Getter for Id
    * @return
    */
-  public String getId() {
-    return Id;
+  public String getItemId() {
+    return itemId;
   }
 
   /**
    * Setter for Id
-   * @param id
+   * @param itemId
    */
-  public void setId(String id) {
-    Id = id;
+  public void setItemId(String itemId) {
+    this.itemId = itemId;
   }
 
   /**
    * Friendly name
    */
-  private String Name;
+  private String name;
 
   /**
    * Getter for name
    * @return
    */
   public String getName() {
-    return Name;
+    return name;
   }
 
   /**
@@ -63,20 +63,20 @@ public class ReferenceItem {
    * @param name
    */
   public void setName(String name) {
-    Name = name;
+    this.name = name;
   }
 
   /**
    * Object type
    */
-  private String Type;
+  private String type;
 
   /**
    * Getter for type
    * @return
    */
   public String getType() {
-    return Type;
+    return type;
   }
 
   /**
@@ -84,20 +84,20 @@ public class ReferenceItem {
    * @param type
    */
   public void setType(String type) {
-    Type = type;
+    this.type = type;
   }
 
   /**
    * Friendly description
    */
-  private String Description;
+  private String description;
 
   /**
    * Getter for description
    * @return
    */
   public String getDescription() {
-    return Description;
+    return description;
   }
 
   /**
@@ -105,20 +105,20 @@ public class ReferenceItem {
    * @param description
    */
   public void setDescription(String description) {
-    Description = description;
+    this.description = description;
   }
 
   /**
    * Base attack score
    */
-  private int AttackScore;
+  private int attackScore;
 
   /**
    * Getter for attack score
    * @return
    */
   public int getAttackScore() {
-    return AttackScore;
+    return attackScore;
   }
 
   /**
@@ -126,20 +126,20 @@ public class ReferenceItem {
    * @param attackScore
    */
   public void setAttackScore(int attackScore) {
-    AttackScore = attackScore;
+    this.attackScore = attackScore;
   }
 
   /**
    * Base defense score
    */
-  private int DefenseScore;
+  private int defenseScore;
 
   /**
    * Getter for defense score
    * @return
    */
   public int getDefenseScore() {
-    return DefenseScore;
+    return defenseScore;
   }
 
   /**
@@ -147,13 +147,13 @@ public class ReferenceItem {
    * @param defenseScore
    */
   public void setDefenseScore(int defenseScore) {
-    DefenseScore = defenseScore;
+    this.defenseScore = defenseScore;
   }
 
   /**
    * Base attack cooldown
    */
-  private Duration Cooldown;
+  private Duration cooldown;
 
   /**
    * Getter for cooldown.
@@ -161,7 +161,7 @@ public class ReferenceItem {
    */
   @JsonFormat(shape = Shape.STRING)
   public Duration getCooldown() {
-    return Cooldown;
+    return cooldown;
   }
 
   /**
@@ -169,12 +169,12 @@ public class ReferenceItem {
    * @param cooldown
    */
   public void setCooldown(Duration cooldown) {
-    Cooldown = cooldown;
+    this.cooldown = cooldown;
   }
   /**
    * Respawn duration. No value indicates the object does not respawn.
    */
-  private Duration RespawnDuration;
+  private Duration respawnDuration;
 
   /**
    * Getter for respawn duration
@@ -182,7 +182,7 @@ public class ReferenceItem {
    */
   @JsonFormat(shape = Shape.STRING)
   public Duration getRespawnDuration() {
-    return RespawnDuration;
+    return respawnDuration;
   }
 
   /**
@@ -190,19 +190,19 @@ public class ReferenceItem {
    * @param respawnDuration
    */
   public void setRespawnDuration(Duration respawnDuration) {
-    RespawnDuration = respawnDuration;
+    this.respawnDuration = respawnDuration;
   }
   /**
    * Prefab name to be instantiated by the Unity client for this object.
    */
-  private String Prefab;
+  private String prefab;
 
   /**
    * Getter for prefab
    * @return
    */
   public String getPrefab() {
-    return Prefab;
+    return prefab;
   }
 
   /**
@@ -210,7 +210,7 @@ public class ReferenceItem {
    * @param prefab
    */
   public void setPrefab(String prefab) {
-    Prefab = prefab;
+    this.prefab = prefab;
   }
 
   /**
@@ -220,15 +220,15 @@ public class ReferenceItem {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("Id: " + Id);
-    sb.append("Name: " + Name);
-    sb.append("Type: " + Type);
-    sb.append("Description: " + Description);
-    sb.append("AttackScore: " + AttackScore);
-    sb.append("DefenseScore: " + DefenseScore);
-    sb.append("Cooldown: " + Cooldown);
-    sb.append("RespawnDuration: " + RespawnDuration);
-    sb.append("Prefab: " + Prefab);
+    sb.append("Id: " + itemId);
+    sb.append("Name: " + name);
+    sb.append("Type: " + type);
+    sb.append("Description: " + description);
+    sb.append("AttackScore: " + attackScore);
+    sb.append("DefenseScore: " + defenseScore);
+    sb.append("Cooldown: " + cooldown);
+    sb.append("RespawnDuration: " + respawnDuration);
+    sb.append("Prefab: " + prefab);
     return sb.toString();
   }
 }

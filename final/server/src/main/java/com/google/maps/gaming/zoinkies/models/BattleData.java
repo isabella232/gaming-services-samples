@@ -24,22 +24,22 @@ public class BattleData {
   /**
    * Unique identifier for the battle location.
    */
-  private String deviceId;
+  private String locationId;
 
   /**
    * Getter for Id
    * @return
    */
-  public String getDeviceId() {
-    return deviceId;
+  public String getLocationId() {
+    return locationId;
   }
 
   /**
    * Setter for Id
-   * @param deviceId
+   * @param locationId
    */
-  public void setDeviceId(String deviceId) {
-    this.deviceId = deviceId;
+  public void setLocationId(String locationId) {
+    this.locationId = locationId;
   }
 
   /**
@@ -170,7 +170,7 @@ public class BattleData {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("BattleData{" + "Id='" + this.deviceId + '\'' + ", "
+    sb.append("BattleData{" + "Id='" + this.locationId + '\'' + ", "
         + ""+ "PlayerStarts:" + this.playerStarts + ", "
         + ""+ "Cooldown:" + this.cooldown + ", "
         + ""+ "EnergyLevel:" + this.energyLevel + ", "

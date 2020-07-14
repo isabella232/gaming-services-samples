@@ -26,7 +26,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// Unique identifier for this item.
         /// This id is reconciled with the reference data loaded from the server.
         /// </summary>
-        public string id { get; set; }
+        public string itemId { get; set; }
 
         /// <summary>
         /// Quantity owned.
@@ -39,13 +39,13 @@ namespace Google.Maps.Demos.Zoinkies
 
         public Item(string objectType, int quantity)
         {
-            id = objectType;
+            itemId = objectType;
             this.quantity = quantity;
         }
 
         public override string ToString()
         {
-            return "{Type: " + id + " Quantity: " + quantity + "}";
+            return "{Type: " + itemId + " Quantity: " + quantity + "}";
         }
     }
 }

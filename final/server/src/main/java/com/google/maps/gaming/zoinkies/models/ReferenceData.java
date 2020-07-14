@@ -32,14 +32,14 @@ public class ReferenceData {
    * Lists to all references for this game. Every game object has a reference in this list.
    * The list is reconciled between client and server.
    */
-  private List<ReferenceItem> References;
+  private List<ReferenceItem> references;
 
   /**
    * Getter for references
    * @return
    */
   public List<ReferenceItem> getReferences() {
-    return References;
+    return references;
   }
 
   /**
@@ -47,11 +47,11 @@ public class ReferenceData {
    * @param references
    */
   public void setReferences(List<ReferenceItem> references) {
-    References = references;
+    this.references = references;
   }
 
   public ReferenceData() {
-    References = new ArrayList<>();
+    references = new ArrayList<>();
   }
 
   /**
@@ -64,7 +64,7 @@ public class ReferenceData {
       return null;
     }
     for(ReferenceItem ri:getReferences()) {
-      if (ri.getId().equals(id)) {
+      if (ri.getItemId().equals(id)) {
         return ri;
       }
     }
@@ -78,7 +78,7 @@ public class ReferenceData {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    for (ReferenceItem ri : References ) {
+    for (ReferenceItem ri : references) {
       sb.append(ri.toString());
       sb.append("\n");
     }

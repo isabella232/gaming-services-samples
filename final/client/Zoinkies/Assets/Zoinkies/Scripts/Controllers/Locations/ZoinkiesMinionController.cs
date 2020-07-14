@@ -93,7 +93,7 @@ namespace Google.Maps.Demos.Zoinkies
 
             if (WorldService.GetInstance().IsRespawning(LocationId))
             {
-                DateTime t = DateTime.Parse(location.respawn_time);
+                DateTime t = DateTime.Parse(location.respawnTime);
                 TimeSpan timeLeft = t.Subtract(DateTime.Now);
 
                 // Hide Minion... until it is respawned

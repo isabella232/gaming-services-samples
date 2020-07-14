@@ -44,7 +44,7 @@ namespace Google.Maps.Demos.Zoinkies
             // Testing - pick first energy station from world
             List<SpawnLocation> s =
                 new List<SpawnLocation>(WorldService.GetInstance().GetEnergyStations());
-            LocationId = s.ElementAt(0).id;
+            LocationId = s.ElementAt(0).locationId;
 
             if (string.IsNullOrEmpty(LocationId))
             {
@@ -57,7 +57,7 @@ namespace Google.Maps.Demos.Zoinkies
             // If not show a floating popup with timeout information
             if (WorldService.GetInstance().IsRespawning(LocationId))
             {
-                DateTime t = DateTime.Parse(location.respawn_time);
+                DateTime t = DateTime.Parse(location.respawnTime);
                 TimeSpan timeLeft = t.Subtract(DateTime.Now);
                 UIManager.OnShowMessageDialog("Station recharging. Time left: ", timeLeft);
                 UIManager.OnShowLoadingView(false);

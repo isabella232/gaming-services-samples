@@ -25,34 +25,34 @@ public class RewardsData {
   /**
    * Unique location identifier
    */
-  private String Id;
+  private String locationId;
 
   /**
    * Getter for Id
    * @return
    */
-  public String getId() {
-    return Id;
+  public String getLocationId() {
+    return locationId;
   }
 
   /**
    * Setter for Id
-   * @param id
+   * @param locationId
    */
-  public void setId(String id) {
-    Id = id;
+  public void setLocationId(String locationId) {
+    this.locationId = locationId;
   }
   /**
    * List of items found or lost at this location (negative quantity indicate losses)
    */
-  private List<Item> Items;
+  private List<Item> items;
 
   /**
    * Getter for Items
    * @return
    */
   public List<Item> getItems() {
-    return Items;
+    return items;
   }
 
   /**
@@ -60,14 +60,14 @@ public class RewardsData {
    * @param items
    */
   public void setItems(List<Item> items) {
-    Items = items;
+    this.items = items;
   }
 
   /**
    * Default constructor - instantiates an empty items list.
    */
   public RewardsData() {
-    Items = new ArrayList<>();
+    items = new ArrayList<>();
   }
 
   /**
@@ -77,8 +77,8 @@ public class RewardsData {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("Id: " + Id);
-    sb.append("Items: " + Items);
+    sb.append("Id: " + locationId);
+    sb.append("Items: " + items);
     return sb.toString();
   }
 }

@@ -161,10 +161,10 @@ public class WorldService {
     // Check if any respawning locations need to be unlocked.
     for (SpawnLocation location:data.getLocations().values()) {
       // Check timestamp progress.
-      if (location.getRespawn_time() != null) {
-        Instant t = Instant.parse(location.getRespawn_time());
+      if (location.getRespawnTime() != null) {
+        Instant t = Instant.parse(location.getRespawnTime());
         if (t.compareTo(Instant.now()) <= 0) {
-          location.setRespawn_time(null);
+          location.setRespawnTime(null);
           location.setActive(true);
           updateNeeded = true;
         }

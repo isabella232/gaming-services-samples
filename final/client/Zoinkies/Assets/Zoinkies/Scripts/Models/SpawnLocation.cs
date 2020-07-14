@@ -23,7 +23,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Unique identifier for the location
         /// </summary>
-        public string id { get; set; }
+        public string locationId { get; set; }
 
         /// <summary>
         ///     Indicates if the location is active
@@ -33,7 +33,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     The type of object at this location
         /// </summary>
-        public string object_type_id { get; set; }
+        public string objectTypeId { get; set; }
 
         /// <summary>
         ///     Indicates if the location respawns
@@ -43,17 +43,17 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Indicates when the location respawns (ISO 8601)
         /// </summary>
-        public string respawn_time { get; set; }
+        public string respawnTime { get; set; }
 
         /// <summary>
         ///     Number of "keys" to activate this location (if any)
         /// </summary>
-        public int number_of_keys_to_activate { get; set; }
+        public int numberOfKeysToActivate { get; set; }
 
         /// <summary>
         ///     The key type for activating this location - could be anything.
         /// </summary>
-        public string key_type_id { get; set; }
+        public string keyTypeId { get; set; }
 
         /// <summary>
         ///     Actual lat lng for this location.
@@ -65,29 +65,29 @@ namespace Google.Maps.Demos.Zoinkies
         }
 
         public SpawnLocation(
-            string id,
+            string locationId,
             bool active,
-            string object_type_id,
+            string objectTypeId,
             bool respawns,
-            string respawn_time,
-            int number_of_keys_to_activate,
-            string key_type_id,
+            string respawnTime,
+            int numberOfKeysToActivate,
+            string keyTypeId,
             PlayableLocationLatLng snappedPoint)
         {
-            this.id = id;
+            this.locationId = locationId;
             this.active = active;
-            this.object_type_id = object_type_id;
+            this.objectTypeId = objectTypeId;
             this.respawns = respawns;
-            this.key_type_id = key_type_id;
-            this.respawn_time = respawn_time;
-            this.number_of_keys_to_activate = number_of_keys_to_activate;
+            this.keyTypeId = keyTypeId;
+            this.respawnTime = respawnTime;
+            this.numberOfKeysToActivate = numberOfKeysToActivate;
             this.snappedPoint = snappedPoint;
         }
 
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("Id: " + id + "  object_type_id " + object_type_id);
+            sb.Append("Id: " + locationId + "  object_type_id " + objectTypeId);
 
             return sb.ToString();
         }

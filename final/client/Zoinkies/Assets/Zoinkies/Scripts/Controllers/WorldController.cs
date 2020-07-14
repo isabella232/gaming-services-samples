@@ -642,7 +642,7 @@ namespace Google.Maps.Demos.Zoinkies
                     Vector3 pos = MapsService.Coords.FromLatLngToVector3(
                         new LatLng(loc.snappedPoint.latitude, loc.snappedPoint.longitude));
                     // Do we already have this object in our scene?
-                    if (!_spawnedGameObjects.ContainsKey(loc.id))
+                    if (!_spawnedGameObjects.ContainsKey(loc.locationId))
                     {
                         GameObject go =
                             Instantiate(prefab, container);
@@ -650,14 +650,14 @@ namespace Google.Maps.Demos.Zoinkies
 
                         // The reference to placeId allows us to find the associated data
                         // through WorldService
-                        go.name = loc.id;
+                        go.name = loc.locationId;
 
                         BaseSpawnLocationController sl =
                             go.GetComponent<BaseSpawnLocationController>();
                         Assert.IsNotNull(sl);
-                        sl.Init(loc.id);
+                        sl.Init(loc.locationId);
 
-                        _spawnedGameObjects.Add(loc.id, go);
+                        _spawnedGameObjects.Add(loc.locationId, go);
                         numberOfObjectsCreated++;
                     }
                 }

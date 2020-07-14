@@ -134,13 +134,13 @@ public class TestRestServices {
     WorldData data = getWorldData();
     SpawnLocation location = null;
     for (String locationId:data.getLocations().keySet()) {
-      if (data.getLocations().get(locationId).getObject_type_id()
+      if (data.getLocations().get(locationId).getObjectTypeId()
           .equals(GameConstants.ENERGY_STATION)) {
         location = data.getLocations().get(locationId);
         break;
       }
     }
-    EnergyData energy = getEnergyData(location.getId());
+    EnergyData energy = getEnergyData(location.getLocationId());
     Assert.isTrue(energy.getAmountRestored() == 75,
         "Restore amount is incorrect.");
 
@@ -163,7 +163,7 @@ public class TestRestServices {
     WorldData data = getWorldData();
     SpawnLocation location = null;
     for (String locationId:data.getLocations().keySet()) {
-      if (data.getLocations().get(locationId).getObject_type_id().equals(GameConstants.TOWER)) {
+      if (data.getLocations().get(locationId).getObjectTypeId().equals(GameConstants.TOWER)) {
         location = data.getLocations().get(locationId);
         break;
       }
@@ -176,20 +176,20 @@ public class TestRestServices {
     PlayerData.addInventoryItem(new Item(GameConstants.DIAMOND_KEY,5));
     playerService.updatePlayerData(deviceId,PlayerData);
 
-    BattleData battleData = getBattleData(location.getId());
+    BattleData battleData = getBattleData(location.getLocationId());
     System.out.println(battleData);
     Assert.isTrue(battleData.getOpponentTypeId().equals(GameConstants.GENERAL),
         "The opponent should be general.");
 
     Boolean winner = true; // Player
-    BattleSummaryData BattleSummaryData = getBattleSummaryData(location.getId(), winner);
+    BattleSummaryData BattleSummaryData = getBattleSummaryData(location.getLocationId(), winner);
     System.out.println(BattleSummaryData);
     Assert.isTrue(BattleSummaryData.getWinner() == winner,
         "The opponent should be the player.");
 
     Item key = null;
     for (Item item: BattleSummaryData.getRewards().getItems()) {
-      if (item.getId().equals(GameConstants.FREED_LEADERS)) {
+      if (item.getItemId().equals(GameConstants.FREED_LEADERS)) {
         key = item;
         break;
       }
@@ -219,7 +219,7 @@ public class TestRestServices {
     WorldData data = getWorldData();
     SpawnLocation location = null;
     for (String locationId:data.getLocations().keySet()) {
-      if (data.getLocations().get(locationId).getObject_type_id().equals(GameConstants.MINION)) {
+      if (data.getLocations().get(locationId).getObjectTypeId().equals(GameConstants.MINION)) {
         location = data.getLocations().get(locationId);
         break;
       }
@@ -230,13 +230,13 @@ public class TestRestServices {
     PlayerData.addInventoryItem(new Item(GameConstants.GOLD_KEY,1));
     playerService.updatePlayerData(deviceId,PlayerData);
 
-    BattleData battleData = getBattleData(location.getId());
+    BattleData battleData = getBattleData(location.getLocationId());
     System.out.println(battleData);
     Assert.isTrue(battleData.getOpponentTypeId().equals(GameConstants.MINION),
         "The opponent should be minion.");
 
     Boolean winner = false; // Minion
-    BattleSummaryData BattleSummaryData = getBattleSummaryData(location.getId(), winner);
+    BattleSummaryData BattleSummaryData = getBattleSummaryData(location.getLocationId(), winner);
     System.out.println(BattleSummaryData);
     Assert.isTrue(BattleSummaryData.getWinner() == winner,
         "The winner should be minion.");
@@ -244,7 +244,7 @@ public class TestRestServices {
 
     Item key = null;
     for (Item item: items) {
-      if (item.getId().equals(GameConstants.GOLD_KEY)) {
+      if (item.getItemId().equals(GameConstants.GOLD_KEY)) {
         key = item;
         break;
       }
@@ -271,25 +271,25 @@ public class TestRestServices {
     WorldData data = getWorldData();
     SpawnLocation location = null;
     for (String locationId:data.getLocations().keySet()) {
-      if (data.getLocations().get(locationId).getObject_type_id().equals(GameConstants.MINION)) {
+      if (data.getLocations().get(locationId).getObjectTypeId().equals(GameConstants.MINION)) {
         location = data.getLocations().get(locationId);
         break;
       }
     }
-    BattleData battleData = getBattleData(location.getId());
+    BattleData battleData = getBattleData(location.getLocationId());
     System.out.println(battleData);
     Assert.isTrue(battleData.getOpponentTypeId().equals(GameConstants.MINION),
         "The opponent should be minion.");
 
     Boolean winner = true; // Player
-    BattleSummaryData BattleSummaryData = getBattleSummaryData(location.getId(), winner);
+    BattleSummaryData BattleSummaryData = getBattleSummaryData(location.getLocationId(), winner);
     System.out.println(BattleSummaryData);
     Assert.isTrue(BattleSummaryData.getWinner() == winner,
         "The opponent should be minion.");
 
     Item key = null;
     for (Item item: BattleSummaryData.getRewards().getItems()) {
-      if (item.getId().equals(GameConstants.GOLD_KEY)) {
+      if (item.getItemId().equals(GameConstants.GOLD_KEY)) {
         key = item;
         break;
       }
@@ -322,19 +322,19 @@ public class TestRestServices {
     WorldData data = getWorldData();
     SpawnLocation chest = null;
     for (String locationId:data.getLocations().keySet()) {
-      if (data.getLocations().get(locationId).getObject_type_id().equals(GameConstants.CHEST)) {
+      if (data.getLocations().get(locationId).getObjectTypeId().equals(GameConstants.CHEST)) {
         chest = data.getLocations().get(locationId);
         break;
       }
     }
 
     if (chest != null) {
-      System.out.println("Trying to activate Chest at locationId: " + chest.getId());
-      RewardsData rewards = getChestRewards(chest.getId());
+      System.out.println("Trying to activate Chest at locationId: " + chest.getLocationId());
+      RewardsData rewards = getChestRewards(chest.getLocationId());
       Boolean haveKey = false;
       // Search for a diamond key
       for (Item i:rewards.getItems()) {
-        if (i.getId().equals(GameConstants.DIAMOND_KEY)) {
+        if (i.getItemId().equals(GameConstants.DIAMOND_KEY)) {
           haveKey = true;
           break;
         }
@@ -342,8 +342,8 @@ public class TestRestServices {
       Assert.isTrue(haveKey, "Diamond Key not found in chest rewards!");
 
       // Try to open the chest a 2nd time
-      System.out.println("Trying to activate Chest at locationId: " + chest.getId() + " a 2nd time");
-      getRespawingChest(chest.getId());
+      System.out.println("Trying to activate Chest at locationId: " + chest.getLocationId() + " a 2nd time");
+      getRespawingChest(chest.getLocationId());
 
     } else {
       System.out.println("No chest in all spawned locations? Unlucky we are, aren't we?");
@@ -380,18 +380,18 @@ public class TestRestServices {
     // Search for a chest in our spawn locations
     SpawnLocation chest = null;
     for (String locationId:data.getLocations().keySet()) {
-      if (data.getLocations().get(locationId).getObject_type_id().equals(GameConstants.CHEST)) {
+      if (data.getLocations().get(locationId).getObjectTypeId().equals(GameConstants.CHEST)) {
         chest = data.getLocations().get(locationId);
         break;
       }
     }
     if (chest != null) {
-      System.out.println("Trying to activate Chest at locationId: " + chest.getId());
-      RewardsData rewards = getChestRewards(chest.getId());
+      System.out.println("Trying to activate Chest at locationId: " + chest.getLocationId());
+      RewardsData rewards = getChestRewards(chest.getLocationId());
       Boolean haveKey = false;
       // Search for a diamond key
       for (Item i:rewards.getItems()) {
-        if (i.getId().equals(GameConstants.DIAMOND_KEY)) {
+        if (i.getItemId().equals(GameConstants.DIAMOND_KEY)) {
           haveKey = true;
           break;
         }
@@ -402,7 +402,7 @@ public class TestRestServices {
       playerData = getPlayerData("Johnny");
       haveKey = false;
       for (Item i:playerData.getInventory()) {
-        if (i.getId().equals(GameConstants.DIAMOND_KEY)) {
+        if (i.getItemId().equals(GameConstants.DIAMOND_KEY)) {
           haveKey = true;
           break;
         }

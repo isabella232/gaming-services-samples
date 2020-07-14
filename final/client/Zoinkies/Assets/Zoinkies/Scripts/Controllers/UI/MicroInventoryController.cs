@@ -102,8 +102,8 @@ namespace Google.Maps.Demos.Zoinkies
                     itemView.Init(i);
                     ItemsCollection.Add(itemView);
 
-                    itemView.gameObject.SetActive(i.id == selectedItemId);
-                    if (i.id == selectedItemId)
+                    itemView.gameObject.SetActive(i.itemId == selectedItemId);
+                    if (i.itemId == selectedItemId)
                     {
                         _currentSelection = itemView;
                     }

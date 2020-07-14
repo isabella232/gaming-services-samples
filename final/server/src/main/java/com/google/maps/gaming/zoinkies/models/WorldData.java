@@ -15,7 +15,6 @@
  */
 package com.google.maps.gaming.zoinkies.models;
 
-import com.google.common.geometry.S2CellId;
 import java.time.Instant;
 import java.util.HashMap;
 
@@ -30,14 +29,14 @@ public class WorldData {
    * When the TTL has reached zero, we remove the entry from this cache so that it is queried again
    * next time.
    */
-  private HashMap<String, String> S2CellsTTL;
+  private HashMap<String, String> s2CellsTTL;
 
   /**
    * Getter for S2 Cells Time to Live
    * @return
    */
   public HashMap<String, String> getS2CellsTTL() {
-    return S2CellsTTL;
+    return s2CellsTTL;
   }
 
   /**
@@ -45,7 +44,7 @@ public class WorldData {
    * @param s2CellsTTL
    */
   public void setS2CellsTTL(HashMap<String, String> s2CellsTTL) {
-    S2CellsTTL = s2CellsTTL;
+    this.s2CellsTTL = s2CellsTTL;
   }
 
   /**
@@ -53,14 +52,14 @@ public class WorldData {
    * playable location. Note that we aren't using PlaceId. Generated locations do not have PlaceIds.
    * They do have plusCodes instead.
    */
-  private HashMap<String, SpawnLocation> Locations;
+  private HashMap<String, SpawnLocation> locations;
 
   /**
    * Getter for locations map.
    * @return
    */
   public HashMap<String, SpawnLocation> getLocations() {
-    return Locations;
+    return locations;
   }
 
   /**
@@ -68,22 +67,22 @@ public class WorldData {
    * @param locations
    */
   public void setLocations(HashMap<String, SpawnLocation> locations) {
-    this.Locations = locations;
+    this.locations = locations;
   }
 
   /**
    * A snapshot at the current server time. For future use. The current implementation is not
    * sync-ing server and client times. But it would be a requirement in a production environment.
    */
-  private String CurrentServerTime;
+  private String currentServerTime;
 
   /**
    * Getter for current server time.
    * @return
    */
   public String getCurrentServerTime() {
-    CurrentServerTime = Instant.now().toString();
-    return CurrentServerTime;
+    currentServerTime = Instant.now().toString();
+    return currentServerTime;
   }
 
   /**
@@ -91,15 +90,15 @@ public class WorldData {
    * @param currentServerTime
    */
   public void setCurrentServerTime(String currentServerTime) {
-    CurrentServerTime = currentServerTime;
+    this.currentServerTime = currentServerTime;
   }
 
   /**
    * Default constructor - instantiates empty maps.
    */
   public WorldData() {
-    S2CellsTTL = new HashMap<>();
-    Locations = new HashMap<>();
-    CurrentServerTime = Instant.now().toString();
+    s2CellsTTL = new HashMap<>();
+    locations = new HashMap<>();
+    currentServerTime = Instant.now().toString();
   }
 }

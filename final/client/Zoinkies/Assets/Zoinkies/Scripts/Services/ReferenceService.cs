@@ -73,7 +73,7 @@ namespace Google.Maps.Demos.Zoinkies
                 throw new System.Exception("Reference data not initialized!");
             }
 
-            return data.references.Find(s => s.id == id);
+            return data.references.Find(s => s.itemId == id);
         }
 
         /// <summary>

@@ -24,6 +24,11 @@ namespace Google.Maps.Demos.Zoinkies
     public class RewardsData
     {
         /// <summary>
+        ///     Unique location identifier
+        /// </summary>
+        public string locationId { get; set; }
+
+        /// <summary>
         ///     List of items
         /// </summary>
         public List<Item> items { get; set; }

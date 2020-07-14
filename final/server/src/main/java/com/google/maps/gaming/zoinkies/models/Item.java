@@ -23,34 +23,34 @@ public class Item {
   /**
    * The id of the object as defined in the reference data file.
    */
-  private String id;
+  private String itemId;
 
   /**
    * Getter for id
    * @return
    */
-  public String getId() {
-    return id;
+  public String getItemId() {
+    return itemId;
   }
 
   /**
    * Setter for id
-   * @param id
+   * @param itemId
    */
-  public void setId(String id) {
-    this.id = id;
+  public void setItemId(String itemId) {
+    this.itemId = itemId;
   }
   /**
    * Quantity owned.
    */
-  private int Quantity;
+  private int quantity;
 
   /**
    * Getter for quantity
    * @return
    */
   public int getQuantity() {
-    return Quantity;
+    return quantity;
   }
 
   /**
@@ -58,7 +58,7 @@ public class Item {
    * @param Quantity
    */
   public void setQuantity(int Quantity) {
-    this.Quantity = Quantity;
+    this.quantity = Quantity;
   }
 
   public Item() {
@@ -66,16 +66,16 @@ public class Item {
 
   /**
    * A constructor that takes an id and a quantity as parameters
-   * @param id
+   * @param itemId
    * @param Quantity
    */
-  public Item(String id, int Quantity) {
-    this.id = id;
-    this.Quantity = Quantity;
+  public Item(String itemId, int Quantity) {
+    this.itemId = itemId;
+    this.quantity = Quantity;
   }
 
   @Override
   public String toString() {
-    return "{Type: " + id + " Quantity: " + Quantity + "}";
+    return "{Type: " + itemId + " Quantity: " + quantity + "}";
   }
 }

@@ -28,35 +28,35 @@ public class PlayerData {
   /**
    * Generated device Id provided by user
    */
-  private long Id;
+  private long deviceId;
 
   /**
    * Getter for the generated id
    * @return
    */
-  public long getId() {
-    return Id;
+  public long getDeviceId() {
+    return deviceId;
   }
 
   /**
    * Setter for the generated id
-   * @param id
+   * @param deviceId
    */
-  public void setId(long id) {
-    Id = id;
+  public void setDeviceId(long deviceId) {
+    this.deviceId = deviceId;
   }
 
   /**
    * Player's avatar name
    */
-  private String Name;
+  private String name;
 
   /**
    * Getter for avater name.
    * @return
    */
   public String getName() {
-    return this.Name;
+    return this.name;
   }
 
   /**
@@ -64,20 +64,20 @@ public class PlayerData {
    * @param Name
    */
   public void setName(String Name) {
-    this.Name = Name;
+    this.name = Name;
   }
 
   /**
    * Equipped weapon. Empty or null means nothing equipped.
    */
-  private String EquippedWeapon;
+  private String equippedWeapon;
 
   /**
    * Getter for equipped weapon
    * @return
    */
   public String getEquippedWeapon() {
-    return EquippedWeapon;
+    return equippedWeapon;
   }
 
   /**
@@ -85,20 +85,20 @@ public class PlayerData {
    * @param equippedWeapon
    */
   public void setEquippedWeapon(String equippedWeapon) {
-    EquippedWeapon = equippedWeapon;
+    this.equippedWeapon = equippedWeapon;
   }
 
   /**
    * Equipped shield. Empty or null means nothing equipped.
    */
-  private String EquippedShield;
+  private String equippedShield;
 
   /**
    * Getter for equipped shield
    * @return
    */
   public String getEquippedShield() {
-    return EquippedShield;
+    return equippedShield;
   }
 
   /**
@@ -106,20 +106,20 @@ public class PlayerData {
    * @param equippedShield
    */
   public void setEquippedShield(String equippedShield) {
-    EquippedShield = equippedShield;
+    this.equippedShield = equippedShield;
   }
 
   /**
    * Equipped helmet. Empty or null means nothing equipped.
    */
-  private String EquippedHelmet;
+  private String equippedHelmet;
 
   /**
    * Getter for equipped helmet
    * @return
    */
   public String getEquippedHelmet() {
-    return EquippedHelmet;
+    return equippedHelmet;
   }
 
   /**
@@ -127,20 +127,20 @@ public class PlayerData {
    * @param equippedHelmet
    */
   public void setEquippedHelmet(String equippedHelmet) {
-    EquippedHelmet = equippedHelmet;
+    this.equippedHelmet = equippedHelmet;
   }
 
   /**
    * Equipped bodyarmor. Empty or null means nothing equipped.
    */
-  private String EquippedBodyArmor;
+  private String equippedBodyArmor;
 
   /**
    * Getter for equipped body armor
    * @return
    */
   public String getEquippedBodyArmor() {
-    return EquippedBodyArmor;
+    return equippedBodyArmor;
   }
 
   /**
@@ -148,20 +148,20 @@ public class PlayerData {
    * @param equippedBodyArmor
    */
   public void setEquippedBodyArmor(String equippedBodyArmor) {
-    EquippedBodyArmor = equippedBodyArmor;
+    this.equippedBodyArmor = equippedBodyArmor;
   }
 
   /**
    * Avatar's current energy level
    */
-  private int EnergyLevel;
+  private int energyLevel;
 
   /**
    * Getter for energy level
    * @return
    */
   public int getEnergyLevel() {
-    return EnergyLevel;
+    return energyLevel;
   }
 
   /**
@@ -169,20 +169,20 @@ public class PlayerData {
    * @param energyLevel
    */
   public void setEnergyLevel(int energyLevel) {
-    EnergyLevel = energyLevel;
+    this.energyLevel = energyLevel;
   }
 
   /**
    * Avatar's max energy level
    */
-  private int MaxEnergyLevel;
+  private int maxEnergyLevel;
 
   /**
    * Getter for maximum energy level
    * @return
    */
   public int getMaxEnergyLevel() {
-    return MaxEnergyLevel;
+    return maxEnergyLevel;
   }
 
   /**
@@ -190,20 +190,20 @@ public class PlayerData {
    * @param maxEnergyLevel
    */
   public void setMaxEnergyLevel(int maxEnergyLevel) {
-    MaxEnergyLevel = maxEnergyLevel;
+    this.maxEnergyLevel = maxEnergyLevel;
   }
 
   /**
    * The Player's character type
    */
-  private String CharacterType;
+  private String characterType;
 
   /**
    * Getter for character type
    * @return
    */
   public String getCharacterType() {
-    return this.CharacterType;
+    return this.characterType;
   }
 
   /**
@@ -211,20 +211,20 @@ public class PlayerData {
    * @param CharacterType
    */
   public void setCharacterType(String CharacterType) {
-    this.CharacterType = CharacterType;
+    this.characterType = CharacterType;
   }
 
   /**
    * Items Inventory
    */
-  private List<Item> Inventory;
+  private List<Item> inventory;
 
   /**
    * Getter for inventory
    * @return
    */
   public List<Item> getInventory() {
-    return this.Inventory;
+    return this.inventory;
   }
 
   /**
@@ -232,7 +232,7 @@ public class PlayerData {
    * @param Inventory
    */
   public void setInventory(List<Item> Inventory) {
-    this.Inventory = Inventory;
+    this.inventory = Inventory;
   }
 
   public PlayerData() {
@@ -252,11 +252,11 @@ public class PlayerData {
       int EnergyLevel,
       int MaxEnergyLevel,
       List<Item> Inventory) {
-    this.Name = name;
-    this.CharacterType = CharacterType;
-    this.EnergyLevel = EnergyLevel;
-    this.MaxEnergyLevel = MaxEnergyLevel;
-    this.Inventory = Inventory;
+    this.name = name;
+    this.characterType = CharacterType;
+    this.energyLevel = EnergyLevel;
+    this.maxEnergyLevel = MaxEnergyLevel;
+    this.inventory = Inventory;
   }
 
   /**
@@ -266,17 +266,17 @@ public class PlayerData {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("User{" + "name='" + this.Name + '\'' + ", "
-        + "characterType:" + this.CharacterType + ", "
-        + "equippedBodyArmor:" + this.EquippedBodyArmor + ", "
-        + "equippedHelmet:" + this.EquippedHelmet + ", "
-        + "equippedShield:" + this.EquippedShield + ", "
-        + "equippedWeapon:" + this.EquippedWeapon + ", "
-        + "EnergyLevel:" + this.EnergyLevel + ", "
-        + "MaxEnergyLevel:" + this.MaxEnergyLevel + ", "
+    sb.append("User{" + "name='" + this.name + '\'' + ", "
+        + "characterType:" + this.characterType + ", "
+        + "equippedBodyArmor:" + this.equippedBodyArmor + ", "
+        + "equippedHelmet:" + this.equippedHelmet + ", "
+        + "equippedShield:" + this.equippedShield + ", "
+        + "equippedWeapon:" + this.equippedWeapon + ", "
+        + "EnergyLevel:" + this.energyLevel + ", "
+        + "MaxEnergyLevel:" + this.maxEnergyLevel + ", "
         + "Inventory=");
-    if (this.Inventory != null) {
-      for (Item i : this.Inventory) {
+    if (this.inventory != null) {
+      for (Item i : this.inventory) {
         sb.append(i.toString() + " \n");
       }
     } else {
@@ -297,8 +297,8 @@ public class PlayerData {
       return items;
     }
 
-    for (Item i:this.Inventory) {
-      if (i.getId().equals(type)) {
+    for (Item i:this.inventory) {
+      if (i.getItemId().equals(type)) {
         items.add(i);
       }
     }
@@ -345,11 +345,11 @@ public class PlayerData {
     }
     // Search for the item
     Item curr = null;
-    List<Item> items = getInventoryItems(item.getId());
+    List<Item> items = getInventoryItems(item.getItemId());
     if (items.size()>0) {
       items.get(0).setQuantity(items.get(0).getQuantity()+item.getQuantity());
     } else {
-      this.Inventory.add(item);
+      this.inventory.add(item);
     }
   }
 
@@ -365,10 +365,10 @@ public class PlayerData {
     }
     // Search for the item
     Item curr = null;
-    List<Item> items = getInventoryItems(item.getId());
+    List<Item> items = getInventoryItems(item.getItemId());
     if (items.size()>0) {
       if (items.get(0).getQuantity() < item.getQuantity()) {
-        throw new Exception("Not enough amount of " + items.get(0).getId() + " in inventory!");
+        throw new Exception("Not enough amount of " + items.get(0).getItemId() + " in inventory!");
       }
       items.get(0).setQuantity(items.get(0).getQuantity()-item.getQuantity());
     }

@@ -26,7 +26,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Unique identifier for this object
         /// </summary>
-        public string id { get; set; }
+        public string itemId { get; set; }
 
         /// <summary>
         ///     Friendly name for the UI
@@ -71,7 +71,7 @@ namespace Google.Maps.Demos.Zoinkies
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("Id: " + id);
+            sb.Append("Id: " + itemId);
             sb.Append("Name: " + name);
             sb.Append("Type: " + type);
             sb.Append("Description: " + description);

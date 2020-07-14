@@ -142,11 +142,11 @@ public class GameService {
     SpawnLocation location = worldData.getLocations().get(LocationId);
     // If the location is inactive, progress its timestamp and update its status.
     if (!location.getActive()) {
-      if (location.getRespawn_time() == null || location.getRespawn_time().isEmpty()) {
-        throw new Exception("Invalid Timestamp found at location " + location.getId());
+      if (location.getRespawnTime() == null || location.getRespawnTime().isEmpty()) {
+        throw new Exception("Invalid Timestamp found at location " + location.getLocationId());
       }
       // Check timestamp progress
-      Instant t = Instant.parse(location.getRespawn_time());
+      Instant t = Instant.parse(location.getRespawnTime());
       if (t.compareTo(Instant.now()) > 0) {
         // Still respawning
         throw new LocationStillRespawningException("Location " + LocationId +
@@ -154,7 +154,7 @@ public class GameService {
       } else {
         // Reactive the location
         location.setActive(true);
-        location.setRespawn_time(null);
+        location.setRespawnTime(null);
         worldService.setWorldData(Id,worldData);
       }
     }
@@ -186,7 +186,7 @@ public class GameService {
     if (refItem.getRespawnDuration() != null) {
       SpawnLocation location = WorldData.getLocations().get(LocationId);
       location.setActive(false);
-      location.setRespawn_time(Instant.now().plus(refItem.getRespawnDuration()).toString());
+      location.setRespawnTime(Instant.now().plus(refItem.getRespawnDuration()).toString());
       worldService.setWorldData(UserId, WorldData);
     }
   }
@@ -218,20 +218,20 @@ public class GameService {
     data.setWinner(Winner);
     data.setWonTheGame(false);
     SpawnLocation location = worldData.getLocations().get(LocationId);
-    if (location.getObject_type_id().equals(GameConstants.MINION)
-        || location.getObject_type_id().equals(GameConstants.TOWER)) {
+    if (location.getObjectTypeId().equals(GameConstants.MINION)
+        || location.getObjectTypeId().equals(GameConstants.TOWER)) {
 
       checkLocationStatus(Id,LocationId);
 
-      ReferenceItem refItem = getReferenceData().getReferenceItem(location.getObject_type_id());
+      ReferenceItem refItem = getReferenceData().getReferenceItem(location.getObjectTypeId());
       if (refItem == null) {
-        throw new Exception("Can't find reference Item for " + location.getObject_type_id() + "!");
+        throw new Exception("Can't find reference Item for " + location.getObjectTypeId() + "!");
       }
       PlayerData playerData = playerService.getPlayerData(Id);
       RewardsData rewardsData;
 
       if (Winner) {
-        if (location.getObject_type_id().equals(GameConstants.MINION)) {
+        if (location.getObjectTypeId().equals(GameConstants.MINION)) {
           rewardsData = getRandomMinionBattleRewardsData();
         }
         else {
@@ -258,11 +258,11 @@ public class GameService {
         }
       }
       data.setRewards(rewardsData);
-      data.getRewards().setId(LocationId);
+      data.getRewards().setLocationId(LocationId);
       playerService.updatePlayerData(Id,playerData);
       if (refItem.getRespawnDuration() != null) {
         location.setActive(false);
-        location.setRespawn_time(Instant.now().plus(refItem.getRespawnDuration()).toString());
+        location.setRespawnTime(Instant.now().plus(refItem.getRespawnDuration()).toString());
         worldService.setWorldData(Id, worldData);
       }
     }
@@ -292,9 +292,9 @@ public class GameService {
     //  - tower disappears afterwards
     //  - requires diamond keys
     BattleData data = new BattleData();;
-    data.setDeviceId(LocationId);
+    data.setLocationId(LocationId);
     SpawnLocation location = worldData.getLocations().get(LocationId);
-    if (location.getObject_type_id().equals(GameConstants.MINION)) {
+    if (location.getObjectTypeId().equals(GameConstants.MINION)) {
       ReferenceItem minionRefItem = getReferenceData().getReferenceItem(GameConstants.MINION);
       if (minionRefItem == null) {
         throw new Exception("Can't find reference data for Minions!");
@@ -307,7 +307,7 @@ public class GameService {
       data.setMaxAttackScoreBonus(GameConstants.MAX_ATTACK_BONUS_MINION);
       data.setMaxAttackScoreBonus(GameConstants.MAX_DEFENSE_BONUS_MINION);
 
-    } else if (location.getObject_type_id().equals(GameConstants.TOWER)) {
+    } else if (location.getObjectTypeId().equals(GameConstants.TOWER)) {
       ReferenceItem generalRefItem = getReferenceData().getReferenceItem(GameConstants.GENERAL);
       if (generalRefItem == null) {
         throw new Exception("Can't find reference data for General!");
@@ -331,10 +331,10 @@ public class GameService {
         throw new Exception("Reference item " + GameConstants.DIAMOND_KEY + " not found!");
       List<Item> items = playerData.getInventoryItems(GameConstants.DIAMOND_KEY);
       if (items.size() > 0 && items.get(0).getQuantity()
-          >= location.getNumber_of_keys_to_activate()) {
+          >= location.getNumberOfKeysToActivate()) {
         items.get(0).setQuantity(items.get(0).getQuantity()
-            - location.getNumber_of_keys_to_activate());
-        location.setNumber_of_keys_to_activate(0);
+            - location.getNumberOfKeysToActivate());
+        location.setNumberOfKeysToActivate(0);
         worldService.setWorldData(Id,worldData);
         playerService.updatePlayerData(Id, playerData);
       } else {
@@ -377,7 +377,7 @@ public class GameService {
     playerData.setEnergyLevel(playerData.getMaxEnergyLevel());
     // Refill all energy points
     EnergyData data = new EnergyData();
-    data.setId(LocationId);
+    data.setLocationId(LocationId);
     data.setAmountRestored(energy);
     // Update Player Data
     playerService.updatePlayerData(Id, playerData);
@@ -419,10 +419,10 @@ public class GameService {
     // Check if we have enough keys
     List<Item> items = playerData.getInventoryItems(GameConstants.GOLD_KEY);
     if (items.size() > 0
-        && items.get(0).getQuantity() >= location.getNumber_of_keys_to_activate()) {
+        && items.get(0).getQuantity() >= location.getNumberOfKeysToActivate()) {
       // Consume gold keys and Update player's inventory
       items.get(0).setQuantity(items.get(0).getQuantity()
-          - location.getNumber_of_keys_to_activate());
+          - location.getNumberOfKeysToActivate());
 
       // Start respawning
       startRespawiningLocation(GameConstants.CHEST, Id, LocationId, worldData);
@@ -434,7 +434,7 @@ public class GameService {
     // Get rewards
     // Generate rewards from loot table
     RewardsData data = getRandomChestRewardsData();
-    data.setId(Id);
+    data.setLocationId(Id);
 
     // Update player's inventory
     for (Item i:data.getItems()) {
@@ -481,31 +481,31 @@ public class GameService {
 
     SpawnLocation location = new SpawnLocation();
     location.setSnappedPoint(point);
-    location.setId(locationId);
+    location.setLocationId(locationId);
     int randomNum = ThreadLocalRandom.current().nextInt(0, 100 + 1);
     if (isBetween(randomNum, 0,4)) {
-      location.setObject_type_id(GameConstants.ENERGY_STATION);
+      location.setObjectTypeId(GameConstants.ENERGY_STATION);
       location.setActive(true);
-      location.setNumber_of_keys_to_activate(0);
-      location.setKey_type_id(null);
+      location.setNumberOfKeysToActivate(0);
+      location.setKeyTypeId(null);
       location.setRespawns(true);
     } else if (isBetween(randomNum, 5,24)) {
-      location.setObject_type_id(GameConstants.CHEST);
+      location.setObjectTypeId(GameConstants.CHEST);
       location.setActive(true);
-      location.setNumber_of_keys_to_activate(3);
-      location.setKey_type_id(GameConstants.GOLD_KEY);
+      location.setNumberOfKeysToActivate(3);
+      location.setKeyTypeId(GameConstants.GOLD_KEY);
       location.setRespawns(true);
     } else if (isBetween(randomNum, 25,39)) {
-      location.setObject_type_id( GameConstants.TOWER);
+      location.setObjectTypeId( GameConstants.TOWER);
       location.setActive(true);
-      location.setNumber_of_keys_to_activate(3);
-      location.setKey_type_id(GameConstants.DIAMOND_KEY);
+      location.setNumberOfKeysToActivate(3);
+      location.setKeyTypeId(GameConstants.DIAMOND_KEY);
       location.setRespawns(false);
     } else {
-      location.setObject_type_id(GameConstants.MINION);
+      location.setObjectTypeId(GameConstants.MINION);
       location.setActive(true);
-      location.setNumber_of_keys_to_activate(0);
-      location.setKey_type_id(null);
+      location.setNumberOfKeysToActivate(0);
+      location.setKeyTypeId(null);
       location.setRespawns(true);
     }
     return location;
@@ -616,7 +616,7 @@ public class GameService {
     for ( LootRefItem lri : selections) {
       currentProb += lri.getWeight();
       if (rand <= currentProb)
-        return new Item(lri.getId(),lri.getMinQuantity());
+        return new Item(lri.getItemId(),lri.getMinQuantity());
     }
     //will happen if the input's probabilities sums to less than 1
     //throw error here if that's appropriate

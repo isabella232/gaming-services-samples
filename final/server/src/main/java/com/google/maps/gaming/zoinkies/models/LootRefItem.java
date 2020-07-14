@@ -43,22 +43,22 @@ public class LootRefItem {
   /**
    * Type of item (the id is reconcile in the game reference data.
    */
-  private String id;
+  private String itemId;
 
   /**
    * Getter for id
    * @return
    */
-  public String getId() {
-    return id;
+  public String getItemId() {
+    return itemId;
   }
 
   /**
    * Setter for id
-   * @param id
+   * @param itemId
    */
-  public void setId(String id) {
-    this.id = id;
+  public void setItemId(String itemId) {
+    this.itemId = itemId;
   }
   /**
    * Minimum quantity awarded
@@ -102,12 +102,12 @@ public class LootRefItem {
   }
 
   public LootRefItem(
-      String id,
+      String itemId,
       double weight,
       int minQuantity,
       int maxQuantity
   ) {
-    this.id = id;
+    this.itemId = itemId;
     this.weight = weight;
     this.minQuantity = minQuantity;
     this.maxQuantity = maxQuantity;

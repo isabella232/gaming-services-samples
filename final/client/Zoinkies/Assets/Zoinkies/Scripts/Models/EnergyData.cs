@@ -24,7 +24,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         /// Unique identifier for the location.
         /// </summary>
-        public string id { get; set; }
+        public string locationId { get; set; }
         /// <summary>
         /// The amount of energy restored.
         /// </summary>
@@ -32,7 +32,7 @@ namespace Google.Maps.Demos.Zoinkies
 
         public override string ToString()
         {
-            return "{Id: " + id +
+            return "{Id: " + locationId +
                    " AmountRestored: " + amountRestored +
                    "}";
         }

@@ -84,16 +84,16 @@ namespace Google.Maps.Demos.Zoinkies
             {
                 UIManager.OnShowLoadingView(false);
 
-                DateTime t = DateTime.Parse(location.respawn_time);
+                DateTime t = DateTime.Parse(location.respawnTime);
                 TimeSpan timeLeft = t.Subtract(DateTime.Now);
                 UIManager.OnShowMessageDialog("Chest locked. Time left: ", timeLeft);
                 return;
             }
 
             // Check pre-requisites
-            if (location.key_type_id == GameConstants.GOLD_KEY
+            if (location.keyTypeId == GameConstants.GOLD_KEY
                 && PlayerService.GetInstance().GetNumberOfGoldKeys() >=
-                location.number_of_keys_to_activate)
+                location.numberOfKeysToActivate)
             {
                 try
                 {
@@ -111,7 +111,7 @@ namespace Google.Maps.Demos.Zoinkies
             {
                 UIManager.OnShowLoadingView(false);
                 UIManager.OnShowMessageDialog("You need "
-                                              + location.number_of_keys_to_activate
+                                              + location.numberOfKeysToActivate
                                               + " Gold Keys. \n You have "
                                               + PlayerService.GetInstance().GetNumberOfGoldKeys()
                                               + " of them!");

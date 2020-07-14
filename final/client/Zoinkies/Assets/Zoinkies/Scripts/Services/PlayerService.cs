@@ -322,7 +322,7 @@ namespace Google.Maps.Demos.Zoinkies
 
             foreach (Item item in items)
             {
-                Item i = _data.inventory.Find(s => s.id == item.id);
+                Item i = _data.inventory.Find(s => s.itemId == item.itemId);
                 if (i != null)
                 {
                     i.quantity += i.quantity;
@@ -349,7 +349,7 @@ namespace Google.Maps.Demos.Zoinkies
             }
             int qty = 0;
 
-            Item i = _data.inventory.Find(s => s.id == GameConstants.GOLD_KEY);
+            Item i = _data.inventory.Find(s => s.itemId == GameConstants.GOLD_KEY);
             if (i != null)
             {
                 qty = i.quantity;
@@ -371,7 +371,7 @@ namespace Google.Maps.Demos.Zoinkies
             }
             int qty = 0;
 
-            Item i = _data.inventory.Find(s => s.id == GameConstants.DIAMOND_KEY);
+            Item i = _data.inventory.Find(s => s.itemId == GameConstants.DIAMOND_KEY);
             if (i != null)
             {
                 qty = i.quantity;
@@ -393,7 +393,7 @@ namespace Google.Maps.Demos.Zoinkies
             }
             int qty = 0;
 
-            Item i = _data.inventory.Find(s => s.id == GameConstants.FREED_LEADERS);
+            Item i = _data.inventory.Find(s => s.itemId == GameConstants.FREED_LEADERS);
             if (i != null)
             {
                 qty = i.quantity;
@@ -415,9 +415,9 @@ namespace Google.Maps.Demos.Zoinkies
             }
 
             IEnumerable<ReferenceItem> refItems = _referenceService.GetWeapons();
-            List<string> ids = refItems.Select(item => item.id).ToList();
+            List<string> ids = refItems.Select(item => item.itemId).ToList();
 
-            return _data.inventory.Where(s => ids.Contains(s.id));
+            return _data.inventory.Where(s => ids.Contains(s.itemId));
         }
 
         /// <summary>
@@ -433,9 +433,9 @@ namespace Google.Maps.Demos.Zoinkies
             }
 
             IEnumerable<ReferenceItem> refItems = _referenceService.GetAvatars();
-            List<string> ids = refItems.Select(item => item.id).ToList();
+            List<string> ids = refItems.Select(item => item.itemId).ToList();
 
-            return _data.inventory.Where(s => ids.Contains(s.id));
+            return _data.inventory.Where(s => ids.Contains(s.itemId));
         }
 
         /// <summary>
@@ -451,9 +451,9 @@ namespace Google.Maps.Demos.Zoinkies
             }
 
             IEnumerable<ReferenceItem> refItems = _referenceService.GetBodyArmors();
-            List<string> ids = refItems.Select(item => item.id).ToList();
+            List<string> ids = refItems.Select(item => item.itemId).ToList();
 
-            return _data.inventory.Where(s => ids.Contains(s.id));
+            return _data.inventory.Where(s => ids.Contains(s.itemId));
         }
 
         /// <summary>
@@ -469,9 +469,9 @@ namespace Google.Maps.Demos.Zoinkies
             }
 
             IEnumerable<ReferenceItem> refItems = _referenceService.GetHelmets();
-            List<string> ids = refItems.Select(item => item.id).ToList();
+            List<string> ids = refItems.Select(item => item.itemId).ToList();
 
-            return _data.inventory.Where(s => ids.Contains(s.id));
+            return _data.inventory.Where(s => ids.Contains(s.itemId));
         }
 
         /// <summary>
@@ -487,9 +487,9 @@ namespace Google.Maps.Demos.Zoinkies
             }
 
             IEnumerable<ReferenceItem> refItems = _referenceService.GetShields();
-            List<string> ids = refItems.Select(item => item.id).ToList();
+            List<string> ids = refItems.Select(item => item.itemId).ToList();
 
-            return _data.inventory.Where(s => ids.Contains(s.id));
+            return _data.inventory.Where(s => ids.Contains(s.itemId));
         }
     }
 }
