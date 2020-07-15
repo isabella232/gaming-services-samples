@@ -15,6 +15,8 @@
  */
 package com.google.maps.gaming.zoinkies.models;
 
+import com.google.maps.gaming.zoinkies.ITEMS;
+
 /**
  * This class models a (generic) game item. It is mostly used for the player's inventory.
  */
@@ -23,13 +25,13 @@ public class Item {
   /**
    * The id of the object as defined in the reference data file.
    */
-  private String itemId;
+  private ITEMS itemId;
 
   /**
    * Getter for id
    * @return
    */
-  public String getItemId() {
+  public ITEMS getItemId() {
     return itemId;
   }
 
@@ -37,7 +39,7 @@ public class Item {
    * Setter for id
    * @param itemId
    */
-  public void setItemId(String itemId) {
+  public void setItemId(ITEMS itemId) {
     this.itemId = itemId;
   }
   /**
@@ -69,7 +71,7 @@ public class Item {
    * @param itemId
    * @param Quantity
    */
-  public Item(String itemId, int Quantity) {
+  public Item(ITEMS itemId, int Quantity) {
     this.itemId = itemId;
     this.quantity = Quantity;
   }

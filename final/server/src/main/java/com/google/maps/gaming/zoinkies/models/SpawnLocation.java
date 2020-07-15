@@ -15,6 +15,7 @@
  */
 package com.google.maps.gaming.zoinkies.models;
 
+import com.google.maps.gaming.zoinkies.ITEMS;
 import com.google.maps.gaming.zoinkies.models.playablelocations.LatLng;
 
 /**
@@ -28,7 +29,7 @@ public class SpawnLocation {
 
   /**
    * Getter for Id
-   * @return
+   * @return the location unique identifier
    */
   public String getLocationId() {
     return locationId;
@@ -36,7 +37,7 @@ public class SpawnLocation {
 
   /**
    * Setter for Id
-   * @param locationId
+   * @param locationId the location unique identifier
    */
   public void setLocationId(String locationId) {
     this.locationId = locationId;
@@ -44,11 +45,11 @@ public class SpawnLocation {
   /**
    * Is the location currently active?
    */
-  private Boolean active;
+  private boolean active;
 
   /**
    * Getter for active.
-   * @return
+   * @return a boolean that indicates if the location is active
    */
   public Boolean getActive() {
     return active;
@@ -56,7 +57,7 @@ public class SpawnLocation {
 
   /**
    * Setter for active.
-   * @param active
+   * @param active a boolean that indicates if the location is active
    */
   public void setActive(Boolean active) {
     this.active = active;
@@ -64,41 +65,41 @@ public class SpawnLocation {
   /**
    * Item representing this location: Tower, Minion, etc...
    */
-  private String objectTypeId;
+  private ITEMS objectTypeId;
 
   /**
    * Getter for object type id
-   * @return
+   * @return the object type mapped to this location
    */
-  public String getObjectTypeId() {
+  public ITEMS getObjectTypeId() {
     return objectTypeId;
   }
 
   /**
    * Setter for object type id
-   * @param objectTypeId
+   * @param objectTypeId the object type mapped to this location
    */
-  public void setObjectTypeId(String objectTypeId) {
+  public void setObjectTypeId(ITEMS objectTypeId) {
     this.objectTypeId = objectTypeId;
   }
   /**
    * Is this location respawning?
    */
-  private Boolean respawns;
+  private boolean respawns;
 
   /**
    * Getter for respawns
-   * @return
+   * @return a boolean to indicate if this location is respawning
    */
-  public Boolean getRespawns() {
+  public boolean getRespawns() {
     return respawns;
   }
 
   /**
    * Setter for respawns
-   * @param respawns
+   * @param respawns a boolean to indicate if this location is respawning
    */
-  public void setRespawns(Boolean respawns) {
+  public void setRespawns(boolean respawns) {
     this.respawns = respawns;
   }
   /**
@@ -108,7 +109,7 @@ public class SpawnLocation {
 
   /**
    * Getter for respawn time.
-   * @return
+   * @return the time it takes to respawn this location
    */
   public String getRespawnTime() {
     return respawnTime;
@@ -116,7 +117,7 @@ public class SpawnLocation {
 
   /**
    * Setter for respawn time.
-   * @param respawnTime
+   * @param respawnTime the time it takes to respawn this location
    */
   public void setRespawnTime(String respawnTime) {
     this.respawnTime = respawnTime;
@@ -129,7 +130,7 @@ public class SpawnLocation {
 
   /**
    * Getter for number of keys to activate
-   * @return
+   * @return the number of keys needed to activate the location
    */
   public int getNumberOfKeysToActivate() {
     return numberOfKeysToActivate;
@@ -137,7 +138,7 @@ public class SpawnLocation {
 
   /**
    * Setter for number of keys to activate
-   * @param numberOfKeysToActivate
+   * @param numberOfKeysToActivate the number of keys needed to activate the location
    */
   public void setNumberOfKeysToActivate(int numberOfKeysToActivate) {
     this.numberOfKeysToActivate = numberOfKeysToActivate;
@@ -146,21 +147,21 @@ public class SpawnLocation {
    * The type of "key" used to lock this location.
    * Keys can be any item in reference data.
    */
-  private String keyTypeId;
+  private ITEMS keyTypeId;
 
   /**
    * Getter for key type id
-   * @return
+   * @return the key type if
    */
-  public String getKeyTypeId() {
+  public ITEMS getKeyTypeId() {
     return keyTypeId;
   }
 
   /**
    * Setter for key type id
-   * @param keyTypeId
+   * @param keyTypeId the key type id
    */
-  public void setKeyTypeId(String keyTypeId) {
+  public void setKeyTypeId(ITEMS keyTypeId) {
     this.keyTypeId = keyTypeId;
   }
   /**
@@ -170,7 +171,7 @@ public class SpawnLocation {
 
   /**
    * Getter for snapped point
-   * @return
+   * @return a lat lng for this location
    */
   public LatLng getSnappedPoint() {
     return snappedPoint;
@@ -178,7 +179,7 @@ public class SpawnLocation {
 
   /**
    * Setter for snapped point
-   * @param snappedPoint
+   * @param snappedPoint the lat lng of the location
    */
   public void setSnappedPoint(
       LatLng snappedPoint) {
@@ -191,7 +192,7 @@ public class SpawnLocation {
 
   /**
    * Getter for S2 Cell id
-   * @return
+   * @return a string that contains the s2 cell id
    */
   public String getS2CellId() {
     return S2CellId;
@@ -199,7 +200,7 @@ public class SpawnLocation {
 
   /**
    * Setter for S2 Cell Id
-   * @param s2CellId
+   * @param s2CellId a string to map the s2 cell id
    */
   public void setS2CellId(String s2CellId) {
     S2CellId = s2CellId;
@@ -208,25 +209,25 @@ public class SpawnLocation {
   public SpawnLocation() {}
 
   /**
-   * Specific constructor.
+   * Specific constructor
    *
-   * @param locationId
-   * @param active
-   * @param objectTypeId
-   * @param respawns
-   * @param respawnTime
-   * @param numberOfKeysToActivate
-   * @param keyTypeId
-   * @param snappedPoint
-   * @param s2CellId
+   * @param locationId the location id
+   * @param active a boolean to indicate if the location is active
+   * @param objectTypeId the object type associated to the location
+   * @param respawns a boolean to indicate if the location is respawning
+   * @param respawnTime the time it takes to respawn
+   * @param numberOfKeysToActivate the number of keys to activate the location
+   * @param keyTypeId the type of keys needed to activate the location
+   * @param snappedPoint the latitude longitude coordinates of this location on the map
+   * @param s2CellId the s2 cell id that this location belongs to
    */
   public SpawnLocation(String locationId,
-      Boolean active,
-      String objectTypeId,
-      Boolean respawns,
+      boolean active,
+      ITEMS objectTypeId,
+      boolean respawns,
       String respawnTime,
       int numberOfKeysToActivate,
-      String keyTypeId,
+      ITEMS keyTypeId,
       LatLng snappedPoint,
       String s2CellId) {
     this.locationId = locationId;
@@ -242,20 +243,20 @@ public class SpawnLocation {
 
   /**
    * ToString override, mostly for testing purposes.
-   * @return
+   * @return a string description of this spawn location.
    */
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("Id: " + locationId);
-    sb.append("Active: " + active);
-    sb.append("Object type id: " + objectTypeId);
-    sb.append("Respawns: " + respawns);
-    sb.append("Key type id: " + keyTypeId);
-    sb.append("Respawn time: " + respawnTime);
-    sb.append("Number of keys to activate: " + numberOfKeysToActivate);
-    sb.append("Snapped Point: " + snappedPoint);
-    sb.append("S2CellId: " + S2CellId);
+    sb.append("Id: ").append(locationId);
+    sb.append("Active: ").append(active);
+    sb.append("Object type id: ").append(objectTypeId);
+    sb.append("Respawns: ").append(respawns);
+    sb.append("Key type id: ").append(keyTypeId);
+    sb.append("Respawn time: ").append(respawnTime);
+    sb.append("Number of keys to activate: ").append(numberOfKeysToActivate);
+    sb.append("Snapped Point: ").append(snappedPoint);
+    sb.append("S2CellId: ").append(S2CellId);
     return sb.toString();
   }
 }

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 package com.google.maps.gaming.zoinkies;
-
 public class GameConstants {
   public static final String DEFAULT_PLAYER_NAME = "Jordyen";
   public static final int DEFAULT_PLAYER_ENERGY_LEVEL = 80;
@@ -64,4 +63,5 @@ public class GameConstants {
   public static final String SHIELD_TYPE_1 = "SHIELD_TYPE_1";
   public static final String SHIELD_TYPE_2 = "SHIELD_TYPE_2";
   public static final String SHIELD_TYPE_3 = "SHIELD_TYPE_3";
+
 }

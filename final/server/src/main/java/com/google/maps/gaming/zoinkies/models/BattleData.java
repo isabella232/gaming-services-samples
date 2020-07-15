@@ -15,6 +15,7 @@
  */
 package com.google.maps.gaming.zoinkies.models;
 
+import com.google.maps.gaming.zoinkies.ITEMS;
 import java.time.Duration;
 
 /**
@@ -28,7 +29,7 @@ public class BattleData {
 
   /**
    * Getter for Id
-   * @return
+   * @return a location id
    */
   public String getLocationId() {
     return locationId;
@@ -36,7 +37,7 @@ public class BattleData {
 
   /**
    * Setter for Id
-   * @param locationId
+   * @param locationId a location id
    */
   public void setLocationId(String locationId) {
     this.locationId = locationId;
@@ -45,41 +46,41 @@ public class BattleData {
   /**
    * Identifier of the opponent (ex: MINION).
    */
-  private String opponentTypeId;
+  private ITEMS opponentTypeId;
 
   /**
    * Getter for OpponentTypeId
-   * @return
+   * @return the opponent type id
    */
-  public String getOpponentTypeId() {
+  public ITEMS getOpponentTypeId() {
     return opponentTypeId;
   }
 
   /**
    * Setter for OpponentTypeId
-   * @param opponentTypeId
+   * @param opponentTypeId the opponent type id
    */
-  public void setOpponentTypeId(String opponentTypeId) {
+  public void setOpponentTypeId(ITEMS opponentTypeId) {
     this.opponentTypeId = opponentTypeId;
   }
   /**
    * Indicates who starts the battle: True-Player False-NPC.
    */
-  private Boolean playerStarts;
+  private boolean playerStarts;
 
   /**
    * Getter for PlayerStarts
-   * @return
+   * @return a boolean that indicates who starts the battle.
    */
-  public Boolean getPlayerStarts() {
+  public boolean getPlayerStarts() {
     return playerStarts;
   }
 
   /**
    * Setter for PlayerStarts
-   * @param playerStarts
+   * @param playerStarts a boolean that indicates who starts the battle.
    */
-  public void setPlayerStarts(Boolean playerStarts) {
+  public void setPlayerStarts(boolean playerStarts) {
     this.playerStarts = playerStarts;
   }
   /**
@@ -89,7 +90,7 @@ public class BattleData {
 
   /**
    * Getter for EnergyLevel
-   * @return
+   * @return the energy level of the NPC
    */
   public int getEnergyLevel() {
     return energyLevel;
@@ -97,7 +98,7 @@ public class BattleData {
 
   /**
    * Setter for EnergyLevel
-   * @param energyLevel
+   * @param energyLevel the energy level of the NPC
    */
   public void setEnergyLevel(int energyLevel) {
     this.energyLevel = energyLevel;
@@ -109,7 +110,7 @@ public class BattleData {
 
   /**
    * Getter for MaxAttackScoreBonus
-   * @return
+   * @return the maximum attack score bonus of the NPC
    */
   public int getMaxAttackScoreBonus() {
     return maxAttackScoreBonus;
@@ -117,7 +118,7 @@ public class BattleData {
 
   /**
    * Setter for MaxAttackScoreBonus
-   * @param maxAttackScoreBonus
+   * @param maxAttackScoreBonus the maximum attack score bonus of the NPC
    */
   public void setMaxAttackScoreBonus(int maxAttackScoreBonus) {
     this.maxAttackScoreBonus = maxAttackScoreBonus;
@@ -129,7 +130,7 @@ public class BattleData {
 
   /**
    * Getter for MaxDefenseScoreBonus
-   * @return
+   * @return the maximum defense score bonus of the NPC
    */
   public int getMaxDefenseScoreBonus() {
     return maxDefenseScoreBonus;
@@ -137,7 +138,7 @@ public class BattleData {
 
   /**
    * Setter for MaxDefenseScoreBonus
-   * @param maxDefenseScoreBonus
+   * @param maxDefenseScoreBonus the maximum defense score bonus of the NPC
    */
   public void setMaxDefenseScoreBonus(int maxDefenseScoreBonus) {
     this.maxDefenseScoreBonus = maxDefenseScoreBonus;
@@ -149,7 +150,7 @@ public class BattleData {
 
   /**
    * Getter for Cooldown
-   * @return
+   * @return the cooldown of the NPC attack
    */
   public Duration getCooldown() {
     return cooldown;
@@ -157,26 +158,25 @@ public class BattleData {
 
   /**
    * Setter for Cooldown
-   * @param cooldown
+   * @param cooldown the cooldown of the NPC attack
    */
   public void setCooldown(Duration cooldown) {
     this.cooldown = cooldown;
   }
 
   /**
-   * Implementation of ToString for testing purposes
-   * @return
+   * Implementation of ToString for testing purposes.
+   * @return a string that describes this battle data instance.
    */
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("BattleData{" + "Id='" + this.locationId + '\'' + ", "
-        + ""+ "PlayerStarts:" + this.playerStarts + ", "
-        + ""+ "Cooldown:" + this.cooldown + ", "
-        + ""+ "EnergyLevel:" + this.energyLevel + ", "
-        + ""+ "MaxAttackScoreBonus:" + this.maxAttackScoreBonus + ", "
-        + ""+ "MaxDefenseScoreBonus:" + this.maxDefenseScoreBonus + ", "
-        + ""+ "OpponentTypeId:" + this.opponentTypeId);
+    sb.append("BattleData{" + "Id='").append(this.locationId).append('\'').append(", ")
+        .append("PlayerStarts:").append(this.playerStarts).append(", ").append("Cooldown:")
+        .append(this.cooldown).append(", ").append("EnergyLevel:").append(this.energyLevel)
+        .append(", ").append("MaxAttackScoreBonus:").append(this.maxAttackScoreBonus).append(", ")
+        .append("MaxDefenseScoreBonus:").append(this.maxDefenseScoreBonus).append(", ")
+        .append("OpponentTypeId:").append(this.opponentTypeId);
     return sb.toString();
   }
 }

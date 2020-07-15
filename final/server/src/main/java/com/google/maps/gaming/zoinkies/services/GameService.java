@@ -18,6 +18,7 @@ package com.google.maps.gaming.zoinkies.services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.maps.gaming.zoinkies.GameConstants;
+import com.google.maps.gaming.zoinkies.ITEMS;
 import com.google.maps.gaming.zoinkies.exceptions.LocationStillRespawningException;
 import com.google.maps.gaming.zoinkies.exceptions.NotEnoughResourcesToUnlockException;
 import com.google.maps.gaming.zoinkies.models.BattleData;
@@ -108,38 +109,38 @@ public class GameService {
   public PlayerData createNewUser() {
     // Default Inventory
     List<Item> inventory = new ArrayList<>();
-    inventory.add(new Item(GameConstants.BODY_ARMOR_TYPE_1, 1));
-    inventory.add(new Item(GameConstants.WEAPON_TYPE_1, 1));
+    inventory.add(new Item(ITEMS.BODY_ARMOR_TYPE_1, 1));
+    inventory.add(new Item(ITEMS.WEAPON_TYPE_1, 1));
     // Character types are added to the default inventory
-    inventory.add(new Item(GameConstants.CHARACTER_TYPE_1, 1));
-    inventory.add(new Item(GameConstants.CHARACTER_TYPE_2, 1));
-    inventory.add(new Item(GameConstants.CHARACTER_TYPE_3, 1));
-    inventory.add(new Item(GameConstants.CHARACTER_TYPE_4, 1));
+    inventory.add(new Item(ITEMS.CHARACTER_TYPE_1, 1));
+    inventory.add(new Item(ITEMS.CHARACTER_TYPE_2, 1));
+    inventory.add(new Item(ITEMS.CHARACTER_TYPE_3, 1));
+    inventory.add(new Item(ITEMS.CHARACTER_TYPE_4, 1));
     PlayerData d = new PlayerData(GameConstants.DEFAULT_PLAYER_NAME,
-        GameConstants.CHARACTER_TYPE_1,
+        ITEMS.CHARACTER_TYPE_1,
         GameConstants.DEFAULT_PLAYER_ENERGY_LEVEL,
         GameConstants.DEFAULT_PLAYER_ENERGY_LEVEL,
         inventory);
     // Equip body armor and weapon starters
-    d.setEquippedBodyArmor(GameConstants.BODY_ARMOR_TYPE_1);
-    d.setEquippedWeapon(GameConstants.WEAPON_TYPE_1);
+    d.setEquippedBodyArmor(ITEMS.BODY_ARMOR_TYPE_1);
+    d.setEquippedWeapon(ITEMS.WEAPON_TYPE_1);
     return d;
   }
 
   /**
    * Helper function that checks and eventually progresses the timestamp of a respawnable location.
    *
-   * @param Id  The player's unique identifier
-   * @param LocationId The location id
-   * @throws Exception
+   * @param deviceId  The player's unique identifier
+   * @param locationId The location id
+   * @throws Exception When conditions are not met
    */
-  private void checkLocationStatus(String Id, String LocationId) throws Exception{
+  private void checkLocationStatus(String deviceId, String locationId) throws Exception{
 
-    WorldData worldData = worldService.getWorldData(Id);
-    if (!worldData.getLocations().containsKey(LocationId)) {
-      throw new Exception("Location Id " + LocationId + " not found!");
+    WorldData worldData = worldService.getWorldData(deviceId);
+    if (!worldData.getLocations().containsKey(locationId)) {
+      throw new Exception("Location Id " + locationId + " not found!");
     }
-    SpawnLocation location = worldData.getLocations().get(LocationId);
+    SpawnLocation location = worldData.getLocations().get(locationId);
     // If the location is inactive, progress its timestamp and update its status.
     if (!location.getActive()) {
       if (location.getRespawnTime() == null || location.getRespawnTime().isEmpty()) {
@@ -149,13 +150,13 @@ public class GameService {
       Instant t = Instant.parse(location.getRespawnTime());
       if (t.compareTo(Instant.now()) > 0) {
         // Still respawning
-        throw new LocationStillRespawningException("Location " + LocationId +
+        throw new LocationStillRespawningException("Location " + locationId +
             " is still respawning!");
       } else {
         // Reactive the location
         location.setActive(true);
         location.setRespawnTime(null);
-        worldService.setWorldData(Id,worldData);
+        worldService.setWorldData(deviceId,worldData);
       }
     }
   }
@@ -164,30 +165,30 @@ public class GameService {
    * Helper function that sets the duration timestamp on a spawnable location.
    * Respawnable items have a duration set in their config.
    * Updates the World Data.
-   * @param ItemId A valid item id
-   * @param UserId The player id
-   * @param LocationId The location id
-   * @param WorldData A reference to the world data
-   * @throws Exception
+   * @param itemId A valid item id
+   * @param deviceId The player id
+   * @param locationId The location id
+   * @param worldData A reference to the world data
+   * @throws Exception When conditions are not met
    */
-  private void startRespawiningLocation(String ItemId, String UserId, String LocationId,
-      WorldData WorldData) throws Exception {
-    if (ItemId == null || ItemId.isEmpty())
+  private void startRespawiningLocation(ITEMS itemId, String deviceId, String locationId,
+      WorldData worldData) throws Exception {
+    if (itemId == null)
       throw new Exception("Invalid item Id!");
-    if (UserId == null || UserId.isEmpty())
+    if (deviceId == null || deviceId.isEmpty())
       throw new Exception("Invalid User Id!");
-    if (LocationId == null || LocationId.isEmpty())
+    if (locationId == null || locationId.isEmpty())
       throw new Exception("Invalid Location Id!");
-    if (WorldData == null)
+    if (worldData == null)
       throw new Exception("Invalid World Data reference!");
-    ReferenceItem refItem = this.getReferenceData().getReferenceItem(ItemId);
+    ReferenceItem refItem = this.getReferenceData().getReferenceItem(itemId);
     if (refItem == null)
-      throw new Exception("Reference item " + ItemId + " not found!");
+      throw new Exception("Reference item " + itemId + " not found!");
     if (refItem.getRespawnDuration() != null) {
-      SpawnLocation location = WorldData.getLocations().get(LocationId);
+      SpawnLocation location = worldData.getLocations().get(locationId);
       location.setActive(false);
       location.setRespawnTime(Instant.now().plus(refItem.getRespawnDuration()).toString());
-      worldService.setWorldData(UserId, WorldData);
+      worldService.setWorldData(deviceId, worldData);
     }
   }
 
@@ -202,43 +203,43 @@ public class GameService {
    * If Zoinkies win, Player loses one key if they have any.
    * Updates the inventory and locks the location as the battle has ended.
    *
-   * @param Id The unique player id
-   * @param LocationId The unique location id
-   * @param Winner Who the winner of the battle is (we trust the client in this demo)
+   * @param deviceId The unique player id
+   * @param locationId The unique location id
+   * @param winner Who the winner of the battle is (we trust the client in this demo)
    * @return A battle summary data with battle rewards or losses.
-   * @throws Exception
+   * @throws Exception When conditions are not met
    */
-  public BattleSummaryData getBattleSummaryData(String Id, String LocationId,
-      Boolean Winner) throws Exception {
-    WorldData worldData = worldService.getWorldData(Id);
-    if (!worldData.getLocations().containsKey(LocationId)) {
-      throw new Exception("Location Id " + LocationId + " not found!");
+  public BattleSummaryData getBattleSummaryData(String deviceId, String locationId,
+      boolean winner) throws Exception {
+    WorldData worldData = worldService.getWorldData(deviceId);
+    if (!worldData.getLocations().containsKey(locationId)) {
+      throw new Exception("Location Id " + locationId + " not found!");
     }
     BattleSummaryData data = new BattleSummaryData();
-    data.setWinner(Winner);
+    data.setWinner(winner);
     data.setWonTheGame(false);
-    SpawnLocation location = worldData.getLocations().get(LocationId);
-    if (location.getObjectTypeId().equals(GameConstants.MINION)
-        || location.getObjectTypeId().equals(GameConstants.TOWER)) {
+    SpawnLocation location = worldData.getLocations().get(locationId);
+    if (location.getObjectTypeId().equals(ITEMS.MINION)
+        || location.getObjectTypeId().equals(ITEMS.TOWER)) {
 
-      checkLocationStatus(Id,LocationId);
+      checkLocationStatus(deviceId,locationId);
 
       ReferenceItem refItem = getReferenceData().getReferenceItem(location.getObjectTypeId());
       if (refItem == null) {
         throw new Exception("Can't find reference Item for " + location.getObjectTypeId() + "!");
       }
-      PlayerData playerData = playerService.getPlayerData(Id);
+      PlayerData playerData = playerService.getPlayerData(deviceId);
       RewardsData rewardsData;
 
-      if (Winner) {
-        if (location.getObjectTypeId().equals(GameConstants.MINION)) {
+      if (winner) {
+        if (location.getObjectTypeId().equals(ITEMS.MINION)) {
           rewardsData = getRandomMinionBattleRewardsData();
         }
         else {
           rewardsData = getRandomGeneralBattleRewardsData();
         }
         playerData.addAllInventoryItems(rewardsData.getItems());
-        List<Item> freedLeaders = playerData.getInventoryItems(GameConstants.FREED_LEADERS);
+        List<Item> freedLeaders = playerData.getInventoryItems(ITEMS.FREED_LEADERS);
         if (freedLeaders.size() > 0 && freedLeaders.get(0).getQuantity()
             >= GameConstants.FREED_LEADERS_TO_WIN) {
           data.setWonTheGame(true); // Hurray!
@@ -246,7 +247,7 @@ public class GameService {
       } else {
         // The player looses a gold key in this case, only if they have one in the inventory.
         rewardsData = new RewardsData();
-        List<Item> keys = playerData.getInventoryItems(GameConstants.GOLD_KEY);
+        List<Item> keys = playerData.getInventoryItems(ITEMS.GOLD_KEY);
         if (keys.size() > 0) {
           int newQty = keys.get(0).getQuantity()-1;
           if (newQty == 0) {
@@ -254,16 +255,16 @@ public class GameService {
           } else {
             keys.get(0).setQuantity(newQty);
           }
-          rewardsData.getItems().add(new Item(GameConstants.GOLD_KEY,-1));
+          rewardsData.getItems().add(new Item(ITEMS.GOLD_KEY,-1));
         }
       }
       data.setRewards(rewardsData);
-      data.getRewards().setLocationId(LocationId);
-      playerService.updatePlayerData(Id,playerData);
+      data.getRewards().setLocationId(locationId);
+      playerService.updatePlayerData(deviceId,playerData);
       if (refItem.getRespawnDuration() != null) {
         location.setActive(false);
         location.setRespawnTime(Instant.now().plus(refItem.getRespawnDuration()).toString());
-        worldService.setWorldData(Id, worldData);
+        worldService.setWorldData(deviceId, worldData);
       }
     }
     return data;
@@ -274,15 +275,15 @@ public class GameService {
    * More specifically, it checks that all pre-requisites are checked for either engaging minions
    * or attacking a tower.
    *
-   * @param Id The userId
-   * @param LocationId The LocationId
+   * @param deviceId The unique id for this player
+   * @param locationId The locationId
    * @return A Battle Data
-   * @throws Exception
+   * @throws Exception When conditions are not met
    */
-  public BattleData getBattleData(String Id, String LocationId) throws Exception {
-    WorldData worldData = worldService.getWorldData(Id);
-    if (!worldData.getLocations().containsKey(LocationId)) {
-      throw new Exception("Location Id " + LocationId + " not found!");
+  public BattleData getBattleData(String deviceId, String locationId) throws Exception {
+    WorldData worldData = worldService.getWorldData(deviceId);
+    if (!worldData.getLocations().containsKey(locationId)) {
+      throw new Exception("Location Id " + locationId + " not found!");
     }
     // Minion or General?
     // Minion - regenerate - grant gold keys
@@ -292,27 +293,27 @@ public class GameService {
     //  - tower disappears afterwards
     //  - requires diamond keys
     BattleData data = new BattleData();;
-    data.setLocationId(LocationId);
-    SpawnLocation location = worldData.getLocations().get(LocationId);
-    if (location.getObjectTypeId().equals(GameConstants.MINION)) {
-      ReferenceItem minionRefItem = getReferenceData().getReferenceItem(GameConstants.MINION);
+    data.setLocationId(locationId);
+    SpawnLocation location = worldData.getLocations().get(locationId);
+    if (location.getObjectTypeId().equals(ITEMS.MINION)) {
+      ReferenceItem minionRefItem = getReferenceData().getReferenceItem(ITEMS.MINION);
       if (minionRefItem == null) {
         throw new Exception("Can't find reference data for Minions!");
       }
-      checkLocationStatus(Id,LocationId);
-      data.setOpponentTypeId(GameConstants.MINION);
+      checkLocationStatus(deviceId,locationId);
+      data.setOpponentTypeId(ITEMS.MINION);
       data.setPlayerStarts(ThreadLocalRandom.current().nextBoolean());
-      data.setCooldown(getReferenceData().getReferenceItem(GameConstants.MINION).getCooldown());
+      data.setCooldown(getReferenceData().getReferenceItem(ITEMS.MINION).getCooldown());
       data.setEnergyLevel(GameConstants.DEFAULT_MINION_ENERGY_LEVEL);
       data.setMaxAttackScoreBonus(GameConstants.MAX_ATTACK_BONUS_MINION);
       data.setMaxAttackScoreBonus(GameConstants.MAX_DEFENSE_BONUS_MINION);
 
-    } else if (location.getObjectTypeId().equals(GameConstants.TOWER)) {
-      ReferenceItem generalRefItem = getReferenceData().getReferenceItem(GameConstants.GENERAL);
+    } else if (location.getObjectTypeId().equals(ITEMS.TOWER)) {
+      ReferenceItem generalRefItem = getReferenceData().getReferenceItem(ITEMS.GENERAL);
       if (generalRefItem == null) {
         throw new Exception("Can't find reference data for General!");
       }
-      ReferenceItem towerRefItem = getReferenceData().getReferenceItem(GameConstants.TOWER);
+      ReferenceItem towerRefItem = getReferenceData().getReferenceItem(ITEMS.TOWER);
       if (towerRefItem == null) {
         throw new Exception("Can't find reference data for Towers!");
       }
@@ -325,30 +326,30 @@ public class GameService {
       // Location is unlocked
       // Update location
       // Update Player Data
-      PlayerData playerData = playerService.getPlayerData(Id);
-       ReferenceItem ri = getReferenceData().getReferenceItem(GameConstants.DIAMOND_KEY);
+      PlayerData playerData = playerService.getPlayerData(deviceId);
+       ReferenceItem ri = getReferenceData().getReferenceItem(ITEMS.DIAMOND_KEY);
       if (ri == null)
-        throw new Exception("Reference item " + GameConstants.DIAMOND_KEY + " not found!");
-      List<Item> items = playerData.getInventoryItems(GameConstants.DIAMOND_KEY);
+        throw new Exception("Reference item " + ITEMS.DIAMOND_KEY + " not found!");
+      List<Item> items = playerData.getInventoryItems(ITEMS.DIAMOND_KEY);
       if (items.size() > 0 && items.get(0).getQuantity()
           >= location.getNumberOfKeysToActivate()) {
         items.get(0).setQuantity(items.get(0).getQuantity()
             - location.getNumberOfKeysToActivate());
         location.setNumberOfKeysToActivate(0);
-        worldService.setWorldData(Id,worldData);
-        playerService.updatePlayerData(Id, playerData);
+        worldService.setWorldData(deviceId,worldData);
+        playerService.updatePlayerData(deviceId, playerData);
       } else {
         throw new NotEnoughResourcesToUnlockException("Not enough Diamond keys to unlock tower!");
       }
-      data.setOpponentTypeId(GameConstants.GENERAL);
+      data.setOpponentTypeId(ITEMS.GENERAL);
       data.setPlayerStarts(ThreadLocalRandom.current().nextBoolean());
-      data.setCooldown(getReferenceData().getReferenceItem(GameConstants.GENERAL).getCooldown());
+      data.setCooldown(getReferenceData().getReferenceItem(ITEMS.GENERAL).getCooldown());
       data.setEnergyLevel(GameConstants.DEFAULT_GENERAL_ENERGY_LEVEL);
       data.setMaxAttackScoreBonus(GameConstants.MAX_ATTACK_BONUS_GENERAL);
       data.setMaxAttackScoreBonus(GameConstants.MAX_DEFENSE_BONUS_GENERAL);
 
     } else {
-      // Unexpected LocationId ?
+      // Unexpected locationId ?
       throw new Exception("Battles can only be started against Minions and Towers (Generals)");
     }
     return data;
@@ -357,32 +358,32 @@ public class GameService {
   /**
    * Returns the energy recovered from the energy station.
    *
-   * @param Id Unique player Id
-   * @param LocationId Unique location Id for the station
+   * @param deviceId Unique player Id
+   * @param locationId Unique location Id for the station
    * @return new Energy Data
-   * @throws Exception
+   * @throws Exception When conditions are not met
    */
-  public EnergyData getEnergyStationData(String Id, String LocationId) throws Exception {
-    WorldData worldData = worldService.getWorldData(Id);
-    if (!worldData.getLocations().containsKey(LocationId)) {
-      throw new Exception("Location Id " + LocationId + " not found!");
+  public EnergyData getEnergyStationData(String deviceId, String locationId) throws Exception {
+    WorldData worldData = worldService.getWorldData(deviceId);
+    if (!worldData.getLocations().containsKey(locationId)) {
+      throw new Exception("Location Id " + locationId + " not found!");
     }
     // Check pre-requisites:
     // - Chest must be in active mode and not respawning
     // Get World Data
-    checkLocationStatus(Id,LocationId);
+    checkLocationStatus(deviceId,locationId);
     // Get PlayerData
-    PlayerData playerData = playerService.getPlayerData(Id);
+    PlayerData playerData = playerService.getPlayerData(deviceId);
     int energy = playerData.getMaxEnergyLevel() - playerData.getEnergyLevel();
     playerData.setEnergyLevel(playerData.getMaxEnergyLevel());
     // Refill all energy points
     EnergyData data = new EnergyData();
-    data.setLocationId(LocationId);
+    data.setLocationId(locationId);
     data.setAmountRestored(energy);
     // Update Player Data
-    playerService.updatePlayerData(Id, playerData);
+    playerService.updatePlayerData(deviceId, playerData);
     // Change station status and start respawning
-    startRespawiningLocation(GameConstants.ENERGY_STATION, Id, LocationId, worldData);
+    startRespawiningLocation(ITEMS.ENERGY_STATION, deviceId, locationId, worldData);
     return data;
   }
 
@@ -391,33 +392,33 @@ public class GameService {
    * after checking that the pre-requisites are met and that the location is active.
    * Starts the respawning of the location afterwards.
    * Also updates the player's inventory in the process.
-   * @param Id
-   * @param LocationId
-   * @return
-   * @throws Exception
+   * @param deviceId The device id identifying the player.
+   * @param locationId The location id of the chest.
+   * @return The rewards associated to the chest.
+   * @throws Exception When conditions are not met.
    */
-  public RewardsData getChestRewards(String Id, String LocationId) throws Exception {
+  public RewardsData getChestRewards(String deviceId, String locationId) throws Exception {
     // Check pre-requisites:
     // - Chest must be in active mode and not respawning
     // Get World Data
-    WorldData worldData = worldService.getWorldData(Id);
-    if (!worldData.getLocations().containsKey(LocationId)) {
-      throw new Exception("Location Id " + LocationId + " not found!");
+    WorldData worldData = worldService.getWorldData(deviceId);
+    if (!worldData.getLocations().containsKey(locationId)) {
+      throw new Exception("Location Id " + locationId + " not found!");
     }
-    checkLocationStatus(Id,LocationId);
-    SpawnLocation location = worldData.getLocations().get(LocationId);
+    checkLocationStatus(deviceId,locationId);
+    SpawnLocation location = worldData.getLocations().get(locationId);
     // Get PlayerData
-    PlayerData playerData = playerService.getPlayerData(Id);
+    PlayerData playerData = playerService.getPlayerData(deviceId);
     // - Player must have enough gold keys
     ReferenceData referenceData = getReferenceData();
-    ReferenceItem ri = referenceData.getReferenceItem(GameConstants.GOLD_KEY);
+    ReferenceItem ri = referenceData.getReferenceItem(ITEMS.GOLD_KEY);
     if (ri == null)
-      throw new Exception("Reference item " + GameConstants.GOLD_KEY + " not found!");
-    ReferenceItem chestRefItem = referenceData.getReferenceItem(GameConstants.CHEST);
+      throw new Exception("Reference item " + ITEMS.GOLD_KEY + " not found!");
+    ReferenceItem chestRefItem = referenceData.getReferenceItem(ITEMS.CHEST);
     if (chestRefItem == null)
-      throw new Exception("Reference item " + GameConstants.CHEST + " not found!");
+      throw new Exception("Reference item " + ITEMS.CHEST + " not found!");
     // Check if we have enough keys
-    List<Item> items = playerData.getInventoryItems(GameConstants.GOLD_KEY);
+    List<Item> items = playerData.getInventoryItems(ITEMS.GOLD_KEY);
     if (items.size() > 0
         && items.get(0).getQuantity() >= location.getNumberOfKeysToActivate()) {
       // Consume gold keys and Update player's inventory
@@ -425,7 +426,7 @@ public class GameService {
           - location.getNumberOfKeysToActivate());
 
       // Start respawning
-      startRespawiningLocation(GameConstants.CHEST, Id, LocationId, worldData);
+      startRespawiningLocation(ITEMS.CHEST, deviceId, locationId, worldData);
      // Return response
     } else {
       throw new NotEnoughResourcesToUnlockException("Not enough Gold keys to unlock chest!");
@@ -434,7 +435,7 @@ public class GameService {
     // Get rewards
     // Generate rewards from loot table
     RewardsData data = getRandomChestRewardsData();
-    data.setLocationId(Id);
+    data.setLocationId(deviceId);
 
     // Update player's inventory
     for (Item i:data.getItems()) {
@@ -442,7 +443,7 @@ public class GameService {
     }
 
     // Update Player Data
-    playerService.updatePlayerData(Id, playerData);
+    playerService.updatePlayerData(deviceId, playerData);
 
     return data;
   }
@@ -456,59 +457,59 @@ public class GameService {
      * 15% -> Towers
      * 60% -> Minions
      *
-     * @return
+     * @return A spawn location
      */
-  public SpawnLocation createRandomSpawnLocation(Location loc) throws Exception {
+  public SpawnLocation createRandomSpawnLocation(Location location) throws Exception {
 
-    if (loc == null) {
+    if (location == null) {
       throw new Exception("Invalid location data found while creating random spawn location!");
     }
 
     String locationId = null;
-    if (loc.getName() != null && !loc.getName().isEmpty()) {
-      locationId = loc.getName().replace("/","_");
+    if (location.getName() != null && !location.getName().isEmpty()) {
+      locationId = location.getName().replace("/","_");
     }
     else {
       throw new Exception("Invalid location name found while creating random spawn location!");
     }
 
-    if (loc.getSnappedPoint() == null && loc.getCenterPoint() == null) {
+    if (location.getSnappedPoint() == null && location.getCenterPoint() == null) {
       throw new Exception(
           "Invalid Lat Lng coordinates found while creating random spawn location!");
     }
 
-    LatLng point = loc.getSnappedPoint()==null?loc.getCenterPoint():loc.getSnappedPoint();
+    LatLng point = location.getSnappedPoint()==null?location.getCenterPoint():location.getSnappedPoint();
 
-    SpawnLocation location = new SpawnLocation();
-    location.setSnappedPoint(point);
-    location.setLocationId(locationId);
+    SpawnLocation spawnLocation = new SpawnLocation();
+    spawnLocation.setSnappedPoint(point);
+    spawnLocation.setLocationId(locationId);
     int randomNum = ThreadLocalRandom.current().nextInt(0, 100 + 1);
     if (isBetween(randomNum, 0,4)) {
-      location.setObjectTypeId(GameConstants.ENERGY_STATION);
-      location.setActive(true);
-      location.setNumberOfKeysToActivate(0);
-      location.setKeyTypeId(null);
-      location.setRespawns(true);
+      spawnLocation.setObjectTypeId(ITEMS.ENERGY_STATION);
+      spawnLocation.setActive(true);
+      spawnLocation.setNumberOfKeysToActivate(0);
+      spawnLocation.setKeyTypeId(null);
+      spawnLocation.setRespawns(true);
     } else if (isBetween(randomNum, 5,24)) {
-      location.setObjectTypeId(GameConstants.CHEST);
-      location.setActive(true);
-      location.setNumberOfKeysToActivate(3);
-      location.setKeyTypeId(GameConstants.GOLD_KEY);
-      location.setRespawns(true);
+      spawnLocation.setObjectTypeId(ITEMS.CHEST);
+      spawnLocation.setActive(true);
+      spawnLocation.setNumberOfKeysToActivate(3);
+      spawnLocation.setKeyTypeId(ITEMS.GOLD_KEY);
+      spawnLocation.setRespawns(true);
     } else if (isBetween(randomNum, 25,39)) {
-      location.setObjectTypeId( GameConstants.TOWER);
-      location.setActive(true);
-      location.setNumberOfKeysToActivate(3);
-      location.setKeyTypeId(GameConstants.DIAMOND_KEY);
-      location.setRespawns(false);
+      spawnLocation.setObjectTypeId( ITEMS.TOWER);
+      spawnLocation.setActive(true);
+      spawnLocation.setNumberOfKeysToActivate(3);
+      spawnLocation.setKeyTypeId(ITEMS.DIAMOND_KEY);
+      spawnLocation.setRespawns(false);
     } else {
-      location.setObjectTypeId(GameConstants.MINION);
-      location.setActive(true);
-      location.setNumberOfKeysToActivate(0);
-      location.setKeyTypeId(null);
-      location.setRespawns(true);
+      spawnLocation.setObjectTypeId(ITEMS.MINION);
+      spawnLocation.setActive(true);
+      spawnLocation.setNumberOfKeysToActivate(0);
+      spawnLocation.setKeyTypeId(null);
+      spawnLocation.setRespawns(true);
     }
-    return location;
+    return spawnLocation;
   }
 
   /**
@@ -516,15 +517,15 @@ public class GameService {
    */
   private List<LootRefItem> GeneralBattleLootTable = new ArrayList<LootRefItem>() {
     {
-      add(new LootRefItem(GameConstants.GOLD_KEY, 0.4, 1, 1));
-      add(new LootRefItem(GameConstants.HELMET_TYPE_2,0.1,1,1));
-      add(new LootRefItem(GameConstants.HELMET_TYPE_3,0.05,1,1));
-      add(new LootRefItem(GameConstants.BODY_ARMOR_TYPE_2,0.1,1,1));
-      add(new LootRefItem(GameConstants.BODY_ARMOR_TYPE_3,0.05,1,1));
-      add(new LootRefItem(GameConstants.SHIELD_TYPE_2,0.1,1,1));
-      add(new LootRefItem(GameConstants.SHIELD_TYPE_3,0.05,1,1));
-      add(new LootRefItem(GameConstants.WEAPON_TYPE_2,0.1,1,1));
-      add(new LootRefItem(GameConstants.WEAPON_TYPE_3,0.05,1,1));
+      add(new LootRefItem(ITEMS.GOLD_KEY, 0.4, 1, 1));
+      add(new LootRefItem(ITEMS.HELMET_TYPE_2,0.1,1,1));
+      add(new LootRefItem(ITEMS.HELMET_TYPE_3,0.05,1,1));
+      add(new LootRefItem(ITEMS.BODY_ARMOR_TYPE_2,0.1,1,1));
+      add(new LootRefItem(ITEMS.BODY_ARMOR_TYPE_3,0.05,1,1));
+      add(new LootRefItem(ITEMS.SHIELD_TYPE_2,0.1,1,1));
+      add(new LootRefItem(ITEMS.SHIELD_TYPE_3,0.05,1,1));
+      add(new LootRefItem(ITEMS.WEAPON_TYPE_2,0.1,1,1));
+      add(new LootRefItem(ITEMS.WEAPON_TYPE_3,0.05,1,1));
     }
   };
 
@@ -533,14 +534,14 @@ public class GameService {
    */
   private List<LootRefItem> MinionBattleLootTable = new ArrayList<LootRefItem>() {
     {
-      add(new LootRefItem(GameConstants.HELMET_TYPE_1,0.2,1,1));
-      add(new LootRefItem(GameConstants.HELMET_TYPE_2,0.05,1,1));
-      add(new LootRefItem(GameConstants.BODY_ARMOR_TYPE_1,0.2,1,1));
-      add(new LootRefItem(GameConstants.BODY_ARMOR_TYPE_2,0.05,1,1));
-      add(new LootRefItem(GameConstants.SHIELD_TYPE_1,0.2,1,1));
-      add(new LootRefItem(GameConstants.SHIELD_TYPE_2,0.05,1,1));
-      add(new LootRefItem(GameConstants.WEAPON_TYPE_1,0.2,1,1));
-      add(new LootRefItem(GameConstants.WEAPON_TYPE_2,0.05,1,1));
+      add(new LootRefItem(ITEMS.HELMET_TYPE_1,0.2,1,1));
+      add(new LootRefItem(ITEMS.HELMET_TYPE_2,0.05,1,1));
+      add(new LootRefItem(ITEMS.BODY_ARMOR_TYPE_1,0.2,1,1));
+      add(new LootRefItem(ITEMS.BODY_ARMOR_TYPE_2,0.05,1,1));
+      add(new LootRefItem(ITEMS.SHIELD_TYPE_1,0.2,1,1));
+      add(new LootRefItem(ITEMS.SHIELD_TYPE_2,0.05,1,1));
+      add(new LootRefItem(ITEMS.WEAPON_TYPE_1,0.2,1,1));
+      add(new LootRefItem(ITEMS.WEAPON_TYPE_2,0.05,1,1));
     }
   };
 
@@ -549,28 +550,28 @@ public class GameService {
    */
   private List<LootRefItem> ChestLootTable = new ArrayList<LootRefItem>(){
     {
-      add(new LootRefItem(GameConstants.HELMET_TYPE_1,0.15,1,1));
-      add(new LootRefItem(GameConstants.HELMET_TYPE_2,0.07,1,1));
-      add(new LootRefItem(GameConstants.HELMET_TYPE_3,0.03,1,1));
-      add(new LootRefItem(GameConstants.BODY_ARMOR_TYPE_1,0.15,1,1));
-      add(new LootRefItem(GameConstants.BODY_ARMOR_TYPE_2,0.07,1,1));
-      add(new LootRefItem(GameConstants.BODY_ARMOR_TYPE_3,0.03,1,1));
-      add(new LootRefItem(GameConstants.SHIELD_TYPE_1,0.15,1,1));
-      add(new LootRefItem(GameConstants.SHIELD_TYPE_2,0.07,1,1));
-      add(new LootRefItem(GameConstants.SHIELD_TYPE_3,0.03,1,1));
-      add(new LootRefItem(GameConstants.WEAPON_TYPE_1,0.15,1,1));
-      add(new LootRefItem(GameConstants.WEAPON_TYPE_2,0.07,1,1));
-      add(new LootRefItem(GameConstants.WEAPON_TYPE_3,0.03,1,1));
+      add(new LootRefItem(ITEMS.HELMET_TYPE_1,0.15,1,1));
+      add(new LootRefItem(ITEMS.HELMET_TYPE_2,0.07,1,1));
+      add(new LootRefItem(ITEMS.HELMET_TYPE_3,0.03,1,1));
+      add(new LootRefItem(ITEMS.BODY_ARMOR_TYPE_1,0.15,1,1));
+      add(new LootRefItem(ITEMS.BODY_ARMOR_TYPE_2,0.07,1,1));
+      add(new LootRefItem(ITEMS.BODY_ARMOR_TYPE_3,0.03,1,1));
+      add(new LootRefItem(ITEMS.SHIELD_TYPE_1,0.15,1,1));
+      add(new LootRefItem(ITEMS.SHIELD_TYPE_2,0.07,1,1));
+      add(new LootRefItem(ITEMS.SHIELD_TYPE_3,0.03,1,1));
+      add(new LootRefItem(ITEMS.WEAPON_TYPE_1,0.15,1,1));
+      add(new LootRefItem(ITEMS.WEAPON_TYPE_2,0.07,1,1));
+      add(new LootRefItem(ITEMS.WEAPON_TYPE_3,0.03,1,1));
     }
   };
 
   /**
    * With chests you get a gold key and 2 random items on the list.
-   * @return
+   * @return The rewards for this minion battle.
    */
   public RewardsData getRandomMinionBattleRewardsData() throws Exception {
     RewardsData d = new RewardsData();
-    d.getItems().add(new Item(GameConstants.GOLD_KEY,1));
+    d.getItems().add(new Item(ITEMS.GOLD_KEY,1));
     for (int i=0; i<1; i++) {
       d.getItems().add(getRandomLootItem(MinionBattleLootTable));
     }
@@ -579,11 +580,11 @@ public class GameService {
 
   /**
    * With chests you get a gold key and 2 random items on the list.
-   * @return
+   * @return The rewards for this boss battle.
    */
   public RewardsData getRandomGeneralBattleRewardsData() throws Exception {
     RewardsData d = new RewardsData();
-    d.getItems().add(new Item(GameConstants.FREED_LEADERS,1));
+    d.getItems().add(new Item(ITEMS.FREED_LEADERS,1));
     for (int i=0; i<2; i++) {
       d.getItems().add(getRandomLootItem(GeneralBattleLootTable));
     }
@@ -592,11 +593,11 @@ public class GameService {
 
   /**
    * With chests you get a gold key and 2 random items on the list.
-   * @return
+   * @return The rewards for this chest
    */
   public RewardsData getRandomChestRewardsData() throws Exception {
     RewardsData d = new RewardsData();
-    d.getItems().add(new Item(GameConstants.DIAMOND_KEY,1));
+    d.getItems().add(new Item(ITEMS.DIAMOND_KEY,1));
     for (int i=0; i<2; i++) {
       d.getItems().add(getRandomLootItem(ChestLootTable));
     }
@@ -606,9 +607,9 @@ public class GameService {
   /**
    * Helper function that returns a random item from a given selection, based on the item weight.
    *
-   * @param selections
+   * @param selections A list of reference items
    * @return A new item
-   * @throws Exception
+   * @throws Exception When conditions are not met
    */
   private Item getRandomLootItem(List<LootRefItem> selections) throws Exception {
     double rand = ThreadLocalRandom.current().nextDouble(0,1);
@@ -625,10 +626,10 @@ public class GameService {
 
   /**
    * Util function to check if a number is within range.
-   * @param x
-   * @param lower
-   * @param upper
-   * @return
+   * @param x The value to evaluate
+   * @param lower The lower bound
+   * @param upper The upper bound
+   * @return A boolean that indicates if the provided value is within the interval.
    */
   public boolean isBetween(int x, int lower, int upper) {
 

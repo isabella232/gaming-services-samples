@@ -15,6 +15,8 @@
  */
 package com.google.maps.gaming.zoinkies.models;
 
+import com.google.maps.gaming.zoinkies.ITEMS;
+
 /**
  * This class holds reference data for loot items as generated in loot tables.
  */
@@ -43,13 +45,13 @@ public class LootRefItem {
   /**
    * Type of item (the id is reconcile in the game reference data.
    */
-  private String itemId;
+  private ITEMS itemId;
 
   /**
    * Getter for id
    * @return
    */
-  public String getItemId() {
+  public ITEMS getItemId() {
     return itemId;
   }
 
@@ -57,7 +59,7 @@ public class LootRefItem {
    * Setter for id
    * @param itemId
    */
-  public void setItemId(String itemId) {
+  public void setItemId(ITEMS itemId) {
     this.itemId = itemId;
   }
   /**
@@ -102,7 +104,7 @@ public class LootRefItem {
   }
 
   public LootRefItem(
-      String itemId,
+      ITEMS itemId,
       double weight,
       int minQuantity,
       int maxQuantity

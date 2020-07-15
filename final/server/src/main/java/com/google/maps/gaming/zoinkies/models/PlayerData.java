@@ -15,6 +15,7 @@
  */
 package com.google.maps.gaming.zoinkies.models;
 
+import com.google.maps.gaming.zoinkies.ITEMS;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -24,6 +25,8 @@ import java.util.List;
  * and inventory details for the player.
  */
 public class PlayerData {
+
+  public ITEMS test;
 
   /**
    * Generated device Id provided by user
@@ -70,13 +73,13 @@ public class PlayerData {
   /**
    * Equipped weapon. Empty or null means nothing equipped.
    */
-  private String equippedWeapon;
+  private ITEMS equippedWeapon;
 
   /**
    * Getter for equipped weapon
    * @return
    */
-  public String getEquippedWeapon() {
+  public ITEMS getEquippedWeapon() {
     return equippedWeapon;
   }
 
@@ -84,20 +87,20 @@ public class PlayerData {
    * Setter for equipped weapon
    * @param equippedWeapon
    */
-  public void setEquippedWeapon(String equippedWeapon) {
+  public void setEquippedWeapon(ITEMS equippedWeapon) {
     this.equippedWeapon = equippedWeapon;
   }
 
   /**
    * Equipped shield. Empty or null means nothing equipped.
    */
-  private String equippedShield;
+  private ITEMS equippedShield;
 
   /**
    * Getter for equipped shield
    * @return
    */
-  public String getEquippedShield() {
+  public ITEMS getEquippedShield() {
     return equippedShield;
   }
 
@@ -105,20 +108,20 @@ public class PlayerData {
    * Setter for equipped shield
    * @param equippedShield
    */
-  public void setEquippedShield(String equippedShield) {
+  public void setEquippedShield(ITEMS equippedShield) {
     this.equippedShield = equippedShield;
   }
 
   /**
    * Equipped helmet. Empty or null means nothing equipped.
    */
-  private String equippedHelmet;
+  private ITEMS equippedHelmet;
 
   /**
    * Getter for equipped helmet
    * @return
    */
-  public String getEquippedHelmet() {
+  public ITEMS getEquippedHelmet() {
     return equippedHelmet;
   }
 
@@ -126,20 +129,20 @@ public class PlayerData {
    * Setter for equipped helmet
    * @param equippedHelmet
    */
-  public void setEquippedHelmet(String equippedHelmet) {
+  public void setEquippedHelmet(ITEMS equippedHelmet) {
     this.equippedHelmet = equippedHelmet;
   }
 
   /**
    * Equipped bodyarmor. Empty or null means nothing equipped.
    */
-  private String equippedBodyArmor;
+  private ITEMS equippedBodyArmor;
 
   /**
    * Getter for equipped body armor
    * @return
    */
-  public String getEquippedBodyArmor() {
+  public ITEMS getEquippedBodyArmor() {
     return equippedBodyArmor;
   }
 
@@ -147,7 +150,7 @@ public class PlayerData {
    * Setter for equipped body armor
    * @param equippedBodyArmor
    */
-  public void setEquippedBodyArmor(String equippedBodyArmor) {
+  public void setEquippedBodyArmor(ITEMS equippedBodyArmor) {
     this.equippedBodyArmor = equippedBodyArmor;
   }
 
@@ -196,13 +199,13 @@ public class PlayerData {
   /**
    * The Player's character type
    */
-  private String characterType;
+  private ITEMS characterType;
 
   /**
    * Getter for character type
    * @return
    */
-  public String getCharacterType() {
+  public ITEMS getCharacterType() {
     return this.characterType;
   }
 
@@ -210,7 +213,7 @@ public class PlayerData {
    * Setter for character type
    * @param CharacterType
    */
-  public void setCharacterType(String CharacterType) {
+  public void setCharacterType(ITEMS CharacterType) {
     this.characterType = CharacterType;
   }
 
@@ -248,7 +251,7 @@ public class PlayerData {
    * @param Inventory
    */
   public PlayerData(String name,
-      String CharacterType,
+      ITEMS CharacterType,
       int EnergyLevel,
       int MaxEnergyLevel,
       List<Item> Inventory) {
@@ -291,9 +294,9 @@ public class PlayerData {
    * @param type The type of item
    * @return
    */
-  public List<Item> getInventoryItems(String type) {
+  public List<Item> getInventoryItems(ITEMS type) {
     List<Item> items = new ArrayList<>();
-    if (type == null || type.isEmpty()) {
+    if (type == null) {
       return items;
     }
 
@@ -312,8 +315,8 @@ public class PlayerData {
    * @return A boolean
    * @throws Exception
    */
-  public Boolean hasInventoryItem(String itemId) throws Exception {
-    if (itemId == null || itemId.isEmpty()) {
+  public Boolean hasInventoryItem(ITEMS itemId) throws Exception {
+    if (itemId == null) {
       throw new Exception("Invalid item id received!");
     }
     // Search for the item

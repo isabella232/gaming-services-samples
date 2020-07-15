@@ -15,6 +15,7 @@
  */
 package com.google.maps.gaming.zoinkies.models;
 
+import com.google.maps.gaming.zoinkies.ITEMS;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,8 +60,8 @@ public class ReferenceData {
    * @param id the unique identifier for this item
    * @return a ReferenceItem
    */
-  public ReferenceItem getReferenceItem(String id) {
-    if (id == null || id.isEmpty()) {
+  public ReferenceItem getReferenceItem(ITEMS id) {
+    if (id == null) {
       return null;
     }
     for(ReferenceItem ri:getReferences()) {

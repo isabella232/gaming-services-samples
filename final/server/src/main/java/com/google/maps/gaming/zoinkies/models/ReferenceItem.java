@@ -17,6 +17,7 @@ package com.google.maps.gaming.zoinkies.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.google.maps.gaming.zoinkies.ITEMS;
 import java.time.Duration;
 
 /**
@@ -27,21 +28,21 @@ public class ReferenceItem {
   /**
    * Unique identifier for this object
    */
-  private String itemId;
+  private ITEMS itemId;
 
   /**
    * Getter for Id
-   * @return
+   * @return the item unique id
    */
-  public String getItemId() {
+  public ITEMS getItemId() {
     return itemId;
   }
 
   /**
    * Setter for Id
-   * @param itemId
+   * @param itemId the item unique id
    */
-  public void setItemId(String itemId) {
+  public void setItemId(ITEMS itemId) {
     this.itemId = itemId;
   }
 
@@ -52,7 +53,7 @@ public class ReferenceItem {
 
   /**
    * Getter for name
-   * @return
+   * @return the item friendly name
    */
   public String getName() {
     return name;
@@ -60,7 +61,7 @@ public class ReferenceItem {
 
   /**
    * Setter for name
-   * @param name
+   * @param name the item friendly name
    */
   public void setName(String name) {
     this.name = name;
@@ -73,7 +74,7 @@ public class ReferenceItem {
 
   /**
    * Getter for type
-   * @return
+   * @return the item type
    */
   public String getType() {
     return type;
@@ -81,7 +82,7 @@ public class ReferenceItem {
 
   /**
    * Setter for type
-   * @param type
+   * @param type the item type
    */
   public void setType(String type) {
     this.type = type;
@@ -94,7 +95,7 @@ public class ReferenceItem {
 
   /**
    * Getter for description
-   * @return
+   * @return the description for this item
    */
   public String getDescription() {
     return description;
@@ -102,7 +103,7 @@ public class ReferenceItem {
 
   /**
    * Setter for description
-   * @param description
+   * @param description the description for this item
    */
   public void setDescription(String description) {
     this.description = description;
@@ -115,7 +116,7 @@ public class ReferenceItem {
 
   /**
    * Getter for attack score
-   * @return
+   * @return the attack score for this item
    */
   public int getAttackScore() {
     return attackScore;
@@ -123,7 +124,7 @@ public class ReferenceItem {
 
   /**
    * Setter for attack score
-   * @param attackScore
+   * @param attackScore the attack score for this item
    */
   public void setAttackScore(int attackScore) {
     this.attackScore = attackScore;
@@ -136,7 +137,7 @@ public class ReferenceItem {
 
   /**
    * Getter for defense score
-   * @return
+   * @return the defense score for this item
    */
   public int getDefenseScore() {
     return defenseScore;
@@ -144,7 +145,7 @@ public class ReferenceItem {
 
   /**
    * Setter for defense score
-   * @param defenseScore
+   * @param defenseScore the defense score for this item
    */
   public void setDefenseScore(int defenseScore) {
     this.defenseScore = defenseScore;
@@ -157,7 +158,7 @@ public class ReferenceItem {
 
   /**
    * Getter for cooldown.
-   * @return
+   * @return the cooldown for this item
    */
   @JsonFormat(shape = Shape.STRING)
   public Duration getCooldown() {
@@ -166,11 +167,12 @@ public class ReferenceItem {
 
   /**
    * Setter for cooldown
-   * @param cooldown
+   * @param cooldown the cooldown for this item
    */
   public void setCooldown(Duration cooldown) {
     this.cooldown = cooldown;
   }
+
   /**
    * Respawn duration. No value indicates the object does not respawn.
    */
@@ -178,7 +180,7 @@ public class ReferenceItem {
 
   /**
    * Getter for respawn duration
-   * @return
+   * @return the respawn duration
    */
   @JsonFormat(shape = Shape.STRING)
   public Duration getRespawnDuration() {
@@ -187,7 +189,7 @@ public class ReferenceItem {
 
   /**
    * Setter for respawn duration
-   * @param respawnDuration
+   * @param respawnDuration the respawn duration
    */
   public void setRespawnDuration(Duration respawnDuration) {
     this.respawnDuration = respawnDuration;
@@ -199,7 +201,7 @@ public class ReferenceItem {
 
   /**
    * Getter for prefab
-   * @return
+   * @return the prefab to instantiate on the client
    */
   public String getPrefab() {
     return prefab;
@@ -207,7 +209,7 @@ public class ReferenceItem {
 
   /**
    * Setter for prefab
-   * @param prefab
+   * @param prefab the prefab to instantiate on the client
    */
   public void setPrefab(String prefab) {
     this.prefab = prefab;
@@ -215,20 +217,20 @@ public class ReferenceItem {
 
   /**
    * ToString override, mostly for testing purposes.
-   * @return
+   * @return a string that describes this reference item instance.
    */
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("Id: " + itemId);
-    sb.append("Name: " + name);
-    sb.append("Type: " + type);
-    sb.append("Description: " + description);
-    sb.append("AttackScore: " + attackScore);
-    sb.append("DefenseScore: " + defenseScore);
-    sb.append("Cooldown: " + cooldown);
-    sb.append("RespawnDuration: " + respawnDuration);
-    sb.append("Prefab: " + prefab);
+    sb.append("Id: ").append(itemId);
+    sb.append("Name: ").append(name);
+    sb.append("Type: ").append(type);
+    sb.append("Description: ").append(description);
+    sb.append("AttackScore: ").append(attackScore);
+    sb.append("DefenseScore: ").append(defenseScore);
+    sb.append("Cooldown: ").append(cooldown);
+    sb.append("RespawnDuration: ").append(respawnDuration);
+    sb.append("Prefab: ").append(prefab);
     return sb.toString();
   }
 }
