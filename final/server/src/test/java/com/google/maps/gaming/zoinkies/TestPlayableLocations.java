@@ -96,14 +96,16 @@ public class TestPlayableLocations {
 
     // The amount of processed cells should be equal to the unique amount of cells derived
     // from the set of locations returned in the response
-    System.out.println("Amount of cells cached in the first response: " + playableLocationsCache.keySet().size());
+    System.out.println("Amount of cells cached in the first response: "
+        + playableLocationsCache.keySet().size());
     assertThat(playableLocationsCache.keySet().size()).isEqualTo(uniqueCells.size());
 
     response = playableLocationsService.requestPlayableLocations(lo,hi,
         GetPLDefaultCriteria(), playableLocationsCache);
 
     // We expect 0 locations returned on the 2nd call as they should all be cached already
-    System.out.println("Amount of locations returned in the second response: " + response.getLocationsPerGameObjectType()
+    System.out.println("Amount of locations returned in the second response: "
+        + response.getLocationsPerGameObjectType()
         .get("0").getLocations().length);
 
     assertThat(response).isNotNull();
