@@ -42,9 +42,9 @@ namespace Google.Maps.Demos.Zoinkies
             base.ActionState();
 
             // Testing - pick first energy station from world
-            List<SpawnLocation> s =
-                new List<SpawnLocation>(WorldService.GetInstance().GetEnergyStations());
-            LocationId = s.ElementAt(0).locationId;
+            //List<SpawnLocation> s =
+            //    new List<SpawnLocation>(WorldService.GetInstance().GetEnergyStations());
+            //LocationId = s.ElementAt(0).locationId;
 
             if (string.IsNullOrEmpty(LocationId))
             {
@@ -91,6 +91,7 @@ namespace Google.Maps.Demos.Zoinkies
                 return;
             }
 
+            // Preemptively start respawning
             WorldService.GetInstance().StartRespawn(LocationId);
 
             // Init the player's data

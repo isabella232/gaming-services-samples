@@ -126,7 +126,6 @@ public class PlayableLocationsService {
     // If the TTL is still valid, skip that cell as we've already handled the playable locations
     // within.
     for (S2CellId id:cellUnion.cellIds()){
-
       String cellIdString = Long.toUnsignedString(id.id());
       if (PlayableLocationsCache != null && PlayableLocationsCache.containsKey(cellIdString)) {
         Duration duration = Duration.parse(PlayableLocationsCache.get(cellIdString));

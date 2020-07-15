@@ -51,7 +51,7 @@ public class SpawnLocation {
    * Getter for active.
    * @return a boolean that indicates if the location is active
    */
-  public Boolean getActive() {
+  public boolean getActive() {
     return active;
   }
 
@@ -59,7 +59,7 @@ public class SpawnLocation {
    * Setter for active.
    * @param active a boolean that indicates if the location is active
    */
-  public void setActive(Boolean active) {
+  public void setActive(boolean active) {
     this.active = active;
   }
   /**

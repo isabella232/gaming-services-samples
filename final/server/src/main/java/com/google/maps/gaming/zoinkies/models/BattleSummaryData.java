@@ -23,13 +23,13 @@ public class BattleSummaryData {
   /**
    * Indicates who won. True-Player, False-NPC
    */
-  private Boolean winner;
+  private boolean winner;
 
   /**
    * Getter for winner
    * @return
    */
-  public Boolean getWinner() {
+  public boolean getWinner() {
     return winner;
   }
 
@@ -37,7 +37,7 @@ public class BattleSummaryData {
    * Setter for winner
    * @param winner
    */
-  public void setWinner(Boolean winner) {
+  public void setWinner(boolean winner) {
     this.winner = winner;
   }
 
@@ -64,13 +64,13 @@ public class BattleSummaryData {
   /**
    * Indicates if the player has won the game (aka met the winning conditions).
    */
-  private Boolean wonTheGame;
+  private boolean wonTheGame;
 
   /**
    * Getter for wonTheGame
    * @return
    */
-  public Boolean getWonTheGame() {
+  public boolean getWonTheGame() {
     return wonTheGame;
   }
 
@@ -78,7 +78,7 @@ public class BattleSummaryData {
    * Setter for wonTheGame
    * @param wonTheGame
    */
-  public void setWonTheGame(Boolean wonTheGame) {
+  public void setWonTheGame(boolean wonTheGame) {
     this.wonTheGame = wonTheGame;
   }
 }

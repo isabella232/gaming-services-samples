@@ -5654,7 +5654,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1156814626}
   - component: {fileID: 1156814627}
-  - component: {fileID: 1156814629}
+  - component: {fileID: 1156814628}
   m_Layer: 0
   m_Name: GameWorld
   m_TagString: Untagged
@@ -5784,7 +5784,7 @@ MonoBehaviour:
   SquashFar: 250
   MaximumSquash: 0.01
   HasGPSLocation: 0
---- !u!114 &1156814629
+--- !u!114 &1156814628
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5793,17 +5793,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1156814625}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2d3c60a68bb54c3ba1bef21b4492e9e, type: 3}
+  m_Script: {fileID: 11500000, guid: f9452ef8f1c4c4abd96a33e459611d33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   BaseMapLoader: {fileID: 1156814627}
   Ground: {fileID: 1341385048592131}
-  CameraMoveDistance: 100
-  CameraMoveAngle: 10
+  CameraMoveDistance: 500
+  CameraMoveAngle: 30
   UnloadedEvent:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: Google.Maps.Examples.DynamicMapsUpdater+MapRegionUnloadedOutsideCircleEvent,
+    m_TypeName: Google.Maps.Demos.Zoinkies.DynamicMapsUpdater+MapRegionUnloadedOutsideCircleEvent,
       Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!1 &1159113324
 GameObject:

@@ -18,7 +18,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Google.Maps.Coord;
-using Google.Maps.Examples;
 using Google.Maps.Examples.Shared;
 using Google.Maps.Feature.Style;
 using Unity.Collections;

@@ -25,9 +25,6 @@ import java.util.List;
  * and inventory details for the player.
  */
 public class PlayerData {
-
-  public ITEMS test;
-
   /**
    * Generated device Id provided by user
    */
@@ -35,7 +32,7 @@ public class PlayerData {
 
   /**
    * Getter for the generated id
-   * @return
+   * @return the device id
    */
   public long getDeviceId() {
     return deviceId;
@@ -43,7 +40,7 @@ public class PlayerData {
 
   /**
    * Setter for the generated id
-   * @param deviceId
+   * @param deviceId the device id
    */
   public void setDeviceId(long deviceId) {
     this.deviceId = deviceId;
@@ -55,8 +52,8 @@ public class PlayerData {
   private String name;
 
   /**
-   * Getter for avater name.
-   * @return
+   * Getter for avatar name.
+   * @return The avatar name
    */
   public String getName() {
     return this.name;
@@ -64,7 +61,7 @@ public class PlayerData {
 
   /**
    * Setter for avatar name.
-   * @param Name
+   * @param Name The avatar name
    */
   public void setName(String Name) {
     this.name = Name;
@@ -77,7 +74,7 @@ public class PlayerData {
 
   /**
    * Getter for equipped weapon
-   * @return
+   * @return The equipped weapon id
    */
   public ITEMS getEquippedWeapon() {
     return equippedWeapon;
@@ -85,7 +82,7 @@ public class PlayerData {
 
   /**
    * Setter for equipped weapon
-   * @param equippedWeapon
+   * @param equippedWeapon The equipped weapon id
    */
   public void setEquippedWeapon(ITEMS equippedWeapon) {
     this.equippedWeapon = equippedWeapon;
@@ -98,7 +95,7 @@ public class PlayerData {
 
   /**
    * Getter for equipped shield
-   * @return
+   * @return The equipped shield id
    */
   public ITEMS getEquippedShield() {
     return equippedShield;
@@ -106,7 +103,7 @@ public class PlayerData {
 
   /**
    * Setter for equipped shield
-   * @param equippedShield
+   * @param equippedShield The equipped shield id
    */
   public void setEquippedShield(ITEMS equippedShield) {
     this.equippedShield = equippedShield;
@@ -119,7 +116,7 @@ public class PlayerData {
 
   /**
    * Getter for equipped helmet
-   * @return
+   * @return The equipped helmet id
    */
   public ITEMS getEquippedHelmet() {
     return equippedHelmet;
@@ -127,7 +124,7 @@ public class PlayerData {
 
   /**
    * Setter for equipped helmet
-   * @param equippedHelmet
+   * @param equippedHelmet The equipped helmet id
    */
   public void setEquippedHelmet(ITEMS equippedHelmet) {
     this.equippedHelmet = equippedHelmet;
@@ -140,7 +137,7 @@ public class PlayerData {
 
   /**
    * Getter for equipped body armor
-   * @return
+   * @return The equipped body armor id
    */
   public ITEMS getEquippedBodyArmor() {
     return equippedBodyArmor;
@@ -148,7 +145,7 @@ public class PlayerData {
 
   /**
    * Setter for equipped body armor
-   * @param equippedBodyArmor
+   * @param equippedBodyArmor The equipped body armor id
    */
   public void setEquippedBodyArmor(ITEMS equippedBodyArmor) {
     this.equippedBodyArmor = equippedBodyArmor;
@@ -161,7 +158,7 @@ public class PlayerData {
 
   /**
    * Getter for energy level
-   * @return
+   * @return The energy level
    */
   public int getEnergyLevel() {
     return energyLevel;
@@ -169,7 +166,7 @@ public class PlayerData {
 
   /**
    * Setter for energy level
-   * @param energyLevel
+   * @param energyLevel The energy level
    */
   public void setEnergyLevel(int energyLevel) {
     this.energyLevel = energyLevel;
@@ -182,7 +179,7 @@ public class PlayerData {
 
   /**
    * Getter for maximum energy level
-   * @return
+   * @return The maximum energy level
    */
   public int getMaxEnergyLevel() {
     return maxEnergyLevel;
@@ -190,7 +187,7 @@ public class PlayerData {
 
   /**
    * Setter for maximum energy level
-   * @param maxEnergyLevel
+   * @param maxEnergyLevel The maximum energy level
    */
   public void setMaxEnergyLevel(int maxEnergyLevel) {
     this.maxEnergyLevel = maxEnergyLevel;
@@ -203,7 +200,7 @@ public class PlayerData {
 
   /**
    * Getter for character type
-   * @return
+   * @return The character type
    */
   public ITEMS getCharacterType() {
     return this.characterType;
@@ -211,7 +208,7 @@ public class PlayerData {
 
   /**
    * Setter for character type
-   * @param CharacterType
+   * @param CharacterType The character type
    */
   public void setCharacterType(ITEMS CharacterType) {
     this.characterType = CharacterType;
@@ -224,7 +221,7 @@ public class PlayerData {
 
   /**
    * Getter for inventory
-   * @return
+   * @return The player's inventory
    */
   public List<Item> getInventory() {
     return this.inventory;
@@ -232,7 +229,7 @@ public class PlayerData {
 
   /**
    * Setter for inventory
-   * @param Inventory
+   * @param Inventory The player's inventory
    */
   public void setInventory(List<Item> Inventory) {
     this.inventory = Inventory;
@@ -244,11 +241,11 @@ public class PlayerData {
   /**
    * Specialized constructor.
    *
-   * @param name
-   * @param CharacterType
-   * @param EnergyLevel
-   * @param MaxEnergyLevel
-   * @param Inventory
+   * @param name The character's name
+   * @param CharacterType The character's type
+   * @param EnergyLevel The character's energy level
+   * @param MaxEnergyLevel The character's maximum energy level
+   * @param Inventory The character's inventory
    */
   public PlayerData(String name,
       ITEMS CharacterType,
@@ -264,23 +261,22 @@ public class PlayerData {
 
   /**
    * ToString overload mostly for testing purposes
-   * @return
+   * @return a string that describes this player data instance.
    */
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("User{" + "name='" + this.name + '\'' + ", "
-        + "characterType:" + this.characterType + ", "
-        + "equippedBodyArmor:" + this.equippedBodyArmor + ", "
-        + "equippedHelmet:" + this.equippedHelmet + ", "
-        + "equippedShield:" + this.equippedShield + ", "
-        + "equippedWeapon:" + this.equippedWeapon + ", "
-        + "EnergyLevel:" + this.energyLevel + ", "
-        + "MaxEnergyLevel:" + this.maxEnergyLevel + ", "
-        + "Inventory=");
+    sb.append("User{" + "name='").append(this.name).append('\'').append(", ")
+        .append("characterType:").append(this.characterType).append(", ")
+        .append("equippedBodyArmor:").append(this.equippedBodyArmor).append(", ")
+        .append("equippedHelmet:").append(this.equippedHelmet).append(", ")
+        .append("equippedShield:").append(this.equippedShield).append(", ")
+        .append("equippedWeapon:").append(this.equippedWeapon).append(", ").append("EnergyLevel:")
+        .append(this.energyLevel).append(", ").append("MaxEnergyLevel:").append(this.maxEnergyLevel)
+        .append(", ").append("Inventory=");
     if (this.inventory != null) {
       for (Item i : this.inventory) {
-        sb.append(i.toString() + " \n");
+        sb.append(i.toString()).append(" \n");
       }
     } else {
       sb.append("Empty \n");
@@ -292,7 +288,7 @@ public class PlayerData {
   /**
    * Returns all items of a given type
    * @param type The type of item
-   * @return
+   * @return The inventory as a list of items
    */
   public List<Item> getInventoryItems(ITEMS type) {
     List<Item> items = new ArrayList<>();
@@ -311,9 +307,9 @@ public class PlayerData {
   /**
    * Checks if the item identified by the given id is in the player's inventory.
    *
-   * @param itemId
-   * @return A boolean
-   * @throws Exception
+   * @param itemId the item id
+   * @return A boolean that indicates if the item is within the inventory
+   * @throws Exception An exception is conditions aren't met
    */
   public Boolean hasInventoryItem(ITEMS itemId) throws Exception {
     if (itemId == null) {
@@ -327,10 +323,9 @@ public class PlayerData {
   /**
    * Adds the sub collection of items to the inventory.
    * @param items a collection of items.
-   * @throws Exception
+   * @throws Exception An exception is conditions aren't met
    */
   public void addAllInventoryItems(Collection<Item> items) throws Exception {
-
     for (Item item:items) {
       addInventoryItem(item);
     }
@@ -340,14 +335,13 @@ public class PlayerData {
    * Adds the given item to the inventory.
    * If items of this type already exist in the inventory, we update the quantity.
    * @param item The item to add to the inventory.
-   * @throws Exception
+   * @throws Exception An exception is conditions aren't met
    */
   public void addInventoryItem(Item item) throws Exception {
     if (item == null) {
       throw new Exception("Invalid item received!");
     }
     // Search for the item
-    Item curr = null;
     List<Item> items = getInventoryItems(item.getItemId());
     if (items.size()>0) {
       items.get(0).setQuantity(items.get(0).getQuantity()+item.getQuantity());
@@ -360,14 +354,13 @@ public class PlayerData {
    * Removes the given item from the inventory.
    *
    * @param item the item to remove from the inventory
-   * @throws Exception
+   * @throws Exception An exception is conditions aren't met
    */
   public void removeInventoryItem(Item item) throws Exception {
     if (item == null) {
       throw new Exception("Invalid item received!");
     }
     // Search for the item
-    Item curr = null;
     List<Item> items = getInventoryItems(item.getItemId());
     if (items.size()>0) {
       if (items.get(0).getQuantity() < item.getQuantity()) {

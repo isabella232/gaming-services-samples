@@ -1,5 +1,8 @@
 package com.google.maps.gaming.zoinkies;
 
+/**
+ * Provides unique keys for all items described in reference data.
+ */
 public enum ITEMS {
 
   SHIELD_TYPE_1 {

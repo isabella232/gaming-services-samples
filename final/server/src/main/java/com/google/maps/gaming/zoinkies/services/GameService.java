@@ -427,7 +427,7 @@ public class GameService {
 
       // Start respawning
       startRespawiningLocation(ITEMS.CHEST, deviceId, locationId, worldData);
-     // Return response
+
     } else {
       throw new NotEnoughResourcesToUnlockException("Not enough Gold keys to unlock chest!");
     }

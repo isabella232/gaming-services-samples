@@ -26,6 +26,7 @@ import java.util.concurrent.ExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -42,33 +43,31 @@ public class PlayerService {
    * If it doesn't exist, create one
    * Otherwise return the current user data in the response
    *
-   * @param Id The User Id
+   * @param deviceId Device generated Id identifying the player.
    * @return A Player Data record
    * @throws ExecutionException
    * @throws InterruptedException
    */
-  public PlayerData getPlayerData(String Id) throws ExecutionException, InterruptedException {
+  @Nullable
+  public PlayerData getPlayerData(String deviceId) throws ExecutionException, InterruptedException {
     ApiFuture<DocumentSnapshot> documentSnapshotApiFuture =
-        this.firestore.document("users/" + Id).get();
-    PlayerData data = null;
+        this.firestore.document("users/" + deviceId).get();
     DocumentSnapshot document = documentSnapshotApiFuture.get();
     if (document.exists()) {
-      data = document.toObject(PlayerData.class);
+      return document.toObject(PlayerData.class);
     }
-    return data;
+    return null;
   }
 
   /**
    * Deletes the player's stats and inventory.
-   * @param Id Device generated Id identifying the player.
+   * @param deviceId Device generated Id identifying the player.
    * @implNote This function does not remove the world collection associated to the player.
    */
-  public void removeUserData(String Id) {
+  public void removeUserData(String deviceId) {
     CollectionReference users = this.firestore.collection("users");
-    Iterable<DocumentReference> documentReferences = users.listDocuments();
-    documentReferences.forEach(documentReference -> {
-      String id = documentReference.getId();
-      if (id.equals(Id)) {
+    users.listDocuments().forEach(documentReference -> {
+      if (documentReference.getId().equals(deviceId)) {
         // Remove the player's data
         try {
           documentReference.delete().get();
@@ -90,8 +89,8 @@ public class PlayerService {
    */
   public PlayerData updatePlayerData(String Id, PlayerData newData)
       throws ExecutionException, InterruptedException {
-    ApiFuture<DocumentSnapshot> documentSnapshotApiFuture =
-        this.firestore.document("users/" + Id).get();
+    //ApiFuture<DocumentSnapshot> documentSnapshotApiFuture =
+    //    this.firestore.document("users/" + Id).get();
     this.firestore.document("users/"+Id).set(newData).get();
     newData = getPlayerData(Id);
     return newData;

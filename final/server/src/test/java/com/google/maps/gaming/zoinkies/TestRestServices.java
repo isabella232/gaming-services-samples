@@ -181,7 +181,7 @@ public class TestRestServices {
     Assert.isTrue(battleData.getOpponentTypeId().equals(ITEMS.GENERAL),
         "The opponent should be general.");
 
-    Boolean winner = true; // Player
+    boolean winner = true; // Player
     BattleSummaryData BattleSummaryData = getBattleSummaryData(location.getLocationId(), winner);
     System.out.println(BattleSummaryData);
     Assert.isTrue(BattleSummaryData.getWinner() == winner,
@@ -235,7 +235,7 @@ public class TestRestServices {
     Assert.isTrue(battleData.getOpponentTypeId().equals(ITEMS.MINION),
         "The opponent should be minion.");
 
-    Boolean winner = false; // Minion
+    boolean winner = false; // Minion
     BattleSummaryData BattleSummaryData = getBattleSummaryData(location.getLocationId(), winner);
     System.out.println(BattleSummaryData);
     Assert.isTrue(BattleSummaryData.getWinner() == winner,
@@ -281,7 +281,7 @@ public class TestRestServices {
     Assert.isTrue(battleData.getOpponentTypeId().equals(ITEMS.MINION),
         "The opponent should be minion.");
 
-    Boolean winner = true; // Player
+    boolean winner = true; // Player
     BattleSummaryData BattleSummaryData = getBattleSummaryData(location.getLocationId(), winner);
     System.out.println(BattleSummaryData);
     Assert.isTrue(BattleSummaryData.getWinner() == winner,
@@ -342,7 +342,8 @@ public class TestRestServices {
       Assert.isTrue(haveKey, "Diamond Key not found in chest rewards!");
 
       // Try to open the chest a 2nd time
-      System.out.println("Trying to activate Chest at locationId: " + chest.getLocationId() + " a 2nd time");
+      System.out.println("Trying to activate Chest at locationId: " + chest.getLocationId()
+          + " a 2nd time");
       getRespawingChest(chest.getLocationId());
 
     } else {
@@ -452,9 +453,11 @@ public class TestRestServices {
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.registerModule(new JavaTimeModule());
 
-    MvcResult result = this.mockMvc.perform(get("/worlds/{id}", deviceId)).andDo(print())
+    MvcResult result = this.mockMvc.perform(get(
+        "/worlds/{id}", deviceId)).andDo(print())
         .andExpect(status().isOk()).andReturn();
-    WorldData data = objectMapper.readValue(result.getResponse().getContentAsString(),
+    WorldData data = objectMapper.readValue(result.getResponse()
+            .getContentAsString(),
         WorldData.class);
 
     return data;
@@ -472,14 +475,16 @@ public class TestRestServices {
 
     String json = objectMapper.writeValueAsString(request);
     this.mockMvc.perform(post("/worlds/{id}", deviceId)
-        .contentType("application/json").content(json)).andDo(print()).andExpect(status().isOk());
+        .contentType("application/json").content(json)).andDo(print())
+        .andExpect(status().isOk());
   }
   /**
    * Delete the world data for the test user
    * @throws Exception an exception when conditions are not met
    */
   private void deleteWorldData() throws Exception {
-    this.mockMvc.perform(delete("/worlds/{id}", deviceId)).andDo(print()).andExpect(status()
+    this.mockMvc.perform(delete("/worlds/{id}", deviceId))
+        .andDo(print()).andExpect(status()
         .isOk());
   }
 
@@ -490,7 +495,8 @@ public class TestRestServices {
    */
   private void getRespawingChest(String locationId) throws Exception {
 
-    this.mockMvc.perform(post("/chests/{id}/{locationId}", deviceId,locationId))
+    this.mockMvc.perform(post("/chests/{id}/{locationId}",
+        deviceId,locationId))
         .andDo(print())
         .andExpect(status()
             .isNoContent());
@@ -503,7 +509,8 @@ public class TestRestServices {
    */
   private BattleData getBattleData(String locationId) throws Exception {
 
-    MvcResult results = this.mockMvc.perform(post("/battle/{id}/{locationId}", deviceId,
+    MvcResult results = this.mockMvc.perform(post(
+        "/battle/{id}/{locationId}", deviceId,
         locationId))
         .andDo(print())
         .andExpect(status()
@@ -512,7 +519,8 @@ public class TestRestServices {
 
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.registerModule(new JavaTimeModule());
-    BattleData data = objectMapper.readValue(results.getResponse().getContentAsString(),
+    BattleData data = objectMapper.readValue(results.getResponse()
+            .getContentAsString(),
         BattleData.class);
 
     return data;
@@ -524,17 +532,20 @@ public class TestRestServices {
    * @return a battle summary data
    * @throws Exception an exception when conditions are not met
    */
-  private BattleSummaryData getBattleSummaryData(String locationId, Boolean winnerIs)
+  private BattleSummaryData getBattleSummaryData(String locationId
+      , boolean winnerIs)
       throws Exception {
-    MvcResult results = this.mockMvc.perform(post("/battlesummary/{id}/{locationId}",
-        deviceId,locationId).param("winner",winnerIs.toString()))
+    MvcResult results = this.mockMvc.perform(post(
+        "/battlesummary/{id}/{locationId}",
+        deviceId,locationId).param("winner",Boolean.toString(winnerIs)))
         .andDo(print())
         .andExpect(status()
             .isOk())
         .andReturn();
 
     ObjectMapper objectMapper = new ObjectMapper();
-    BattleSummaryData data = objectMapper.readValue(results.getResponse().getContentAsString(),
+    BattleSummaryData data = objectMapper.readValue(results.getResponse()
+            .getContentAsString(),
         BattleSummaryData.class);
     return data;
   }
@@ -546,7 +557,8 @@ public class TestRestServices {
    */
   private EnergyData getEnergyData(String locationId) throws Exception {
 
-    MvcResult results = this.mockMvc.perform(post("/energystation/{id}/{locationId}",
+    MvcResult results = this.mockMvc.perform(post(
+        "/energystation/{id}/{locationId}",
         deviceId,locationId))
         .andDo(print())
         .andExpect(status()
@@ -555,7 +567,8 @@ public class TestRestServices {
 
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.registerModule(new JavaTimeModule());
-    EnergyData data = objectMapper.readValue(results.getResponse().getContentAsString(),
+    EnergyData data = objectMapper.readValue(results.getResponse()
+            .getContentAsString(),
         EnergyData.class);
 
     return data;
@@ -568,7 +581,8 @@ public class TestRestServices {
    */
   private RewardsData getChestRewards(String locationId) throws Exception {
 
-    MvcResult results = this.mockMvc.perform(post("/chests/{id}/{locationId}",
+    MvcResult results = this.mockMvc.perform(post(
+        "/chests/{id}/{locationId}",
         deviceId,locationId))
         .andDo(print())
         .andExpect(status()
@@ -577,7 +591,8 @@ public class TestRestServices {
 
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.registerModule(new JavaTimeModule());
-    RewardsData data = objectMapper.readValue(results.getResponse().getContentAsString(),
+    RewardsData data = objectMapper.readValue(results.getResponse()
+            .getContentAsString(),
         RewardsData.class);
 
     return data;
@@ -589,13 +604,15 @@ public class TestRestServices {
    * @throws Exception an exception when conditions are not met
    */
   private PlayerData getPlayerData(String newName) throws Exception {
-    MvcResult results = this.mockMvc.perform(get("/users/{id}", deviceId)).andDo(print()).
+    MvcResult results = this.mockMvc.perform(get("/users/{id}"
+        , deviceId)).andDo(print()).
         andExpect(status().isOk())
         .andExpect(content().string(containsString(newName))).andReturn();
 
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.registerModule(new JavaTimeModule());
-    PlayerData data = objectMapper.readValue(results.getResponse().getContentAsString(),
+    PlayerData data = objectMapper.readValue(results.getResponse()
+            .getContentAsString(),
         PlayerData.class);
     return data;
   }
@@ -611,7 +628,8 @@ public class TestRestServices {
 
     String json = new ObjectMapper().writeValueAsString(newData);
     this.mockMvc.perform(post("/users/{id}", deviceId)
-        .contentType("application/json").content(json)).andDo(print()).andExpect(status().isOk());
+        .contentType("application/json").content(json)).andDo(print())
+        .andExpect(status().isOk());
   }
 
   /**
@@ -619,7 +637,8 @@ public class TestRestServices {
    * @throws Exception an exception when conditions are not met
    */
   private void deletePlayerData() throws Exception {
-    this.mockMvc.perform(delete("/users/{id}", deviceId)).andDo(print()).andExpect(status()
+    this.mockMvc.perform(delete("/users/{id}", deviceId))
+        .andDo(print()).andExpect(status()
         .isOk());
   }
 

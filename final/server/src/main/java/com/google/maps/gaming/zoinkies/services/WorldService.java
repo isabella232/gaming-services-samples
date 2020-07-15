@@ -34,6 +34,7 @@ import java.util.concurrent.ExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -66,14 +67,15 @@ public class WorldService {
    * If it doesn't exist, create one
    * Otherwise return the current user data in the response
    *
-   * @param Id The User Id
+   * @param deviceId The User Id
    * @return A World Data record
    * @throws ExecutionException
    * @throws InterruptedException
    */
-  public WorldData getWorldData(String Id) throws ExecutionException, InterruptedException {
+  @Nullable
+  public WorldData getWorldData(String deviceId) throws ExecutionException, InterruptedException {
     ApiFuture<DocumentSnapshot> documentSnapshotApiFuture =
-        this.firestore.document("worlds/" + Id).get();
+        this.firestore.document("worlds/" + deviceId).get();
     WorldData data = null;
     DocumentSnapshot document = documentSnapshotApiFuture.get();
     if (document.exists()) {
@@ -84,18 +86,18 @@ public class WorldService {
 
   /**
    * This class updates the database with an entirely new world data.
-   * @param Id The User Id
+   * @param deviceId The User Id
    * @param worldData The World Data to update
    * @throws ExecutionException
    * @throws InterruptedException
    */
-  public void setWorldData(String Id, WorldData worldData)
+  public void setWorldData(String deviceId, WorldData worldData)
       throws ExecutionException, InterruptedException {
     ApiFuture<DocumentSnapshot> documentSnapshotApiFuture =
-        this.firestore.document("worlds/" + Id).get();
-    DocumentSnapshot document = documentSnapshotApiFuture.get();
-    if (document.exists()) {
-      this.firestore.document("worlds/" + Id).set(worldData).get();
+        this.firestore.document("worlds/" + deviceId).get();
+    //DocumentSnapshot document = ;
+    if (documentSnapshotApiFuture.get().exists()) {
+      this.firestore.document("worlds/" + deviceId).set(worldData).get();
     }
   }
 
@@ -110,7 +112,7 @@ public class WorldService {
   public WorldData getSpawnLocations(String Id, WorldDataRequest WorldDataRequest)
       throws Exception {
 
-    Boolean updateNeeded = false;
+    boolean updateNeeded = false;
 
     WorldData data = getWorldData(Id);
     if (data == null) {
@@ -186,8 +188,8 @@ public class WorldService {
    */
   public void removeWorldData(String Id) {
     CollectionReference users = this.firestore.collection("worlds");
-    Iterable<DocumentReference> documentReferences = users.listDocuments();
-    documentReferences.forEach(documentReference -> {
+    //Iterable<DocumentReference> documentReferences = ;
+    users.listDocuments().forEach(documentReference -> {
       if (documentReference.getId().equals(Id)) {
         try {
           documentReference.delete().get();
