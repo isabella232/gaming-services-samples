@@ -16,6 +16,12 @@ Part 4 (final)/ Setup for mobile
 
 ## Pre-requisites
 
+The Unity client under Part 1, 3 and 4 rely on two libraries:
+1- Google Maps Unity SDK, available at this url: https://cloud.google.com/maps-platform/gaming
+2- Unity LitJson, available at this url: https://github.com/Mervill/UnityLitJson
+
+Note: All Unity projects will show compilation errors and missing scripts without the two libraries.
+
 Both client and server call Maps Gaming Services and require appropriate API Keys, therefore a GCP project with access to the Semantic Tile API and Playable Locations API is needed to run the game demo.
 
 ## Project structure
@@ -36,6 +42,10 @@ Note that the server java code is identical in part2, part3 and final. The only 
 
 The client code requires an API Key to run.
 The Key should be set on the MapsService component attached to the WorldContainer gameobject parented to GameWorld object in the main scene.
+
+Part 1/client is a client only project.
+Part 3/client relies on Part3/server running locally
+Part 4/client relies on Part4/server running remotely, and is ready for mobile deployment
 
 
 ## Building and running the server code locally
