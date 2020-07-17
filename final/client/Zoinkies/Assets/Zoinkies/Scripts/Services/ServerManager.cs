@@ -29,14 +29,9 @@ namespace Google.Maps.Demos.Zoinkies
     public class ServerManager : MonoBehaviour
     {
         /// <summary>
-        /// The  server url used when testing locally
-        /// </summary>
-        //private const string SERVER_URL = "http://localhost:8080";
-
-        /// <summary>
         /// The url used to access the remote server
         /// </summary>
-        private const string SERVER_URL = "https://musk-samples.wl.r.appspot.com";
+        private const string SERVER_URL = "YOUR SERVER URL HERE";
 
         /// <summary>
         ///     Sends battle results to the server.
