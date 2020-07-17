@@ -3769,8 +3769,7 @@ MonoBehaviour:
   m_Script: {fileID: -576295101, guid: 322c8874b7f0401c8c1211fe39d44d90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApiKey: AIzaSyAZc7i2gq-bv-xYy2Ou2eNDPDUxf5bIQEo
-  SemanticTileApiAddress: vectortile.googleapis.com
+  ApiKey: 
   NetworkPoolSize: 100
   NetworkTimeoutSeconds: 10
   EnableDiagnostics: 1
@@ -3780,120 +3779,146 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
         m_TypeName: Google.Maps.Event.WillCreateExtrudedStructureEvent, Google.Maps,
-          Version=1.0.1167.0, Culture=neutral, PublicKeyToken=null
+          Version=1.0.7481.36574, Culture=neutral, PublicKeyToken=null
       DidCreate:
         m_PersistentCalls:
           m_Calls: []
         m_TypeName: Google.Maps.Event.DidCreateExtrudedStructureEvent, Google.Maps,
-          Version=1.0.1167.0, Culture=neutral, PublicKeyToken=null
+          Version=1.0.7481.36574, Culture=neutral, PublicKeyToken=null
     _ModeledStructureEvents:
       WillCreate:
         m_PersistentCalls:
           m_Calls: []
         m_TypeName: Google.Maps.Event.WillCreateModeledStructureEvent, Google.Maps,
-          Version=1.0.1167.0, Culture=neutral, PublicKeyToken=null
+          Version=1.0.7481.36574, Culture=neutral, PublicKeyToken=null
       DidCreate:
         m_PersistentCalls:
           m_Calls: []
         m_TypeName: Google.Maps.Event.DidCreateModeledStructureEvent, Google.Maps,
-          Version=1.0.1167.0, Culture=neutral, PublicKeyToken=null
+          Version=1.0.7481.36574, Culture=neutral, PublicKeyToken=null
     _SegmentEvents:
       WillCreate:
         m_PersistentCalls:
           m_Calls: []
-        m_TypeName: Google.Maps.Event.WillCreateSegmentEvent, Google.Maps, Version=1.0.1167.0,
+        m_TypeName: Google.Maps.Event.WillCreateSegmentEvent, Google.Maps, Version=1.0.7481.36574,
           Culture=neutral, PublicKeyToken=null
       DidCreate:
         m_PersistentCalls:
           m_Calls: []
-        m_TypeName: Google.Maps.Event.DidCreateSegmentEvent, Google.Maps, Version=1.0.1167.0,
+        m_TypeName: Google.Maps.Event.DidCreateSegmentEvent, Google.Maps, Version=1.0.7481.36574,
+          Culture=neutral, PublicKeyToken=null
+    _IntersectionEvents:
+      WillCreate:
+        m_PersistentCalls:
+          m_Calls: []
+        m_TypeName: Google.Maps.Event.WillCreateIntersectionEvent, Google.Maps, Version=1.0.7481.36574,
+          Culture=neutral, PublicKeyToken=null
+      DidCreate:
+        m_PersistentCalls:
+          m_Calls: []
+        m_TypeName: Google.Maps.Event.DidCreateIntersectionEvent, Google.Maps, Version=1.0.7481.36574,
           Culture=neutral, PublicKeyToken=null
     _RegionEvents:
       WillCreate:
         m_PersistentCalls:
           m_Calls: []
-        m_TypeName: Google.Maps.Event.WillCreateRegionEvent, Google.Maps, Version=1.0.1167.0,
+        m_TypeName: Google.Maps.Event.WillCreateRegionEvent, Google.Maps, Version=1.0.7481.36574,
           Culture=neutral, PublicKeyToken=null
       DidCreate:
         m_PersistentCalls:
           m_Calls: []
-        m_TypeName: Google.Maps.Event.DidCreateRegionEvent, Google.Maps, Version=1.0.1167.0,
+        m_TypeName: Google.Maps.Event.DidCreateRegionEvent, Google.Maps, Version=1.0.7481.36574,
           Culture=neutral, PublicKeyToken=null
     _AreaWaterEvents:
       WillCreate:
         m_PersistentCalls:
           m_Calls: []
-        m_TypeName: Google.Maps.Event.WillCreateAreaWaterEvent, Google.Maps, Version=1.0.1167.0,
+        m_TypeName: Google.Maps.Event.WillCreateAreaWaterEvent, Google.Maps, Version=1.0.7481.36574,
           Culture=neutral, PublicKeyToken=null
       DidCreate:
         m_PersistentCalls:
           m_Calls: []
-        m_TypeName: Google.Maps.Event.DidCreateAreaWaterEvent, Google.Maps, Version=1.0.1167.0,
+        m_TypeName: Google.Maps.Event.DidCreateAreaWaterEvent, Google.Maps, Version=1.0.7481.36574,
           Culture=neutral, PublicKeyToken=null
     _LineWaterEvents:
       WillCreate:
         m_PersistentCalls:
           m_Calls: []
-        m_TypeName: Google.Maps.Event.WillCreateLineWaterEvent, Google.Maps, Version=1.0.1167.0,
+        m_TypeName: Google.Maps.Event.WillCreateLineWaterEvent, Google.Maps, Version=1.0.7481.36574,
           Culture=neutral, PublicKeyToken=null
       DidCreate:
         m_PersistentCalls:
           m_Calls: []
-        m_TypeName: Google.Maps.Event.DidCreateLineWaterEvent, Google.Maps, Version=1.0.1167.0,
+        m_TypeName: Google.Maps.Event.DidCreateLineWaterEvent, Google.Maps, Version=1.0.7481.36574,
           Culture=neutral, PublicKeyToken=null
     _RoadLatticeEvents:
       DidModify:
         m_PersistentCalls:
           m_Calls: []
-        m_TypeName: Google.Maps.Event.DidModifyRoadLatticeEvent, Google.Maps, Version=1.0.1167.0,
+        m_TypeName: Google.Maps.Event.DidModifyRoadLatticeEvent, Google.Maps, Version=1.0.7481.36574,
           Culture=neutral, PublicKeyToken=null
     _MapEvents:
       LoadStart:
         m_PersistentCalls:
           m_Calls: []
-        m_TypeName: Google.Maps.Event.MapLoadStartEvent, Google.Maps, Version=1.0.1167.0,
+        m_TypeName: Google.Maps.Event.MapLoadStartEvent, Google.Maps, Version=1.0.7481.36574,
           Culture=neutral, PublicKeyToken=null
       Loaded:
         m_PersistentCalls:
           m_Calls: []
-        m_TypeName: Google.Maps.Event.MapLoadedEvent, Google.Maps, Version=1.0.1167.0,
+        m_TypeName: Google.Maps.Event.MapLoadedEvent, Google.Maps, Version=1.0.7481.36574,
           Culture=neutral, PublicKeyToken=null
       LoadError:
         m_PersistentCalls:
           m_Calls: []
-        m_TypeName: Google.Maps.Event.MapLoadErrorEvent, Google.Maps, Version=1.0.1167.0,
+        m_TypeName: Google.Maps.Event.MapLoadErrorEvent, Google.Maps, Version=1.0.7481.36574,
           Culture=neutral, PublicKeyToken=null
       Progress:
         m_PersistentCalls:
           m_Calls: []
-        m_TypeName: Google.Maps.Event.MapLoadProgressEvent, Google.Maps, Version=1.0.1167.0,
+        m_TypeName: Google.Maps.Event.MapLoadProgressEvent, Google.Maps, Version=1.0.7481.36574,
           Culture=neutral, PublicKeyToken=null
     _TerrainEvents:
       WillCreate:
         m_PersistentCalls:
           m_Calls: []
-        m_TypeName: Google.Maps.Event.WillCreateTerrainEvent, Google.Maps, Version=1.0.1167.0,
+        m_TypeName: Google.Maps.Event.WillCreateTerrainEvent, Google.Maps, Version=1.0.7481.36574,
           Culture=neutral, PublicKeyToken=null
       DidCreate:
         m_PersistentCalls:
           m_Calls: []
-        m_TypeName: Google.Maps.Event.DidCreateTerrainEvent, Google.Maps, Version=1.0.1167.0,
+        m_TypeName: Google.Maps.Event.DidCreateTerrainEvent, Google.Maps, Version=1.0.7481.36574,
           Culture=neutral, PublicKeyToken=null
+      FeatureMaskPreRender:
+        m_PersistentCalls:
+          m_Calls: []
+        m_TypeName: Google.Maps.Event.FeatureMaskPreRenderEvent, Google.Maps, Version=1.0.7481.36574,
+          Culture=neutral, PublicKeyToken=null
+      FeatureMaskTextureCreated:
+        m_PersistentCalls:
+          m_Calls: []
+        m_TypeName: Google.Maps.Event.FeatureMaskTextureCreatedEvent, Google.Maps,
+          Version=1.0.7481.36574, Culture=neutral, PublicKeyToken=null
       AlphaMapsNeedPaint:
         m_PersistentCalls:
           m_Calls: []
-        m_TypeName: Google.Maps.Event.AlphaMapsNeedPaintEvent, Google.Maps, Version=1.0.1167.0,
+        m_TypeName: Google.Maps.Event.AlphaMapsNeedPaintEvent, Google.Maps, Version=1.0.7481.36574,
           Culture=neutral, PublicKeyToken=null
       DidPaint:
         m_PersistentCalls:
           m_Calls: []
-        m_TypeName: Google.Maps.Event.DidPaintTerrainEvent, Google.Maps, Version=1.0.1167.0,
+        m_TypeName: Google.Maps.Event.DidPaintTerrainEvent, Google.Maps, Version=1.0.7481.36574,
           Culture=neutral, PublicKeyToken=null
   EnableModeledStructures: 1
   EnablePoliticalFeatures: 0
   EnablePrivateRoads: 0
+  EnableTerrain: 0
   ObjectCreationFrameBudget: 0
   StaticBatching: 0
+  TerrainOptions:
+    TerrainMeshMetersPerPoint: 1
+    AltitudePrecision: 0.01
+  EnableIntersections: 0
   EnableExhaustiveIntersectionReconstruction: 0
   EnableRoadLattice: 0
   MapPreviewOptions:
