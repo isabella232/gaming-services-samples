@@ -139,12 +139,12 @@ namespace Google.Maps.Demos.Zoinkies
             // Init the spawn location respawn time and active flag (to mimic what the server will do)
             // Prevents constant syncs - the server is the final authority
             SpawnLocation location = GetSpawnLocation(locationId);
-            if (location.respawn_time != null)
+            if (location.respawnTime != null)
             {
-                DateTime t = DateTime.Parse(location.respawn_time);
+                DateTime t = DateTime.Parse(location.respawnTime);
                 if (t <= DateTime.Now)
                 {
-                    location.respawn_time = null;
+                    location.respawnTime = null;
                     location.active = true;
                 }
                 else
@@ -177,13 +177,13 @@ namespace Google.Maps.Demos.Zoinkies
             // Init the spawn location respawn time and active flag (to mimic what the server will do)
             // Prevents constant syncs - the server is the final authority
             SpawnLocation location = GetInstance().GetSpawnLocation(locationId);
-            ReferenceItem ri = ReferenceService.GetInstance().GetItem(location.object_type_id);
+            ReferenceItem ri = ReferenceService.GetInstance().GetItem(location.objectTypeId);
             if (location != null && ri != null && ri.respawnDuration != null)
             {
                 location.active = false;
                 TimeSpan ts = XmlConvert.ToTimeSpan(ri.respawnDuration);
                 DateTime dt = DateTime.Now.Add(ts);
-                location.respawn_time = dt.ToString("O");
+                location.respawnTime = dt.ToString("O");
                 DataHasChanged = true;
             }
         }
@@ -200,7 +200,7 @@ namespace Google.Maps.Demos.Zoinkies
                 throw new System.Exception("World data not initialized!");
             }
 
-            return _data.locations.Values.Where(s => s.respawn_time != null);
+            return _data.locations.Values.Where(s => s.respawnTime != null);
         }
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace Google.Maps.Demos.Zoinkies
                 throw new System.Exception("World data not initialized!");
             }
 
-            return _data.locations.Values.Where(s => s.object_type_id == GameConstants.TOWER);
+            return _data.locations.Values.Where(s => s.objectTypeId == GameConstants.TOWER);
         }
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace Google.Maps.Demos.Zoinkies
                 throw new System.Exception("World data not initialized!");
             }
 
-            return _data.locations.Values.Where(s => s.object_type_id == GameConstants.MINION);
+            return _data.locations.Values.Where(s => s.objectTypeId == GameConstants.MINION);
         }
 
         /// <summary>
@@ -245,7 +245,7 @@ namespace Google.Maps.Demos.Zoinkies
                 throw new System.Exception("World data not initialized!");
             }
 
-            return _data.locations.Values.Where(s => s.object_type_id == GameConstants.CHEST);
+            return _data.locations.Values.Where(s => s.objectTypeId == GameConstants.CHEST);
         }
 
         /// <summary>
@@ -261,7 +261,7 @@ namespace Google.Maps.Demos.Zoinkies
             }
 
             return _data.locations.Values.Where(
-                s => s.object_type_id == GameConstants.ENERGY_STATION);
+                s => s.objectTypeId == GameConstants.ENERGY_STATION);
         }
     }
 }

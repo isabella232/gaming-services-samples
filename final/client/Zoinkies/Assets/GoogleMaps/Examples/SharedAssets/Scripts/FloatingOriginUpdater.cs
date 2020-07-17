@@ -14,6 +14,9 @@ namespace Google.Maps.Examples.Shared {
   /// errors.
   /// </para></summary>
   public sealed class FloatingOriginUpdater : MonoBehaviour {
+    /// <summary>The last set floating origin.</summary>
+    public Vector3 FloatingOrigin { get; private set; }
+
     /// <summary>
     /// Optional <see cref="UnityEvent"/> called whenever this script updates the world's Floating
     /// Origin.
@@ -36,9 +39,6 @@ namespace Google.Maps.Examples.Shared {
     /// The <see cref="MapsService"/> to update the floating origin of.
     /// </summary>
     public MapsService MapsService;
-
-    /// <summary>The last set floating origin.</summary>
-    private Vector3 FloatingOrigin;
 
     /// <summary>
     /// All <see cref="GameObject"/>s to be moved when the world's Floating Origin is moved.

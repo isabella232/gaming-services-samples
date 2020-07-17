@@ -154,8 +154,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2e0b68449f5c494498f0894eb2aa8a16, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &347017281
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,10 +166,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -576295101, guid: 322c8874b7f0401c8c1211fe39d44d90, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  ApiKey:
-  SemanticTileApiAddress: vectortile.googleapis.com
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ApiKey: 
   NetworkPoolSize: 100
   NetworkTimeoutSeconds: 10
   EnableDiagnostics: 1
@@ -216,13 +215,6 @@ MonoBehaviour:
       DidCreate:
         m_PersistentCalls:
           m_Calls: []
-    _BridgeEvents:
-      WillCreate:
-        m_PersistentCalls:
-          m_Calls: []
-      DidCreate:
-        m_PersistentCalls:
-          m_Calls: []
     _RoadLatticeEvents:
       DidModify:
         m_PersistentCalls:
@@ -241,7 +233,13 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
     _TerrainEvents:
+      WillCreate:
+        m_PersistentCalls:
+          m_Calls: []
       DidCreate:
+        m_PersistentCalls:
+          m_Calls: []
+      AlphaMapsNeedPaint:
         m_PersistentCalls:
           m_Calls: []
       DidPaint:
@@ -256,7 +254,6 @@ MonoBehaviour:
   TerrainOptions:
     TerrainMeshMetersPerPoint: 1
     AltitudePrecision: 0.01
-  EnableIntersections: 0
   EnableExhaustiveIntersectionReconstruction: 1
   EnableRoadLattice: 1
   MapPreviewOptions:
@@ -270,7 +267,7 @@ MonoBehaviour:
     MetadataRegister: {fileID: 0}
   ZoomLevel: 17
   _CacheOptions:
-    BasePath:
+    BasePath: 
     Directory: Google.Maps
     MaxDiskBytes: 10485760
     DiskTimeoutSeconds: 0
@@ -325,8 +322,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 344ebe44db4d14b70994f3c80b72fa96, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   MovementSpeed: 200
   RotationSpeed: 100
   MinHeight: 2
@@ -410,12 +407,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 822c2b4155c7a4c47bb05593fefdf428, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  perspectiveZoomSpeed: 0.5
-  orthoZoomSpeed: 0.5
-  activeCamera: {fileID: 364988092}
+  PerspectiveZoomSpeed: 0.5
+  OrthoZoomSpeed: 0.5
+  ActiveCamera: {fileID: 0}
   MinFieldOfView: 30
   MaxFieldOfView: 80
   MaxOrthographicSize: 0.1
+  MinOrthographicSize: 0.1
 --- !u!1 &652858709
 GameObject:
   m_ObjectHideFlags: 0
@@ -489,10 +487,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: afb16b8bf8d9647a999c9917913f2c8e, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   target: {fileID: 0}
-  Offset: {x: 0, y: -60, z: -120}
+  Offset: {x: 0, y: -20, z: -120}
 --- !u!114 &720860437
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -503,8 +501,8 @@ MonoBehaviour:
   m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a59a2e607043c4bd190b8a4465be307e, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   MovementSpeed: 200
   RotationSpeed: 100
   MinHeight: 2
@@ -550,8 +548,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a89762e09fda84f348f9f1242a2760e0, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   LatLng:
     _Lat: 35.665122
     _Lng: 139.75338399999998
@@ -594,8 +592,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f53c02290557415a9cb59016d3e55c8, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   BaseMapLoader: {fileID: 910068125}
   LatticeMaterials:
   - {fileID: 2100000, guid: 2fda21c703cbe4cab997bb2c2cadbca8, type: 2}
@@ -616,8 +614,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5236f1a1a53b34386bbef2ec4abc74e4, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   BaseMapLoader: {fileID: 910068125}
   AvatarPrefab: {fileID: 877221094857757777, guid: bc0082eedae1a40dc9424033cc95e1c8,
     type: 3}
@@ -627,6 +625,7 @@ MonoBehaviour:
   SmoothFollowCamera: {fileID: 720860436}
   NumberOfOpponents: 1
   IsAISearchActive: 0
+  MaxAIStartDistanceFromAvatar: 100
   IsDebugPathOn: 0
 --- !u!114 &910068132
 MonoBehaviour:
@@ -638,8 +637,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f9a5802cf30064be08c1ad8e703673e4, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   BaseMapLoader: {fileID: 910068125}
   ExtrudedStructuresContainer: {fileID: 0}
   ModeledStructuresContainer: {fileID: 0}
@@ -695,8 +694,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 1077351063, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   m_HorizontalAxis: Horizontal
   m_VerticalAxis: Vertical
   m_SubmitButton: Submit
@@ -714,8 +713,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -619905303, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
@@ -793,8 +792,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3121beff27e6c475c91ff400fb7426cf, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1802421275
 GameObject:
   m_ObjectHideFlags: 0
@@ -1085,6 +1084,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2096909783, guid: d72ae7da8569640dcaaaedc9969af898, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2096909784, guid: d72ae7da8569640dcaaaedc9969af898, type: 3}
+      propertyPath: m_Text
+      value: The RoadLattice feature is in beta.
+      objectReference: {fileID: 0}
+    - target: {fileID: 2096909784, guid: d72ae7da8569640dcaaaedc9969af898, type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 1243767623999932674, guid: d72ae7da8569640dcaaaedc9969af898,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -1153,22 +1164,22 @@ PrefabInstance:
     - target: {fileID: 7694464446948896850, guid: d72ae7da8569640dcaaaedc9969af898,
         type: 3}
       propertyPath: BaseMapLoader
-      value:
+      value: 
       objectReference: {fileID: 910068125}
     - target: {fileID: 7694464446948896850, guid: d72ae7da8569640dcaaaedc9969af898,
         type: 3}
       propertyPath: cameraController
-      value:
+      value: 
       objectReference: {fileID: 364988091}
     - target: {fileID: 7694464446948896850, guid: d72ae7da8569640dcaaaedc9969af898,
         type: 3}
       propertyPath: PathFindingExample
-      value:
+      value: 
       objectReference: {fileID: 910068129}
     - target: {fileID: 7694464446948896850, guid: d72ae7da8569640dcaaaedc9969af898,
         type: 3}
       propertyPath: RoadLatticeNodesVisualizer
-      value:
+      value: 
       objectReference: {fileID: 910068128}
     - target: {fileID: 7994177490400794614, guid: d72ae7da8569640dcaaaedc9969af898,
         type: 3}

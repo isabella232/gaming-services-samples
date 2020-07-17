@@ -1,4 +1,5 @@
 ﻿using System;
+using Google.Maps.Coord;
 using Google.Maps.Examples.Shared;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,9 +31,6 @@ namespace Google.Maps.Examples {
 
     [Tooltip("Current zoom level of the maps service")]
     public Text CurrentZoomLevel;
-
-    [Tooltip("Zoom Levels slider (Min Lvl: 10, Max Lvl 19")]
-    public Slider ZoomLevels;
 
     [Tooltip("Search by PlaceId dialog box. Displays all placeIds available in the scene.")]
     public SearchByIdDialog SearchByPlaceIdDialog;
@@ -126,10 +124,12 @@ namespace Google.Maps.Examples {
     }
 
     private void Update() {
-      // Init maps service values as they change.
+      // Update maps service values as they change.
       if (LatValue != null && LngValue != null && CurrentZoomLevel != null) {
-        LatValue.text = BaseMapLoader.LatLng.Lat.ToString("N5");
-        LngValue.text = BaseMapLoader.LatLng.Lng.ToString("N5");
+        LatLng latLng = BaseMapLoader.MapsService.Coords.FromVector3ToLatLng(
+            FloatingOriginUpdater.FloatingOrigin);
+        LatValue.text = latLng.Lat.ToString("N5");
+        LngValue.text = latLng.Lng.ToString("N5");
         CurrentZoomLevel.text = BaseMapLoader.MapsService.ZoomLevel.ToString();
       }
     }
@@ -193,28 +193,6 @@ namespace Google.Maps.Examples {
     /// <param name="change">The checkbox element</param>
     public void OnProgressBarSelected(Toggle change) {
       ProgressBarUpdater.enabled = change.isOn;
-    }
-
-    /// <summary>
-    /// Sets the zoom level in the <see cref="MapsService"/>
-    /// </summary>
-    /// <remarks>
-    /// Zoom levels supported by the <see cref="MapsService"/> range from 10 to 19 with 17 as a
-    /// default.
-    /// </remarks>
-    /// <exception cref="Exception">The zoom level is invalid.</exception>
-    public void OnZoomLevelChanged() {
-      if (ZoomLevels.value < 10 || ZoomLevels.value > 19) {
-        throw new System.Exception(
-            "Invalid zoom level. The value should be between 10 and 19. Current value is: " +
-            ZoomLevels.value);
-      }
-
-      BaseMapLoader.MapsService.ZoomLevel = (int)ZoomLevels.value;
-
-      // Apply the new zoom level by performing a force reload.
-      BaseMapLoader.ClearMap();
-      BaseMapLoader.LoadMap();
     }
 
     /// <summary>

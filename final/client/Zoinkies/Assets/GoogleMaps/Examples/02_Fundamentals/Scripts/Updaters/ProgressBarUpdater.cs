@@ -107,7 +107,7 @@ namespace Google.Maps.Examples {
     /// updated accordingly. In this case, we remove all roads and buildings gizmos if any.
     /// </para></remarks>
     private void ClearAndReload() {
-      // Init the map.
+      // Update the map.
       BaseMapLoader.ClearMap();
       BaseMapLoader.LoadMap();
     }

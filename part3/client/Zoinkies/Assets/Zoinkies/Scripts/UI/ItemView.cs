@@ -47,7 +47,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         /// A reference to the item id
         /// </summary>
-        public string Id => _data.id;
+        public string Id => _data.itemId;
 
         /// <summary>
         /// A reference to the properties of the item
@@ -70,7 +70,7 @@ namespace Google.Maps.Demos.Zoinkies
             {
                 _data = item;
 
-                _referenceData = ReferenceService.GetInstance().GetItem(this._data.id);
+                _referenceData = ReferenceService.GetInstance().GetItem(this._data.itemId);
                 if (_referenceData != null)
                 {
                     ItemName.text = _referenceData.name;

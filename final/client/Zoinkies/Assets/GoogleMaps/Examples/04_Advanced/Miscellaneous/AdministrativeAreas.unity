@@ -340,10 +340,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -576295101, guid: 322c8874b7f0401c8c1211fe39d44d90, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  ApiKey:
-  SemanticTileApiAddress: vectortile.googleapis.com
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ApiKey: 
   NetworkPoolSize: 100
   NetworkTimeoutSeconds: 10
   EnableDiagnostics: 1
@@ -390,13 +389,6 @@ MonoBehaviour:
       DidCreate:
         m_PersistentCalls:
           m_Calls: []
-    _BridgeEvents:
-      WillCreate:
-        m_PersistentCalls:
-          m_Calls: []
-      DidCreate:
-        m_PersistentCalls:
-          m_Calls: []
     _RoadLatticeEvents:
       DidModify:
         m_PersistentCalls:
@@ -436,7 +428,6 @@ MonoBehaviour:
   TerrainOptions:
     TerrainMeshMetersPerPoint: 1
     AltitudePrecision: 0.01
-  EnableIntersections: 0
   EnableExhaustiveIntersectionReconstruction: 0
   EnableRoadLattice: 0
   MapPreviewOptions:
@@ -448,7 +439,7 @@ MonoBehaviour:
   MetadataOptions:
     Method: 1
     MetadataRegister: {fileID: 0}
-  ZoomLevel: 7
+  ZoomLevel: 5
   _CacheOptions:
     BasePath: 
     Directory: Google.Maps

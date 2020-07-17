@@ -61,6 +61,11 @@ namespace Google.Maps.Examples {
     public bool LoadOnStart = true;
 
     /// <summary>
+    /// Whether the application has quit;
+    /// </summary>
+    private bool HasQuit;
+
+    /// <summary>
     /// This event is dispatched before starting the map loading.
     /// It can be used to notify other game systems that we are about to load a new map (or a
     /// portion of it).
@@ -84,7 +89,7 @@ namespace Google.Maps.Examples {
     /// In this example, the map setup and loading are done as soon as the loader becomes active in
     /// the scene.
     /// </summary>
-    protected virtual void Start() {
+    void Start() {
       InitFloatingOrigin();
       InitStylingOptions();
       InitEventListeners();
@@ -95,6 +100,10 @@ namespace Google.Maps.Examples {
       if (LoadOnStart) {
         LoadMap();
       }
+    }
+
+    void OnApplicationQuit() {
+      HasQuit = true;
     }
 
     /// <summary>
@@ -200,6 +209,11 @@ namespace Google.Maps.Examples {
         return;
       }
 
+      // Don't load if the application has quit and we're not in edit-time preview mode.
+      if (HasQuit && (Application.isPlaying || !MapsService.MapPreviewOptions.Enable)) {
+        return;
+      }
+
       // Set the loading flag to true before loading.
       // This flag is really used to let users of the map loader know about its current state.
       IsLoading = true;
@@ -212,7 +226,7 @@ namespace Google.Maps.Examples {
       // Load the visible map region.
       MapsService.MakeMapLoadRegion()
           .AddViewport(Camera.main, MaxDistance)
-          .Load(RenderingStyles, MapsService.ZoomLevel);
+          .Load(RenderingStyles);
     }
 
     /// <summary>
@@ -227,6 +241,11 @@ namespace Google.Maps.Examples {
     /// called. It won't invoke these events if the associated map features are still in its cache.
     /// </summary>
     public virtual void ClearMap() {
+      // Don't clear if the application has quit and we're not in edit-time preview mode.
+      if (HasQuit && (Application.isPlaying || !MapsService.MapPreviewOptions.Enable)) {
+        return;
+      }
+
       if (MapsService.GameObjectManager != null) {
         MapsService.GameObjectManager.DestroyAll();
       }

@@ -1,5 +1,4 @@
 ﻿using Google.Maps.Event;
-using Google.Maps.Examples.Shared;
 using UnityEngine;
 
 namespace Google.Maps.Examples {
@@ -103,7 +102,7 @@ namespace Google.Maps.Examples {
       // Clear Visuals
       ClearRoadLatticeDebugVisuals();
 
-      // Init the map
+      // Update the map
       if (BaseMapLoader != null) {
         BaseMapLoader.ClearMap();
         BaseMapLoader.LoadMap();

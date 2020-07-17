@@ -18,8 +18,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Google.Maps.Coord;
-using Google.Maps.Examples;
-using Google.Maps.Examples.Shared;
 using Google.Maps.Feature.Style;
 using Unity.Collections;
 using UnityEngine;
@@ -263,9 +261,31 @@ namespace Google.Maps.Demos.Zoinkies
                 throw new System.Exception("We expect at least one wall " +
                                            "and one roof material.");
             }
+        }
 
-            // Load Initial Map
-            LoadMap();
+        void Update()
+        {
+            if (_gameStarted)
+            {
+                _currentTimer += Time.deltaTime;
+                if (Input.location.status == LocationServiceStatus.Running &&
+                    _currentTimer > LOCATION_PING)
+                {
+                    LocationInfo locInfo = Input.location.lastData;
+                    // Compare distance from current location to floating origin
+                    // If distance is greater than 500 meters,
+                    // let's reinitialize the floating origin.
+                    Vector3 locInfoPos =
+                        MapsService.Coords.FromLatLngToVector3(new LatLng(locInfo.latitude,
+                            locInfo.longitude));
+                    float dist = Vector3.Distance(locInfoPos, Vector3.zero);
+                    if (dist > 1000f)
+                    {
+                        OnLocationServicesEvalComplete(locInfo);
+                    }
+                    _currentTimer = 0f;
+                }
+            }
         }
 
         /// <summary>
@@ -280,6 +300,27 @@ namespace Google.Maps.Demos.Zoinkies
             {
                 StartCoroutine(ServerManager.PostPlayerData(PlayerService.GetInstance().Data,
                     data => { PlayerService.GetInstance().Init(data); }, OnError));
+            }
+        }
+
+        /// <summary>
+        ///     Triggered when the map is being reloaded.
+        ///     For first time invocations, we request the GPS location if enabled. Otherwise this call
+        ///     is just delegating the map reload to the base class.
+        /// </summary>
+        public override void LoadMap()
+        {
+            // LoadMap is called from Dynamic updater
+            // Get our new GPS coordinates and use these to load the map
+            // We don't need to update the floating origin all the time.
+
+            if (_gameStarted)
+            {
+                base.LoadMap();
+            }
+            else
+            {
+                StartCoroutine(GetGPSLocation(OnLocationServicesEvalComplete));
             }
         }
 
@@ -365,16 +406,73 @@ namespace Google.Maps.Demos.Zoinkies
         }
 
         /// <summary>
+        ///     Sets the lat lng to our current position is the GPS is enabled
+        ///     Otherwise use the default position, which is currently the Googleplex
+        ///     in Mountain View, CA
+        /// </summary>
+        /// <param name="onInitComplete">
+        ///     The callback triggered when we have a valid location info
+        /// </param>
+        /// <returns>An enumerator for a coroutine</returns>
+        protected IEnumerator GetGPSLocation(Action<LocationInfo> onInitComplete)
+        {
+            Assert.IsNotNull(onInitComplete);
+
+            // Invalidate the previous position
+            HasGPSLocation = false;
+            LocationInfo locInfo = new LocationInfo();
+
+            if (Input.location.isEnabledByUser)
+            {
+                // Start service before querying location
+                Input.location.Start();
+
+                // Wait until service initializes
+                int maxWait = 20;
+                while (Input.location.status == LocationServiceStatus.Initializing && maxWait > 0)
+                {
+                    yield return new WaitForSeconds(1);
+                    maxWait--;
+                }
+
+                // Service didn't initialize in 20 seconds
+                if (maxWait < 1)
+                {
+                    onInitComplete.Invoke(locInfo);
+                    yield break;
+                }
+
+                // Connection has failed
+                if (Input.location.status == LocationServiceStatus.Failed)
+                {
+                    // Failed to get
+                    onInitComplete.Invoke(locInfo);
+                    yield break;
+                }
+
+                locInfo = Input.location.lastData;
+                HasGPSLocation = true;
+
+                // Success - locInfo is set
+                onInitComplete.Invoke(locInfo);
+            }
+            else
+            {
+                onInitComplete.Invoke(locInfo);
+            }
+        }
+
+        /// <summary>
         ///     Initializes the style options for this game, by setting materials to roads,
         ///     buildings and water areas.
         /// </summary>
         protected override void InitStylingOptions()
         {
-            _zoinkiesStylesOptions = ExampleDefaults.DefaultGameObjectOptions;
+            _zoinkiesStylesOptions = DefaultStyles.DefaultGameObjectOptions;
 
             // The default maps shader has a glossy property that allows the sky to reflect on it.
             Material waterMaterial =
-                ExampleDefaults.DefaultGameObjectOptions.RegionStyle.FillMaterial;
+                DefaultStyles.DefaultGameObjectOptions.RegionStyle.FillMaterial;
             waterMaterial.color = new Color(0.4274509804f, 0.7725490196f, 0.8941176471f);
 
             _zoinkiesStylesOptions.ModeledStructureStyle = new ModeledStructureStyle.Builder
@@ -542,7 +640,7 @@ namespace Google.Maps.Demos.Zoinkies
                     Vector3 pos = MapsService.Coords.FromLatLngToVector3(
                         new LatLng(loc.snappedPoint.latitude, loc.snappedPoint.longitude));
                     // Do we already have this object in our scene?
-                    if (!_spawnedGameObjects.ContainsKey(loc.id))
+                    if (!_spawnedGameObjects.ContainsKey(loc.locationId))
                     {
                         GameObject go =
                             Instantiate(prefab, container);
@@ -550,14 +648,14 @@ namespace Google.Maps.Demos.Zoinkies
 
                         // The reference to placeId allows us to find the associated data
                         // through WorldService
-                        go.name = loc.id;
+                        go.name = loc.locationId;
 
                         BaseSpawnLocationController sl =
                             go.GetComponent<BaseSpawnLocationController>();
                         Assert.IsNotNull(sl);
-                        sl.Init(loc.id);
+                        sl.Init(loc.locationId);
 
-                        _spawnedGameObjects.Add(loc.id, go);
+                        _spawnedGameObjects.Add(loc.locationId, go);
                         numberOfObjectsCreated++;
                     }
                 }
@@ -575,6 +673,45 @@ namespace Google.Maps.Demos.Zoinkies
             {
                 GameReady?.Invoke();
                 _gameStarted = true;
+            }
+        }
+
+        /// <summary>
+        /// Triggered when a valid location info is returned from the Unity Input locations service.
+        /// </summary>
+        /// <param name="locationInfo">Location Info</param>
+        private void OnLocationServicesEvalComplete(LocationInfo locationInfo)
+        {
+            if (HasGPSLocation) // aka we were able to get a valid GPS location
+            {
+                LatLng = new LatLng(locationInfo.latitude, locationInfo.longitude);
+                MapsService.MoveFloatingOrigin(LatLng);
+                Avatar.transform.position = MapsService.Coords.FromLatLngToVector3(LatLng);
+            }
+
+            base.LoadMap();
+        }
+
+        /// <summary>
+        /// Triggered when the application has focus (on Mobile).
+        /// When this happens, we enable/disable location services and eventually request
+        /// an adjustment to our loaded map.
+        /// </summary>
+        /// <param name="hasFocus">Indicates if the app has focus.</param>
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            if (!_gameStarted)
+            {
+                return;
+            }
+
+            if (hasFocus)
+            {
+                StartCoroutine(GetGPSLocation(OnLocationServicesEvalComplete));
+            }
+            else if (Input.location.status == LocationServiceStatus.Running)
+            {
+                Input.location.Stop();
             }
         }
 

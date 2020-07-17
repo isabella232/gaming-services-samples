@@ -258,6 +258,51 @@
             </exception></member>
         <member name="M:Google.Maps.Collections.Generic.InsertionOrderDictionary`2.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{TKey,TValue}}#Remove(System.Collections.Generic.KeyValuePair{`0,`1})">
             <inheritdoc /></member>
+        <member name="T:Google.Maps.Collections.Generic.IQuadTree`2">
+            <summary>
+            Quadtree interface.
+            </summary>
+            <typeparam name="K">The type of the keys in the quadtree.</typeparam>
+            <typeparam name="V">The type of the values in the quadtree.</typeparam></member>
+        <member name="M:Google.Maps.Collections.Generic.IQuadTree`2.Add(`0,`1)">
+            <summary>
+            Add the given key and value to the quadtree.
+            </summary>
+            <param name="key">The key of the item to add.</param>
+            <param name="value">The value of the item to add.</param></member>
+        <member name="M:Google.Maps.Collections.Generic.IQuadTree`2.Remove(`0)">
+            <summary>
+            Remove an item with the given key from the quadtree.
+            </summary>
+            <param name="key">The key to search for.</param>
+            <returns>True if a value was removed.</returns></member>
+        <member name="M:Google.Maps.Collections.Generic.IQuadTree`2.Contains(`0)">
+            <summary>
+            Returns true if the given key exists in the quadtree.
+            </summary>
+            <param name="key">The key to check.</param>
+            <returns>True if the given key exists in the quadtree.</returns></member>
+        <member name="M:Google.Maps.Collections.Generic.IQuadTree`2.Overlaps(UnityEngine.RectInt)">
+            <summary>
+            Returns true if an item in the quadtree exists inside the given rectangle.
+            </summary>
+            <param name="rect">The rectangle to test.</param>
+            <returns>True if an item in the quadtree exists inside the given rectangle.</returns></member>
+        <member name="M:Google.Maps.Collections.Generic.IQuadTree`2.GetOverlaps(UnityEngine.RectInt,`1[])">
+            <summary>
+            Fills the given array with items that the given rectangle overlaps in the quadtree.
+            </summary>
+            <remarks>
+            If <paramref name="results" /> is not large enough to hold every item that
+            <paramref name="rect" /> overlaps, this method returns early after it has been filled.
+            </remarks>
+            <param name="rect">The rectangle to test.</param>
+            <param name="results">The array to fill.</param>
+            <returns>The number of items added to <paramref name="results" />.</returns></member>
+        <member name="M:Google.Maps.Collections.Generic.IQuadTree`2.Clear">
+            <summary>
+            Clears the quadtree.
+            </summary></member>
         <member name="T:Google.Maps.Collections.Generic.KeyValueMinHeap`2.KeyComparer">
             <summary>
             Compares a <see cref="T:System.Collections.Generic.KeyValuePair`2" /> by key only.
@@ -384,6 +429,182 @@
             <summary>
             Remove all elements from the heap. The capacity remains unchanged.
             </summary></member>
+        <member name="T:Google.Maps.Collections.Generic.PointQuadTree`1">
+            <summary>
+            A simple, point-based quadtree.
+            </summary>
+            <remarks>
+            Quadrants can only contain a fixed maximum number of items, specified in the constructor.
+            When this number is exceeded, it is subdivided if the specified maximum depth has not been
+            reached, and throws an exception otherwise. It is recommended that you handle this exception
+            in some way (e.g. simply discarding it if you don't mind some inaccuracy) if you cannot
+            guarantee it won't occur.
+            </remarks></member>
+        <member name="T:Google.Maps.Collections.Generic.PointQuadTree`1.NodeInfo">
+            <summary>
+            Stores data relating to quadrant in this quadtree.
+            </summary></member>
+        <member name="F:Google.Maps.Collections.Generic.PointQuadTree`1.NodeInfo.IsLeaf">
+            <summary>
+            Whether this node is a leaf.
+            </summary></member>
+        <member name="F:Google.Maps.Collections.Generic.PointQuadTree`1.NodeInfo.Rect">
+            <summary>
+            The bounds of this quadrant.
+            </summary></member>
+        <member name="F:Google.Maps.Collections.Generic.PointQuadTree`1.NodeInfo.FirstChildIndex">
+            <summary>
+            The index of the first child of this node. If this node is a leaf, then
+            this indexes into <see cref="F:Google.Maps.Collections.Generic.PointQuadTree`1.Items" />. Otherwise, it indexes
+            into its subdivisions in <see cref="F:Google.Maps.Collections.Generic.PointQuadTree`1.Nodes" />.
+            </summary></member>
+        <member name="F:Google.Maps.Collections.Generic.PointQuadTree`1.NodeInfo.ItemCount">
+            <summary>
+            The number of items held by this node if it is a leaf.
+            </summary></member>
+        <member name="M:Google.Maps.Collections.Generic.PointQuadTree`1.NodeInfo.#ctor(UnityEngine.RectInt,System.Int32)">
+            <summary>
+            Leaf node constructor.
+            </summary></member>
+        <member name="F:Google.Maps.Collections.Generic.PointQuadTree`1.UnassignedChildIndex">
+            <summary>
+            The value of an uninitialized <see cref="F:Google.Maps.Collections.Generic.PointQuadTree{`0}.NodeInfo.FirstChildIndex" /> index.
+            </summary></member>
+        <member name="F:Google.Maps.Collections.Generic.PointQuadTree`1.ItemNotFound">
+            <summary>
+            The return value of an invalid item index.
+            </summary></member>
+        <member name="F:Google.Maps.Collections.Generic.PointQuadTree`1.InitialNodeCapacity">
+            <summary>
+            The initial capacity of <see cref="F:Google.Maps.Collections.Generic.PointQuadTree{`0}.Nodes" />.
+            </summary></member>
+        <member name="P:Google.Maps.Collections.Generic.PointQuadTree`1.Count">
+            <summary>
+            The number of items in this quadtree.
+            </summary></member>
+        <member name="F:Google.Maps.Collections.Generic.PointQuadTree`1.MaxQuadrantItemCount">
+            <summary>
+            The maximum number of items a single leaf can hold.
+            </summary></member>
+        <member name="F:Google.Maps.Collections.Generic.PointQuadTree`1.MaxDepth">
+            <summary>
+            The maximum depth of this quadtree.
+            </summary></member>
+        <member name="F:Google.Maps.Collections.Generic.PointQuadTree`1.OverlapsTemp">
+            <summary>
+            Array reused in <see cref="M:Google.Maps.Collections.Generic.PointQuadTree{`0}.Overlaps(UnityEngine.RectInt)" /> to reduce garbage.
+            </summary></member>
+        <member name="F:Google.Maps.Collections.Generic.PointQuadTree`1.Items">
+            <summary>
+            The items held by the leaves in this quadtree.
+            </summary></member>
+        <member name="F:Google.Maps.Collections.Generic.PointQuadTree`1.NextItemSubarrayStartIndex">
+            <summary>
+            The start index i of the next available items subarray (i, i+MaxQuadrantItemCount) in
+            <see cref="F:Google.Maps.Collections.Generic.PointQuadTree{`0}.Items" /> to allocate to a leaf. These subarrays are allocated on-demand rather
+            than immediately upon creating a new leaf.
+            </summary></member>
+        <member name="F:Google.Maps.Collections.Generic.PointQuadTree`1.NodeCount">
+            <summary>
+            The number of nodes in this quadtree.
+            </summary></member>
+        <member name="F:Google.Maps.Collections.Generic.PointQuadTree`1.Nodes">
+            <summary>
+            The nodes in this quadtree. The node at index 0 is the root node.
+            </summary></member>
+        <member name="M:Google.Maps.Collections.Generic.PointQuadTree`1.#ctor(UnityEngine.RectInt,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="rect">The bounds of the quadtree.</param>
+            <param name="maxQuadrantItemCount">
+            The maximum number of items a single quadrant can hold before subdividing.
+            </param>
+            <param name="initialCapacity">Initial capacity for the item backing array.</param>
+            <param name="maxDepth">The maximum depth of the quadtree.</param></member>
+        <member name="M:Google.Maps.Collections.Generic.PointQuadTree`1.#ctor(UnityEngine.RectInt)">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="rect">The bounds of the quadtree.</param></member>
+        <member name="M:Google.Maps.Collections.Generic.PointQuadTree`1.#ctor">
+            <summary>
+            Constructor.
+            </summary></member>
+        <member name="M:Google.Maps.Collections.Generic.PointQuadTree`1.Add(UnityEngine.Vector2Int,`0)">
+            <inheritdoc />
+            <exception cref="T:System.ArgumentException">
+            Thrown when <paramref name="point" /> exists outside the bounds of the quadtree.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown when the quadrant to add <paramref name="point" /> to is full and at the maximum
+            depth of the quadtree.
+            </exception></member>
+        <member name="M:Google.Maps.Collections.Generic.PointQuadTree`1.Overlaps(UnityEngine.RectInt)">
+            <inheritdoc /></member>
+        <member name="M:Google.Maps.Collections.Generic.PointQuadTree`1.GetOverlaps(UnityEngine.RectInt,`0[])">
+            <inheritdoc /></member>
+        <member name="M:Google.Maps.Collections.Generic.PointQuadTree`1.Remove(UnityEngine.Vector2Int)">
+            <inheritdoc />
+            <exception cref="T:System.ArgumentException">
+            Thrown when <paramref name="point" /> exists outside the bounds of the quadtree.
+            </exception></member>
+        <member name="M:Google.Maps.Collections.Generic.PointQuadTree`1.Reset(UnityEngine.RectInt)">
+            <summary>
+            Clears the quadtree and resets its bounds.
+            </summary>
+            <param name="rect">The new bounds of the quadtree.</param></member>
+        <member name="M:Google.Maps.Collections.Generic.PointQuadTree`1.Contains(UnityEngine.Vector2Int)">
+            <inheritdoc />
+            <exception cref="T:System.ArgumentException">
+            Thrown when <paramref name="point" /> exists outside the bounds of the quadtree.
+            </exception></member>
+        <member name="M:Google.Maps.Collections.Generic.PointQuadTree`1.Clear">
+            <inheritdoc /></member>
+        <member name="M:Google.Maps.Collections.Generic.PointQuadTree`1.Initialize(UnityEngine.RectInt)">
+            <summary>
+            Initializes the quadtree.
+            </summary>
+            <param name="rect">The bounds of the quadtree.</param></member>
+        <member name="M:Google.Maps.Collections.Generic.PointQuadTree`1.FindNode(UnityEngine.Vector2Int)">
+            <summary>
+            Returns the existing leaf node whose Rect contains the supplied point.
+            </summary>
+            <param name="point">The point to test.</param>
+            <returns>
+            The existing leaf node whose Rect contains the supplied point.
+            </returns>
+            <exception cref="T:System.ArgumentException">
+            Thrown when <paramref name="point" /> exists outside the bounds of the quadtree.
+            </exception></member>
+        <member name="M:Google.Maps.Collections.Generic.PointQuadTree`1.FindItemIndex(System.Int32,UnityEngine.Vector2Int)">
+            <summary>
+            Returns the index of the item in <see cref="F:Google.Maps.Collections.Generic.PointQuadTree{`0}.Items" /> held by the node indexed by the
+            supplied index and located at <paramref name="point" />.
+            </summary>
+            <param name="nodeIdx">The node to check the items of.</param>
+            <param name="point">The point to look for.</param>
+            <returns>
+            The index of the item in <see cref="F:Google.Maps.Collections.Generic.PointQuadTree{`0}.Items" /> held by the indexed node and located at
+            <paramref name="point" />.
+            </returns></member>
+        <member name="M:Google.Maps.Collections.Generic.PointQuadTree`1.AddItem(System.Int32,UnityEngine.Vector2Int,`0)">
+            <summary>
+            Adds an item to the node indexed by the supplied index given a point and value.
+            </summary>
+            <param name="nodeIdx">The index of the node to add the item to.</param>
+            <param name="point">The point the value is located at.</param>
+            <param name="value">The value to add.</param></member>
+        <member name="M:Google.Maps.Collections.Generic.PointQuadTree`1.Subdivide(System.Int32)">
+            <summary>
+            Subdivides the node at the given index.
+            </summary>
+            <param name="nodeIdx">The index of the node to subdivide.</param></member>
+        <member name="M:Google.Maps.Collections.Generic.PointQuadTree`1.AssignItemNodeSubarray(System.Int32)">
+            <summary>
+            Assigns a node a subarray for storing items.
+            </summary>
+            <param name="nodeIdx">The index of the node.</param></member>
         <member name="T:Google.Maps.Collections.Generic.Tree.AVLTree`1">
             <summary>
             An AVL tree, which maintains a balanced binary search tree.
@@ -501,7 +722,7 @@
             Rebalances the tree after a remove or add operation.
             </summary>
             <param name="node">The parent of the node that was removed or added.</param></member>
-        <member name="M:Google.Maps.Collections.Generic.Tree.AVLTree`1.InitHeight(Google.Maps.Collections.Generic.Tree.AVLTree{`0}.AVLTreeNode)">
+        <member name="M:Google.Maps.Collections.Generic.Tree.AVLTree`1.UpdateHeight(Google.Maps.Collections.Generic.Tree.AVLTree{`0}.AVLTreeNode)">
             <summary>
             Sets the height of the node to be the height of its largest subtree plus one.
             </summary>
@@ -1071,6 +1292,23 @@
             This parameter is filled with the tile coordinate to the immediate south of this one.
             </param>
             <param name="normalize">Whether the returned coordinate should be normalized.</param></member>
+        <member name="M:Google.Maps.Coord.TileCoord.Offset(Google.Maps.Coord.TileCoord@,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Produces the <see cref="T:Google.Maps.Coord.TileCoord" /> offset from this tile coordinate by the specified
+            X and Y. Returns true if this coordinate falls within the valid bounds of the tile
+            coordinate space before any optional wrapping is applied. False if not.
+            </summary>
+            <param name="offset">
+            This parameter is filled with the tile coordinate whose position relative to this one is
+            specified by xOffset and yOffset.
+            </param>
+            <param name="xOffset">
+            The number of tiles to move to the east (negative for west, zero to stay in place).
+            </param>
+            <param name="yOffset">
+            The number of tiles to move to the south (negative for north, zero to stay in place).
+            </param>
+            <param name="normalize">Whether the returned coordinate should be normalized.</param></member>
         <member name="M:Google.Maps.Coord.TileCoord.ToString">
             <summary>
             Returns the formatted string representation of this `%TileCoord`.
@@ -1171,6 +1409,7 @@
             <param name="provider">The country provider.</param></member>
         <member name="T:Google.Maps.Decoration.ExtrudedStructureDecorator">
             <summary>
+            Deprecated.
             Encapsulates helper methods that allow you to style <see cref="T:Google.Maps.Feature.ExtrudedStructure" />s.
             </summary>
             <remarks>
@@ -1261,6 +1500,7 @@
             <param name="extrusions">An array of <see cref="T:Google.Maps.Feature.Shape.ExtrudedArea.Extrusion" />s.</param></member>
         <member name="T:Google.Maps.Decoration.CircularMarker">
             <summary>
+            Deprecated.
             Encapsulates the circular boundary around a <see cref="T:UnityEngine.GameObject" />.
             </summary></member>
         <member name="P:Google.Maps.Decoration.CircularMarker.Radius">
@@ -1347,6 +1587,14 @@
             <remarks>See <see cref="F:Google.Maps.Event.LineWaterEvents.DidCreate" /></remarks></member>
         <member name="M:Google.Maps.Event.DidCreateLineWaterArgs.#ctor(Google.Maps.Feature.LineWater,Google.Maps.Feature.Style.LineWaterStyle,UnityEngine.GameObject)">
             <inheritdoc /></member>
+        <member name="T:Google.Maps.Event.DidCreateIntersectionArgs">
+            <summary>
+            Encapsulates event arguments for <see cref="T:Google.Maps.Feature.Segment" />
+            WillCreate events.
+            </summary>
+            <remarks>See <see cref="F:Google.Maps.Event.SegmentEvents.WillCreate" /></remarks></member>
+        <member name="M:Google.Maps.Event.DidCreateIntersectionArgs.#ctor(Google.Maps.Unity.Intersections.IntersectionFeature,Google.Maps.Feature.Style.SegmentStyle,UnityEngine.GameObject)">
+            <inheritdoc /></member>
         <member name="T:Google.Maps.Event.Events">
             <summary>
             Encapsulates the set of all events fired by the SDK.
@@ -1360,7 +1608,7 @@
             contain geometry and metadata information that you can use to style map
             feature <see cref="T:UnityEngine.GameObject" />s.<br /><br />
             For more information, see
-            [GameObject creation](/maps/tt/games/concepts_musk#gameobject_creation).
+            [GameObject creation](/maps/documentation/gaming/tt/concepts_musk#gameobject_creation).
             </remarks></member>
         <member name="F:Google.Maps.Event.Events._ExtrudedStructureEvents">
             <summary>
@@ -1385,6 +1633,14 @@
         <member name="P:Google.Maps.Event.Events.SegmentEvents">
             <summary>
             <see cref="T:Google.Maps.Feature.Segment" /> construction pipeline events.
+            </summary></member>
+        <member name="F:Google.Maps.Event.Events._IntersectionEvents">
+            <summary>
+            Backing field for <see cref="T:Google.Maps.Event.IntersectionEvents" />
+            </summary></member>
+        <member name="P:Google.Maps.Event.Events.IntersectionEvents">
+            <summary>
+            Events related to road intersections.
             </summary></member>
         <member name="F:Google.Maps.Event.Events._RegionEvents">
             <summary>
@@ -1503,6 +1759,28 @@
             <param name="offset">
             Translation offset corresponding to the movement of the floating origin.
             </param></member>
+        <member name="T:Google.Maps.Event.WillCreateIntersectionEvent">
+            <summary>
+            Encapsulates an <see cref="T:Google.Maps.Unity.Intersections.Intersection" /> WillCreate event.
+            </summary></member>
+        <member name="T:Google.Maps.Event.DidCreateIntersectionEvent">
+            <summary>
+            Encapsulates an <see cref="T:Google.Maps.Unity.Intersections.Intersection" /> DidCreate event.
+            </summary></member>
+        <member name="T:Google.Maps.Event.IntersectionEvents">
+            <summary>
+            Encapsulates <see cref="T:Google.Maps.Unity.Intersections.Intersection" /> construction pipeline events.
+            </summary></member>
+        <member name="F:Google.Maps.Event.IntersectionEvents.WillCreate">
+            <summary>
+            Fired when the SDK is about to begin constructing an <see cref="T:Google.Maps.Unity.Intersections.Intersection" />
+            GameObject.
+            </summary></member>
+        <member name="F:Google.Maps.Event.IntersectionEvents.DidCreate">
+            <summary>
+            Fired when the SDK finishes constructing an <see cref="T:Google.Maps.Unity.Intersections.Intersection" /> GameObject,
+            and adding it to the %Unity scene.
+            </summary></member>
         <member name="T:Google.Maps.Event.ListenerCountingUnityEvent`1">
             <summary>
             A subclass of UnityEvent that keeps track of the number of runtime-added event listeners.
@@ -1583,9 +1861,34 @@
             Constructor.
             </summary>
             <param name="terrain">The <see cref="T:UnityEngine.Terrain" /> that was created.</param></member>
+        <member name="T:Google.Maps.Event.FeatureMaskTextureCreatedArgs">
+            <summary>
+            %Event arguments for FeatureMaskTextureCreated events.
+            </summary></member>
+        <member name="F:Google.Maps.Event.FeatureMaskTextureCreatedArgs.FeatureMaskRenderTexture">
+            <summary>
+            <see cref="T:UnityEngine.RenderTexture" /> into which the feature mask will be rendered using a
+            <see cref="T:UnityEngine.Camera" />. Provided to the handler by the SDK.
+            </summary></member>
+        <member name="M:Google.Maps.Event.FeatureMaskTextureCreatedArgs.#ctor(UnityEngine.RenderTexture)">
+            <summary>
+            Constructor.
+            </summary></member>
+        <member name="T:Google.Maps.Event.FeatureMaskPreRenderArgs">
+            <summary>
+            %Event arguments for FeatureMaskPreRender events.
+            </summary></member>
+        <member name="F:Google.Maps.Event.FeatureMaskPreRenderArgs.FeatureMaskCamera">
+            <summary>
+            <see cref="T:UnityEngine.Camera" /> used to render the feature mask. Provided to the handler by the SDK.
+            </summary></member>
+        <member name="M:Google.Maps.Event.FeatureMaskPreRenderArgs.#ctor(UnityEngine.Camera)">
+            <summary>
+            Constructor.
+            </summary></member>
         <member name="T:Google.Maps.Event.AlphaMapsNeedPaintArgs">
             <summary>
-            %Event arguments for Terrain AlphaMapsNeedPaint events.
+            %Event arguments for AlphaMapsNeedPaint events.
             </summary></member>
         <member name="F:Google.Maps.Event.AlphaMapsNeedPaintArgs.Terrain">
             <summary>
@@ -1640,9 +1943,17 @@
             <summary>
             Encapsulates a <see cref="N:Google.Maps.Terrain" /> DidCreate event.
             </summary></member>
+        <member name="T:Google.Maps.Event.FeatureMaskPreRenderEvent">
+            <summary>
+            Encapsulates a FeatureMaskPreRender event.
+            </summary></member>
+        <member name="T:Google.Maps.Event.FeatureMaskTextureCreatedEvent">
+            <summary>
+            Encapsulates a FeatureMaskTextureCreated event.
+            </summary></member>
         <member name="T:Google.Maps.Event.AlphaMapsNeedPaintEvent">
             <summary>
-            Encapsulates a <see cref="N:Google.Maps.Terrain" /> AlphaMapsNeedPaint event.
+            Encapsulates a AlphaMapsNeedPaint event.
             </summary></member>
         <member name="T:Google.Maps.Event.DidPaintTerrainEvent">
             <summary>
@@ -1660,6 +1971,17 @@
             <summary>
             Fired immediately after creating a <see cref="T:UnityEngine.Terrain" />
             <see cref="T:UnityEngine.GameObject" />..
+            </summary></member>
+        <member name="F:Google.Maps.Event.TerrainEvents.FeatureMaskPreRender">
+            <summary>
+            Fired immediately before the feature mask is rendered. Can be used to perform additional
+            <see cref="T:UnityEngine.Camera" /> setup before rendering.
+            </summary></member>
+        <member name="F:Google.Maps.Event.TerrainEvents.FeatureMaskTextureCreated">
+            <summary>
+            Fired immediately after the creation of the <see cref="T:UnityEngine.RenderTexture" /> into
+            which the feature mask will be rendered. Can be used to perform additional configuration
+            of the <see cref="T:UnityEngine.RenderTexture" /> before the feature mask is rendered into it.
             </summary></member>
         <member name="F:Google.Maps.Event.TerrainEvents.AlphaMapsNeedPaint">
             <summary>
@@ -1968,7 +2290,7 @@
             <c>
             mapsService.Events.MapEvents.LoadError.AddListener(e =&gt; {
             if (e.DetailedErrorCode == DetailedErrorEnum.UnsupportedClientVersion) {
-            log.Error("Init app to latest version");
+            log.Error("Update app to latest version");
             return;
             }<br />
             // Retry up to 5 attempts.
@@ -2256,6 +2578,14 @@
             <remarks>See <see cref="F:Google.Maps.Event.LineWaterEvents.WillCreate" /></remarks></member>
         <member name="M:Google.Maps.Event.WillCreateLineWaterArgs.#ctor(Google.Maps.Feature.LineWater,Google.Maps.Feature.Style.LineWaterStyle)">
             <inheritdoc /></member>
+        <member name="T:Google.Maps.Event.WillCreateIntersectionArgs">
+            <summary>
+            Encapsulates event arguments for <see cref="T:Google.Maps.Unity.Intersections.IntersectionFeature" />
+            WillCreate events.
+            </summary>
+            <remarks>See <see cref="F:Google.Maps.Event.IntersectionEvents.WillCreate" /></remarks></member>
+        <member name="M:Google.Maps.Event.WillCreateIntersectionArgs.#ctor(Google.Maps.Unity.Intersections.IntersectionFeature,Google.Maps.Feature.Style.SegmentStyle)">
+            <inheritdoc /></member>
         <member name="T:Google.Maps.Event.LoadMapChunkArgs">
             <summary>
             Arguments for <see cref="T:Google.Maps.Event.LoadMapChunkEvent" /> events.
@@ -2371,13 +2701,23 @@
             <param name="metadata">Associated metadata.</param></member>
         <member name="M:Google.Maps.Feature.ExtrudedStructure.ToString">
             <inheritdoc /></member>
+        <member name="T:Google.Maps.Feature.IntersectionMetadata">
+            <summary>
+            Unity-independent representation of immutable properties of an intersection feature.
+            </summary></member>
+        <member name="M:Google.Maps.Feature.IntersectionMetadata.#ctor(System.String,System.String)">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="placeId">The <see cref="T:Google.Maps.Unity.Intersections.Intersection" />'s pseudo-place ID.</param>
+            <param name="name">The name of this feature, used to name generated Unity objects.</param></member>
         <member name="T:Google.Maps.Feature.ITileContent">
             <summary>
             Tile content that can be stored in a <see cref="T:Google.Maps.TileLoading.TileCache`1" />.
             </summary></member>
-        <member name="M:Google.Maps.Feature.ITileContent.TranslateAndInitFloatingOriginFromCoords(Google.Maps.Coord.Coords)">
+        <member name="M:Google.Maps.Feature.ITileContent.TranslateAndUpdateFloatingOriginFromCoords(Google.Maps.Coord.Coords)">
             <summary>
-            Inits this tile's floating origin, and translates all geometry in the tile to accommodate
+            Updates this tile's floating origin, and translates all geometry in the tile to accommodate
             the origin change.
             </summary>
             <param name="coords">
@@ -2821,7 +3161,7 @@
             <param name="floatingOrigin">
             The floating origin providing the reference frame for  coordinates of features in this tile.
             </param></member>
-        <member name="M:Google.Maps.Feature.MapTile.TranslateAndInitFloatingOriginFromCoords(Google.Maps.Coord.Coords)">
+        <member name="M:Google.Maps.Feature.MapTile.TranslateAndUpdateFloatingOriginFromCoords(Google.Maps.Coord.Coords)">
             <inheritdoc /></member>
         <member name="M:Google.Maps.Feature.MapTile.TranslateOrigin(UnityEngine.Vector2)">
             <summary>
@@ -2849,7 +3189,7 @@
             </returns></member>
         <member name="M:Google.Maps.Feature.MapTile.GenerateRoadLattice(System.Boolean)">
             <summary>
-            Inits the road lattice of this tile based on the segments in this tile.
+            Updates the road lattice of this tile based on the segments in this tile.
             </summary>
             <param name="extraIntersections">
             Whether to search for intersections optimized away in the source data.
@@ -3762,9 +4102,9 @@
             <see cref="T:Google.Maps.MapsService" /> and ensures that <see cref="F:Google.Maps.Feature.Style.Attachment.StyleAttachment.SettingsChangeListeners" /> is
             installed on the correct settings assets.
             </summary></member>
-        <member name="M:Google.Maps.Feature.Style.Attachment.StyleAttachment.InitGameObjectOptions(Google.Maps.GameObjectOptions)">
+        <member name="M:Google.Maps.Feature.Style.Attachment.StyleAttachment.UpdateGameObjectOptions(Google.Maps.GameObjectOptions)">
             <summary>
-            Init a <see cref="T:Google.Maps.GameObjectOptions" /> instance with the style settings attached to
+            Update a <see cref="T:Google.Maps.GameObjectOptions" /> instance with the style settings attached to
             this attachment.
             </summary>
             <param name="gameObjectOptions">The <see cref="T:Google.Maps.GameObjectOptions" /> to update.</param></member>
@@ -4132,6 +4472,14 @@
             MeshRenderer material in the event that no material is provided. The
             default value is *null*.
             </remarks></member>
+        <member name="P:Google.Maps.Feature.Style.SegmentishStyle.SegmentishStyleBuilder.IntersectionMaterial">
+            <inheritdoc cref="SegmentishStyle.IntersectionMaterial" /></member>
+        <member name="P:Google.Maps.Feature.Style.SegmentishStyle.SegmentishStyleBuilder.IntersectionJoinLength">
+            <inheritdoc cref="SegmentishStyle.IntersectionJoinLength" /></member>
+        <member name="P:Google.Maps.Feature.Style.SegmentishStyle.SegmentishStyleBuilder.IntersectionArmLength">
+            <inheritdoc cref="SegmentishStyle.IntersectionArmLength" /></member>
+        <member name="P:Google.Maps.Feature.Style.SegmentishStyle.SegmentishStyleBuilder.MaxIntersectionArmDistance">
+            <inheritdoc cref="SegmentishStyle.MaxIntersectionArmDistance" /></member>
         <member name="P:Google.Maps.Feature.Style.SegmentishStyle.SegmentishStyleBuilder.Width">
             <summary>
             The width of the Segment, in meters. The default value is *10*.
@@ -4188,6 +4536,14 @@
             material in the event that no material is provided. The default value is
             *null*.
             </remarks></member>
+        <member name="P:Google.Maps.Feature.Style.SegmentishStyle.IntersectionMaterial">
+            <summary /></member>
+        <member name="P:Google.Maps.Feature.Style.SegmentishStyle.IntersectionArmLength">
+            <inheritdoc cref="SegmentStyleSettings.IntersectionArmLength" /></member>
+        <member name="P:Google.Maps.Feature.Style.SegmentishStyle.IntersectionJoinLength">
+            <inheritdoc cref="SegmentStyleSettings.IntersectionJoinLength" /></member>
+        <member name="P:Google.Maps.Feature.Style.SegmentishStyle.MaxIntersectionArmDistance">
+            <inheritdoc cref="SegmentStyleSettings.MaxIntersectionArmDistance" /></member>
         <member name="P:Google.Maps.Feature.Style.SegmentishStyle.Width">
             <summary>
             The width of the Segment, in meters. The default value is *10*.
@@ -4431,6 +4787,32 @@
             <summary>
             Fill material for segments.
             </summary></member>
+        <member name="F:Google.Maps.Feature.Style.Settings.SegmentStyleSettings.IntersectionMaterial">
+            <summary>
+            Intersection material for segments.
+            </summary></member>
+        <member name="F:Google.Maps.Feature.Style.Settings.SegmentStyleSettings.IntersectionArmLength">
+            <summary>
+            The length of the intersection arms.
+            </summary></member>
+        <member name="F:Google.Maps.Feature.Style.Settings.SegmentStyleSettings.IntersectionJoinLength">
+            <summary>
+            If the length of a road connecting two intersections is shorter than the join length, the
+            two intersections are joined.
+            </summary>
+            <remarks>
+            In most cases, this should be greater than twice the arm length to avoid overlapping arms.
+            </remarks></member>
+        <member name="F:Google.Maps.Feature.Style.Settings.SegmentStyleSettings.MaxIntersectionArmDistance">
+            <summary>
+            The maximum distance an intersection arm can start from the center of the intersection
+            it's connected with.
+            </summary>
+            <remarks>
+            Two roads may overlap indefinitely, usually caused by a large road width. In these cases,
+            it may not be possible to generate an acceptable intersection. Settings a maximum arm
+            distance prevents abnormally large intersections from being generated.
+            </remarks></member>
         <member name="F:Google.Maps.Feature.Style.Settings.SegmentStyleSettings.Width">
             <summary>
             Segment width.
@@ -4455,7 +4837,7 @@
             </summary></member>
         <member name="F:Google.Maps.Feature.Style.Settings.SettingsChangeListener.SettingsReference">
             <summary>
-            Initd by <see cref="M:Google.Maps.Feature.Style.Settings.SettingsChangeListener.InitSettingsReference(Google.Maps.Feature.Style.Settings.AbstractStyleSettings)" />. Holds a reference to the
+            Updated by <see cref="M:Google.Maps.Feature.Style.Settings.SettingsChangeListener.UpdateSettingsReference(Google.Maps.Feature.Style.Settings.AbstractStyleSettings)" />. Holds a reference to the
             <see cref="T:Google.Maps.Feature.Style.Settings.AbstractStyleSettings" /> instance we're listening to.
             </summary></member>
         <member name="F:Google.Maps.Feature.Style.Settings.SettingsChangeListener.ListenerDelegate">
@@ -4469,9 +4851,9 @@
             The delegate to trigger when the <see cref="T:Google.Maps.Feature.Style.Settings.AbstractStyleSettings" /> changes.
             </param>
             </summary></member>
-        <member name="M:Google.Maps.Feature.Style.Settings.SettingsChangeListener.InitSettingsReference(Google.Maps.Feature.Style.Settings.AbstractStyleSettings)">
+        <member name="M:Google.Maps.Feature.Style.Settings.SettingsChangeListener.UpdateSettingsReference(Google.Maps.Feature.Style.Settings.AbstractStyleSettings)">
             <summary>
-            Init the reference to the <see cref="T:Google.Maps.Feature.Style.Settings.AbstractStyleSettings" /> instance that we're
+            Update the reference to the <see cref="T:Google.Maps.Feature.Style.Settings.AbstractStyleSettings" /> instance that we're
             listening to. Adds <see cref="F:Google.Maps.Feature.Style.Settings.SettingsChangeListener.ListenerDelegate" /> as a listener on the new instance,
             if any, and removes it from the previous instance, if any.
             </summary></member>
@@ -4485,6 +4867,298 @@
             </summary>
             <param name="placeId">Place ID.</param>
             <param name="name">The name of this feature, used to name generated Unity objects.</param></member>
+        <member name="T:Google.Maps.Fencing.ObjectCreatedArgs">
+            <summary>
+            Arguments for the <see cref="T:Google.Maps.Fencing.ObjectCreatedEvent" /> event.
+            Experimental. Interface subject to change.
+            </summary></member>
+        <member name="F:Google.Maps.Fencing.ObjectCreatedArgs.GameObject">
+            <summary>
+            The <see cref="T:UnityEngine.GameObject" /> instance created by the <see cref="T:Google.Maps.Fencing.FencingService" />.
+            </summary></member>
+        <member name="M:Google.Maps.Fencing.ObjectCreatedArgs.#ctor(UnityEngine.GameObject)">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="gameObject">The <see cref="T:UnityEngine.GameObject" /> that has been destroyed.</param></member>
+        <member name="T:Google.Maps.Fencing.ObjectDestroyedArgs">
+            <summary>
+            Arguments for the <see cref="T:Google.Maps.Fencing.ObjectDestroyedEvent" /> event.
+            Experimental. Interface subject to change.
+            </summary></member>
+        <member name="F:Google.Maps.Fencing.ObjectDestroyedArgs.GameObject">
+            <summary>
+            The <see cref="T:UnityEngine.GameObject" /> instance destroyed by the <see cref="T:Google.Maps.Fencing.FencingService" />.
+            </summary></member>
+        <member name="M:Google.Maps.Fencing.ObjectDestroyedArgs.#ctor(UnityEngine.GameObject)">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="gameObject">
+            The <see cref="T:UnityEngine.GameObject" /> instance destroyed by the <see cref="T:Google.Maps.Fencing.FencingService" />.
+            </param></member>
+        <member name="T:Google.Maps.Fencing.ObjectCreatedEvent">
+            <summary>
+            Triggered when a <see cref="T:Google.Maps.Fencing.FencingService" /> instance creates a new fencing
+            <see cref="T:UnityEngine.GameObject" />. The specific objects that will be created, as well as their
+            structure is determined by the way in which <see cref="T:Google.Maps.Fencing.FencingService" /> is used.
+            Experimental. Interface subject to change.
+            </summary></member>
+        <member name="T:Google.Maps.Fencing.ObjectDestroyedEvent">
+            <summary>
+            Triggered when a <see cref="T:Google.Maps.Fencing.FencingService" /> instance destroys a fencing
+            <see cref="T:UnityEngine.GameObject" />. Will be called immediately before object destruction.
+            Experimental. Interface subject to change.
+            </summary></member>
+        <member name="T:Google.Maps.Fencing.FencingServiceEvents">
+            <summary>
+            Experimental. Interface subject to change.
+            Events provided by <see cref="T:Google.Maps.Fencing.FencingService" />.
+            </summary></member>
+        <member name="F:Google.Maps.Fencing.FencingServiceEvents.ObjectCreated">
+            <summary>
+            See documentation for <see cref="T:Google.Maps.Fencing.ObjectCreatedEvent" />.
+            </summary></member>
+        <member name="F:Google.Maps.Fencing.FencingServiceEvents.ObjectDestroyed">
+            <summary>
+            See documentation for <see cref="T:Google.Maps.Fencing.ObjectDestroyedEvent" />.
+            </summary></member>
+        <member name="T:Google.Maps.Fencing.FencingService">
+            <summary>
+            Creates fencing objects in response to <see cref="F:Google.Maps.Event.MapFeatureEvents.Load" /> and unloads
+            them in response to <see cref="F:Google.Maps.Event.MapFeatureEvents.Unload" />. The fencing objects are
+            repositioned in response to <see cref="F:Google.Maps.Event.FloatingOriginEvents.Move" />. Where and when fencing
+            objects should be created is specified by registering <see cref="T:Google.Maps.Fencing.FencingRule" /> instances
+            with this class.
+            Experimental. Interface subject to change.
+            The created fencing objects are all placed under <see cref="T:UnityEngine.GameObject" /> referenced by
+            <see cref="F:Google.Maps.Fencing.FencingService.Root" />. Each game object is placed directly under the root and is guaranteed to
+            have an attached <see cref="T:UnityEngine.SphereCollider" />. Together, the <see cref="T:UnityEngine.SphereCollider" />s
+            approximate the volume of the zone specified by the fencing rules. The game objects are
+            not generated with elements that are visible in the game view.
+            </summary></member>
+        <member name="T:Google.Maps.Fencing.FencingService.RegistrationInfo">
+            <summary>
+            Information associated with the registration of a rule with a <see cref="T:Google.Maps.Fencing.FencingService" />.
+            </summary></member>
+        <member name="F:Google.Maps.Fencing.FencingService.RegistrationInfo.FencingRule">
+            <summary>
+            The registered fencing rule.
+            </summary></member>
+        <member name="F:Google.Maps.Fencing.FencingService.RegistrationInfo.Layer">
+            <summary>
+            Layer that should be assigned to the <see cref="T:UnityEngine.GameObject" />s for this rule.
+            </summary></member>
+        <member name="T:Google.Maps.Fencing.FencingService.Handle">
+            <summary>
+            Handle to a particular registration of a rule.
+            </summary></member>
+        <member name="F:Google.Maps.Fencing.FencingService.MapsServiceEvents">
+            <summary>
+            <see cref="T:Google.Maps.MapsService" /> events.
+            </summary></member>
+        <member name="F:Google.Maps.Fencing.FencingService.FencingServiceEvents">
+            <summary>
+            <see cref="T:Google.Maps.Fencing.FencingService" /> events.
+            </summary></member>
+        <member name="F:Google.Maps.Fencing.FencingService.Root">
+            <summary>
+            Root under which all fencing objects will be added.
+            </summary></member>
+        <member name="F:Google.Maps.Fencing.FencingService.FencingRules">
+            <summary>
+            Mapping from rules to registration information (e.g. which layer the fencing objects
+            should be placed on). Rules are registered by <see cref="T:Google.Maps.Fencing.FencingRule" /> using their
+            instance identity, so the same rule instance cannot have two registrations simultaneously.
+            </summary></member>
+        <member name="F:Google.Maps.Fencing.FencingService.ChunkGameObjects">
+            <summary>
+            Mapping from chunks to game objects. When fencing objects are created they are linked
+            to their chunk in this mapping. Later, when a chunk is unloaded the objects can be
+            located here and destroyed.
+            </summary></member>
+        <member name="M:Google.Maps.Fencing.FencingService.RegisterRule(Google.Maps.Fencing.FencingRule,System.Int32)">
+            <summary>
+            Register a rule for fencing object creation on the specified layer. After this call,
+            this <see cref="T:Google.Maps.Fencing.FencingService" /> will create fencing objects as it receives
+            <see cref="T:Google.Maps.Event.LoadMapChunkEvent" /> events. Calling <see cref="M:Google.Maps.Fencing.FencingService.RegisterRule(Google.Maps.Fencing.FencingRule,System.Int32)" /> has no
+            effect on any existing fencing objects until <see cref="T:Google.Maps.Event.LoadMapChunkEvent" /> is received
+            for the relevant chunks. Registering the same rule instance twice has the effect of
+            updating the rule's registration. It does not cause a second collection of fencing objects
+            to be created. Fencing objects that are created are destroyed in response to
+            <see cref="T:Google.Maps.Event.UnloadMapChunkEvent" />.
+            </summary>
+            <param name="fencingRule">The rule instance to register for object creation.</param>
+            <param name="layer">
+            The layer on which to create fencing objects for the given rule.
+            </param>
+            <returns>A handle that can be used to refer to the registration.</returns></member>
+        <member name="M:Google.Maps.Fencing.FencingService.UnregisterRule(Google.Maps.Fencing.FencingService.Handle)">
+            <summary>
+            Unregister a rule using a handle returned by <see cref="M:Google.Maps.Fencing.FencingService.RegisterRule(Google.Maps.Fencing.FencingRule,System.Int32)" />. After this call,
+            this <see cref="T:Google.Maps.Fencing.FencingService" /> will no longer create fencing objects as it receives
+            <see cref="T:Google.Maps.Event.LoadMapChunkEvent" /> events. Any fencing objects loaded for the rule will
+            continue to be destroyed in response to <see cref="T:Google.Maps.Event.UnloadMapChunkEvent" /> as before.
+            Fencing objects will not be destroyed by this call, and will remain in the scene until
+            an appropriate <see cref="T:Google.Maps.Event.UnloadMapChunkEvent" /> event is encountered.
+            </summary>
+            <param name="handle">Handle to registration to remove.</param>
+            <exception cref="T:System.ArgumentException">
+            Thrown if one of the arguments was invalid, e.g. the rule instance was not registered
+            immediately before calling this method.
+            </exception></member>
+        <member name="M:Google.Maps.Fencing.FencingService.GetBoundsFloorCenter(UnityEngine.Bounds)">
+            <summary>
+            Returns the center of the floor of some bounds.
+            </summary>
+            <param name="bounds">The bounds.</param>
+            <returns>The center of the floor of the bounds.</returns></member>
+        <member name="M:Google.Maps.Fencing.FencingService.GetBoundsFloorDiameter(UnityEngine.Bounds)">
+            <summary>
+            Returns the corner-to-corner diameter of some bounds across its floor.
+            </summary>
+            <param name="bounds">The bounds.</param>
+            <returns>The diameter of the bounds across its floor.</returns></member>
+        <member name="M:Google.Maps.Fencing.FencingService.HasFencingObjects(System.Object)">
+            <summary>
+            Returns true if any fencing objects are registered against the specified chunk.
+            </summary>
+            <param name="chunkId">The id of the chunk.</param>
+            <returns>
+            True if any fencing objects are registered against the chunk, false otherwise.
+            </returns></member>
+        <member name="M:Google.Maps.Fencing.FencingService.RegisterFencingObject(System.Object,UnityEngine.GameObject)">
+            <summary>
+            Registers a fencing object against the specified chunk.
+            </summary>
+            <param name="chunkId">
+            The id of the chunk to register the fencing object against.
+            </param>
+            <param name="fencingObject">The fencing object to register.</param></member>
+        <member name="M:Google.Maps.Fencing.FencingService.CreateFencingObjects(System.Object,Google.Maps.Feature.MapFeature,Google.Maps.Fencing.FencingService.RegistrationInfo,System.Single)">
+            <summary>
+            Create fencing objects for the specified map feature and register them against the
+            specified chunk id.
+            </summary>
+            <param name="chunkId">
+            The id of the chunk to register the new fencing objects against.
+            </param>
+            <param name="mapFeature">The map feature to create fencing objects for.</param>
+            <param name="registrationInfo">Registration information applicable to this feature.</param>
+            <param name="margin">The amount of margin to add around feature.</param></member>
+        <member name="M:Google.Maps.Fencing.FencingService.DestroyFencingObjects(System.Object)">
+            <summary>
+            Destroy fencing objects registered against specified chunk and remove registration.
+            </summary>
+            <param name="chunkId">
+            The id of the chunk whose objects are to be destroyed and unregistered.
+            </param></member>
+        <member name="M:Google.Maps.Fencing.FencingService.MatchMapFeature(Google.Maps.Feature.MapFeature,Google.Maps.Fencing.FencingRule,System.Single@)">
+            <summary>
+            Match map feature against <see cref="T:Google.Maps.Fencing.FencingRule" />, returning the margin if it matches.
+            </summary>
+            <param name="mapFeature">The map feature to match against the rule.</param>
+            <param name="fencingRule">The rule to match the map feature against.</param>
+            <param name="margin">
+            The variable to save the margin into, in the case that the map feature matches
+            <see cref="T:Google.Maps.Fencing.FencingRule" />
+            </param>
+            <returns>True if the feature matches, false otherwise.</returns></member>
+        <member name="M:Google.Maps.Fencing.FencingService.MaybeCreateFencingObjects(System.Object,Google.Maps.Feature.MapFeature)">
+            <summary>
+            Create fencing objects for a map feature if it matches any rules.
+            </summary>
+            <param name="chunkId">Chunk to register fencing objects against.</param>
+            <param name="mapFeature">Feature to add fencing objects for.</param></member>
+        <member name="M:Google.Maps.Fencing.FencingService.HandleLoad(Google.Maps.Event.LoadMapChunkArgs)">
+            <summary>
+            Handle load of a map feature by checking feature against fencing rule. If the rule
+            matches create some fencing objects for the feature.
+            </summary>
+            <param name="args">Event arguments.</param></member>
+        <member name="M:Google.Maps.Fencing.FencingService.HandleUnload(Google.Maps.Event.UnloadMapChunkArgs)">
+            <summary>
+            Handle unloading of a chunk by finding all the fencing objects created for the chunk
+            and destroying them.
+            </summary>
+            <param name="args">Event arguments.</param></member>
+        <member name="M:Google.Maps.Fencing.FencingService.HandleFloatingOriginMove(Google.Maps.Event.FloatingOriginMoveArgs)">
+            <summary>
+            Handle movement of floating origin by translating all of the fencing objects by the
+            appropriate offset.
+            </summary>
+            <param name="args">Event arguments.</param></member>
+        <member name="M:Google.Maps.Fencing.FencingService.#ctor(UnityEngine.GameObject,Google.Maps.Event.Events)">
+            <summary>
+            Constructor.
+            </summary></member>
+        <member name="M:Google.Maps.Fencing.FencingService.Initialize">
+            <summary>
+            Initialize instance by registering event handlers.
+            </summary></member>
+        <member name="T:Google.Maps.Fencing.StructureArea">
+            <summary>
+            A structure usage type paired with a margin distance.
+            </summary></member>
+        <member name="T:Google.Maps.Fencing.FencingRule">
+            <summary>
+            A rule specifying a fencing area. This is a data class representing the abstract syntax of
+            a rule. Rules are built up in a fluent style.
+            Experimental. Interface subject to change.
+            The following example specifies the rule "within 30m of a school or 10m of a bank":
+            <code>
+            FencingRule rule = FencingRule.NewRule()
+            .StructureArea(UsageType.School, 30f)
+            .StructureArea(UsageType.Bank, 10f);
+            </code>
+            </summary></member>
+        <member name="F:Google.Maps.Fencing.FencingRule.StructureAreas">
+            <summary>
+            All the structure types and their margins for this rule.
+            </summary></member>
+        <member name="M:Google.Maps.Fencing.FencingRule.NewRule">
+            <summary>
+            Create a new rule encompassing no area.
+            </summary>
+            <returns>The new rule.</returns></member>
+        <member name="M:Google.Maps.Fencing.FencingRule.#ctor(System.Collections.Generic.IEnumerable{Google.Maps.Fencing.StructureArea})">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="structureAreas">The individual areas that make up this rule.</param></member>
+        <member name="M:Google.Maps.Fencing.FencingRule.StructureArea(Google.Maps.Feature.StructureMetadata.UsageType,System.Single)">
+            <summary>
+            Create a rule encompassing the area of this rule plus the all areas covered by structures
+            of a given type plus some margin around those structures.
+            </summary>
+            <param name="usageType">The type of structure to add to the rule.</param>
+            <param name="margin">The margin to leave around the structures, in meters.</param>
+            <returns>The new rule.</returns></member>
+        <member name="T:Google.Maps.Fencing.FencingServiceComponent">
+            Creates, destroys and updates fencing objects based upon the loading/unloading of
+            map features and the movement of the floating origin.
+            Experimental. Interface subject to change.
+            The created fencing objects are all placed under <see cref="T:UnityEngine.GameObject" /> referenced by
+            <see cref="F:Google.Maps.Fencing.FencingServiceComponent.Root" />. The specific structure is unspecified, but the subtree under
+            <see cref="F:Google.Maps.Fencing.FencingServiceComponent.Root" /> is guaranteed to contain some <see cref="T:UnityEngine.SphereCollider" /> instances
+            approximating the volume of the zone specified by the fencing rules.</member>
+        <member name="F:Google.Maps.Fencing.FencingServiceComponent.MapsService">
+            <summary>
+            The MapsService instance to listen to for events.
+            </summary></member>
+        <member name="F:Google.Maps.Fencing.FencingServiceComponent.Root">
+            <summary>
+            The game object under which to add all the fencing objects.
+            </summary></member>
+        <member name="P:Google.Maps.Fencing.FencingServiceComponent.FencingService">
+            <summary>
+            Fencing service provided by this component. Not guaranteed to be set to an instance until
+            <see cref="M:Google.Maps.Fencing.FencingServiceComponent.Awake" /> has finished executing.
+            </summary></member>
+        <member name="M:Google.Maps.Fencing.FencingServiceComponent.Awake">
+            <summary>
+            Component awakening.
+            </summary></member>
         <member name="T:Google.Maps.GameObjectOptions">
             <summary>
             Encapsulates styling options for map feature GameObjects.
@@ -4773,8 +5447,13 @@
             Unloads parts of the map that have not been loaded or displayed in the last
             <see cref="F:Google.Maps.Loading.MapLoader.UnloadUnusedSeconds" /> seconds.
             </summary></member>
-        <member name="M:Google.Maps.Loading.MapLoader.OnPreRender">
-            <summary>Called by Unity before rendering each frame for the attached camera.</summary></member>
+        <member name="M:Google.Maps.Loading.MapLoader.OnPreCull">
+            <summary>Called by Unity before the attached camera culls the scene for rendering.</summary>
+            <remarks>
+            The visibility of GameObjects to the attached camera is determined after this method is
+            called. See https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnPreCull.html for more
+            information.
+            </remarks></member>
         <member name="T:Google.Maps.Loading.MixedZoom">
             <summary>
             Extra parameters for a <see cref="T:Google.Maps.Loading.MapLoader" /> to load the map at lower zoom levels further
@@ -5344,7 +6023,7 @@
             <param name="zoom">
             Zoom level (Coords.Zoom is ignored and this is used instead).
             </param>
-            <returns>Initd Grid.</returns></member>
+            <returns>Updated Grid.</returns></member>
         <member name="M:Google.Maps.MapLoadRegion.Shape.ContainsTileCoord(Google.Maps.Coord.TileCoord,Google.Maps.Coord.Coords)">
             <summary>
             Determines whether a tileCoord overlaps or is entirely contained in this shape.
@@ -5360,7 +6039,7 @@
         <member name="F:Google.Maps.MapLoadRegion.Area.Bounds">
             <summary>
             The <see cref="T:UnityEngine.Bounds" /> the shape will encompass. This is the area of the map the shape
-            will load when <see cref="M:Google.Maps.MapLoadRegion.Load(Google.Maps.GameObjectOptions,System.Int32)" /> is called.
+            will load when a Load method is called.
             </summary></member>
         <member name="F:Google.Maps.MapLoadRegion.Area.TileFilter">
             <summary>
@@ -5372,7 +6051,7 @@
             <summary>Constructor.</summary>
             <param name="bounds">
             The <see cref="T:UnityEngine.Bounds" /> the shape will encompass. This is the area of the map the shape
-            will load when <see cref="M:Google.Maps.MapLoadRegion.Load(Google.Maps.GameObjectOptions,System.Int32)" /> is called.
+            will load when <see cref="M:Google.Maps.MapLoadRegion.Load(Google.Maps.GameObjectOptions)" /> is called.
             </param>
             <param name="tileFilter">
             <para>
@@ -5429,7 +6108,7 @@
             </summary></member>
         <member name="F:Google.Maps.MapLoadRegion.TileLoader">
             <summary>
-            Tile loader to call via <see cref="M:Google.Maps.MapLoadRegion.Load(Google.Maps.GameObjectOptions,System.Int32)" />.
+            Tile loader to call via <see cref="M:Google.Maps.MapLoadRegion.Load(Google.Maps.GameObjectOptions)" />.
             </summary></member>
         <member name="F:Google.Maps.MapLoadRegion.Coords">
             <summary>Coordinate system.</summary></member>
@@ -5477,7 +6156,40 @@
             The <see cref="T:Google.Maps.GameObjectOptions" /> to use if <see cref="F:Google.Maps.MapLoadRegion.GameObjectOptionsProvider" />
             doesn't provide one.
             </param></member>
+        <member name="M:Google.Maps.MapLoadRegion.Load(Google.Maps.GameObjectOptions)">
+            <summary>
+            Loads the portion of the map defined by this region at the zoom level specified by the
+            <see cref="T:Google.Maps.MapsService" />.
+            </summary>
+            <param name="options">
+            Game object options. Ignored if a <see cref="T:Google.Maps.Feature.Style.Attachment.StyleAttachment" /> component is attached to
+            the same <see cref="T:UnityEngine.GameObject" /> as the relevant <see cref="T:Google.Maps.MapsService" />.
+            </param></member>
         <member name="M:Google.Maps.MapLoadRegion.Load(Google.Maps.GameObjectOptions,System.Int32)">
+            <summary>
+            Loads the portion of the map defined by this region, at the specified
+            zoom level.
+            </summary>
+            <param name="options">
+            Game object options. Ignored if a <see cref="T:Google.Maps.Feature.Style.Attachment.StyleAttachment" /> component is attached to
+            the same <see cref="T:UnityEngine.GameObject" /> as the relevant <see cref="T:Google.Maps.MapsService" />.
+            </param>
+            <param name="zoom">
+            The magnification level. The range is 0-21. If no zoom level is supplied, the one from
+            *Coords.Zoom* will be used instead.
+            <strong>Caution:</strong> Zoom level controls the level of detail of map
+            data, and determines the size of the map "tiles" returned. The higher
+            the zoom level, the more detail is returned, which negatively affects
+            performance.
+            <para>
+            The default zoom level is *17*. This zoom level is considered
+            appropriate for location-based games because lower zoom levels tend to
+            miss some important map features. Zoom level 17 is also more stable,
+            which means the returned map features are less likely to change over
+            time.
+            </para>
+            </param></member>
+        <member name="M:Google.Maps.MapLoadRegion.LoadWithZoom(Google.Maps.GameObjectOptions,System.Int32)">
             <summary>
             Loads the portion of the map defined by this region, at the specified
             zoom level.
@@ -5610,10 +6322,9 @@
             </param>
             <param name="transform">
             The <see cref="T:UnityEngine.Transform" /> used to transform the area of the map region to be loaded.
-            <remarks>
             This is usually the <see cref="T:UnityEngine.Transform" /> of the corresponding <see cref="T:Google.Maps.MapsService" />
-            component to ensure that the right amount of geometry is loaded to fill the viewport.
-            </remarks>
+            component to ensure that the right amount of geometry is loaded to fill the viewport
+            whenever it is rotated or scaled.
             </param>
             <param name="maxDistance">The maximum distance from the camera position to load.</param></member>
         <member name="M:Google.Maps.MapLoadRegion.Expand(System.Single)">
@@ -5696,6 +6407,10 @@
         <member name="F:Google.Maps.MapPreviewOptions.Initialized">
             <summary>
             Has the object been fully initialized?
+            </summary></member>
+        <member name="F:Google.Maps.MapPreviewOptions.SuppressWarningDialog">
+            <summary>
+            Used to suppress warning dialog during testing.
             </summary></member>
         <member name="F:Google.Maps.MapPreviewOptions.EnabledPrevious">
             <summary>
@@ -5899,12 +6614,6 @@
             properties. For example, you could add a bird's-eye mini-map with a
             different zoom level to your main map.
             </remarks></member>
-        <member name="F:Google.Maps.MapsService.ApiKey">
-            <summary>The API key. You must have both the
-            Semantic Tile API and the Playable Locations API enabled. For more information,
-            see <a href="/maps/tt/games/get_api_key">Get API Key</a>.</summary>
-            <remarks><strong>Note:</strong> If you modify this field after calling
-            <see cref="M:Google.Maps.MapsService.Awake" />, it has no effect.</remarks></member>
         <member name="F:Google.Maps.MapsService.SemanticTileApiAddress">
             <summary>
             The domain address of the Semantic Tile API.
@@ -5915,6 +6624,12 @@
             <summary>
             When true, uses http instead of https when sending requests to the Semantic Tile API.
             </summary></member>
+        <member name="F:Google.Maps.MapsService.ApiKey">
+            <summary>The API key. You must have both the
+            Semantic Tile API and the Playable Locations API enabled. For more information,
+            see <a href="/maps/documentation/gaming/tt/get_api_key">Get API Key</a>.</summary>
+            <remarks><strong>Note:</strong> If you modify this field after calling
+            <see cref="M:Google.Maps.MapsService.Awake" />, it has no effect.</remarks></member>
         <member name="F:Google.Maps.MapsService.NetworkPoolSize">
             <summary>Maximum number of concurrent connections to the Semantic Tile API.</summary>
             <remarks>
@@ -6380,10 +7095,6 @@
             <seealso cref="M:Google.Maps.MapsService.InitFloatingOrigin(Google.Maps.Coord.LatLng)" /></member>
         <member name="M:Google.Maps.MapsService.ResolveApiKey">
             <summary>Resolves which API key to use.</summary>
-            <remarks>
-            If the ApiKey property is unset, this reads the key from
-            "Assets/Resources/GoogleMaps/ApiKey.txt", if it exists.
-            </remarks>
             <returns>The API Key to use.</returns></member>
         <member name="M:Google.Maps.MapsService.ResolveCountryProvider">
             <summary>Finds the <see cref="T:Google.Maps.CountryProvider" /> component.</summary></member>
@@ -6391,9 +7102,9 @@
             <summary>
             Determines the base path for cached tiles based on <see cref="F:Google.Maps.CacheOptions.Directory" />.
             </summary></member>
-        <member name="M:Google.Maps.MapsService.FrameInit">
+        <member name="M:Google.Maps.MapsService.FrameUpdate">
             <summary>
-            Handle Unity's Init event.
+            Handle Unity's Update event.
             </summary></member>
         <member name="M:Google.Maps.MapsService.MapInit">
             <summary>
@@ -6455,6 +7166,10 @@
             <see cref="T:UnityEngine.Camera" /> responsible for capturing features to then paint them onto terrain
             later.
             </summary></member>
+        <member name="F:Google.Maps.Terrain.Painting.TerrainPaintingManager.FeatureMaskCameraObject">
+            <summary>
+            <see cref="T:UnityEngine.GameObject" /> to attach <see cref="F:Google.Maps.Terrain.Painting.TerrainPaintingManager.FeatureMaskCamera" /> to.
+            </summary></member>
         <member name="F:Google.Maps.Terrain.Painting.TerrainPaintingManager.TerrainEvents">
             <summary>
             %Events related to Terrain.
@@ -6463,12 +7178,26 @@
             <summary>
             Constructor.
             </summary></member>
+        <member name="M:Google.Maps.Terrain.Painting.TerrainPaintingManager.Destroy">
+            <summary>
+            Clean up any resources created by this class.
+            </summary></member>
         <member name="M:Google.Maps.Terrain.Painting.TerrainPaintingManager.PaintTerrain(UnityEngine.Terrain,Google.Maps.Terrain.TerrainStyle,Google.Maps.Util.ValueWrapper{System.Action})">
             <summary>
             Coroutine to paint a <see cref="T:UnityEngine.Terrain" /> object.
             </summary>
             <param name="terrain">The <see cref="T:UnityEngine.Terrain" /> object to paint.</param>
             <param name="terrainStyle">The style to apply to the <see cref="T:UnityEngine.Terrain" />.</param>
+            <param name="tileLoadFinalizer">
+            Finalizer that will be called when tile is finished loading or is aborted.
+            </param></member>
+        <member name="M:Google.Maps.Terrain.Painting.TerrainPaintingManager.PaintTerrainRoutine(UnityEngine.Terrain,UnityEngine.RenderTexture,Google.Maps.Util.ValueWrapper{System.Action})">
+            <summary>
+            Coroutine to paint a <see cref="T:UnityEngine.Terrain" /> object.
+            </summary>
+            <param name="terrain">The <see cref="T:UnityEngine.Terrain" /> object to paint.</param>
+            <param name="featureMaskTexture">The <see cref="T:Google.Maps.Feature.MapFeature" /> group mask used to draw
+            <see cref="T:Google.Maps.Feature.MapFeature" />s onto the <see cref="T:UnityEngine.Terrain" />.</param>
             <param name="tileLoadFinalizer">
             Finalizer that will be called when tile is finished loading or is aborted.
             </param></member>
@@ -6524,7 +7253,7 @@
             </summary>
             <param name="elevationGridSize">The size of this elevation grid in meters.</param>
             <param name="floatingOrigin">Floating origin.</param></member>
-        <member name="M:Google.Maps.Terrain.TerrainTile.TranslateAndInitFloatingOriginFromCoords(Google.Maps.Coord.Coords)">
+        <member name="M:Google.Maps.Terrain.TerrainTile.TranslateAndUpdateFloatingOriginFromCoords(Google.Maps.Coord.Coords)">
             <inheritdoc /></member>
         <member name="M:Google.Maps.Terrain.TerrainTile.TranslateOrigin(UnityEngine.Vector2)">
             <summary>
@@ -6749,8 +7478,8 @@
             <summary>Creates a new transaction for an entry in this cache block.</summary>
             <param name="xOffset">X offset of the cache block entry.</param>
             <param name="yOffset">Y offset of the cache block entry.</param></member>
-        <member name="M:Google.Maps.TileLoading.CacheBlock`1.InitFloatingOrigin(Google.Maps.Coord.Coords)">
-            <summary>Inits the floating origin of each cached tile.</summary>
+        <member name="M:Google.Maps.TileLoading.CacheBlock`1.UpdateFloatingOrigin(Google.Maps.Coord.Coords)">
+            <summary>Updates the floating origin of each cached tile.</summary>
             <param name="coords">Coordinate system containing the new floating origin.</param></member>
         <member name="M:Google.Maps.TileLoading.CacheBlock`1.Serialize(System.IO.Stream)">
             <summary>Writes a binary serialized CacheBlock to a stream.</summary></member>
@@ -7155,10 +7884,6 @@
             Static class containing helper functions common info for generating tile and session network
             information.
             </summary></member>
-        <member name="F:Google.Maps.TileLoading.NetworkParameters.UnsupportedClientVersionMessage">
-            <summary>
-            Error string sent by Semantic Tile API if the client is blacklisted.
-            </summary></member>
         <member name="F:Google.Maps.TileLoading.NetworkParameters._PlatformRequestHeaders">
             <summary>
             Backing field for <see cref="P:Google.Maps.TileLoading.NetworkParameters.PlatformRequestHeaders" />.
@@ -7251,6 +7976,11 @@
         <member name="F:Google.Maps.TileLoading.ProtoTileProducer.RequestHeaders">
             <summary>
             Request headers, populated the first time <see cref="M:Google.Maps.TileLoading.ProtoTileProducer.GetRequestHeaders" /> is called.
+            </summary></member>
+        <member name="F:Google.Maps.TileLoading.ProtoTileProducer.KillSwitchEnabled">
+            <summary>
+            Set to true when kill switch response is received. Prevents further network requests from
+            being initiated.
             </summary></member>
         <member name="M:Google.Maps.TileLoading.ProtoTileProducer.#ctor(System.String,System.Boolean,System.String,System.Int32,System.Int32,Google.Maps.TileLoading.ICountryProvider,Google.Maps.TileLoading.IUrlBuilder,Google.Maps.Event.MapEvents,Google.Maps.Logging.ITileRequestLogger,Google.Maps.Util.IRequestFactory,Google.Maps.Util.IClock)">
             <summary>
@@ -7756,11 +8486,12 @@
             <summary>
             URL builder used to build cache keys.
             </summary></member>
-        <member name="F:Google.Maps.TileLoading.TileCache`1.FirstRequestHasBeenSent">
+        <member name="F:Google.Maps.TileLoading.TileCache`1.MustSendNextNetworkRequest">
             <summary>
-            Whether any requests have been sent to the network.
+            Whether to send the next network request unconditionally, even if it's cached. It is set to
+            false after sending one request. This allows more accurate daily active user accounting.
             </summary></member>
-        <member name="M:Google.Maps.TileLoading.TileCache`1.Initialize(Google.Maps.Util.ICoroutineStarter,Google.Maps.Util.IClock,Google.Maps.TileLoading.ProtoTileProducer,Google.Maps.TileLoading.ITileDecoder{`0},Google.Maps.TileLoading.IUrlBuilder,Google.Maps.Coord.Coords,Google.Maps.CacheOptions,Google.Maps.Logging.ITileRequestLogger)">
+        <member name="M:Google.Maps.TileLoading.TileCache`1.Initialize(Google.Maps.Util.ICoroutineStarter,Google.Maps.Util.IClock,Google.Maps.TileLoading.ProtoTileProducer,Google.Maps.TileLoading.ITileDecoder{`0},Google.Maps.TileLoading.IUrlBuilder,Google.Maps.Coord.Coords,Google.Maps.CacheOptions,Google.Maps.Logging.ITileRequestLogger,System.Boolean)">
             <summary>
             Initializes the TileCache, backed by a disk cache if options.MaxDiskBytes &gt; 0.
             </summary>
@@ -7771,7 +8502,10 @@
             <param name="urlBuilder">URL builder for building cache keys.</param>
             <param name="coords">Coordinate system.</param>
             <param name="options">Cache options.</param>
-            <param name="requestLogger">Logger for cache stats.</param></member>
+            <param name="requestLogger">Logger for cache stats.</param>
+            <param name="alwaysSendFirstNetworkRequest">
+            Whether to send the first network request unconditionally.
+            </param></member>
         <member name="M:Google.Maps.TileLoading.TileCache`1.InitializeCleanup(Google.Maps.Util.ICoroutineStarter,Google.Maps.TileLoading.IPersistentCache{`0})">
             <summary>
             Starts <see cref="M:Google.Maps.TileLoading.IPersistentCache`1.CallCleanup" /> as a coroutine.
@@ -7780,7 +8514,7 @@
             If <see cref="F:Google.Maps.TileLoading.TileCache{`0}.UseLongExpiryTimeForTesting" /> is true, the cache should never be cleaned up,
             so don't start the coroutine.
             </remarks></member>
-        <member name="M:Google.Maps.TileLoading.TileCache`1.InitializeInternal(Google.Maps.Util.ICoroutineStarter,Google.Maps.TileLoading.ITileProducer,Google.Maps.TileLoading.ITileDecoder{`0},Google.Maps.TileLoading.IUrlBuilder,Google.Maps.Util.IClock,Google.Maps.Coord.Coords,Google.Maps.TileLoading.IPersistentCache{`0},Google.Maps.Logging.ITileRequestLogger)">
+        <member name="M:Google.Maps.TileLoading.TileCache`1.InitializeInternal(Google.Maps.Util.ICoroutineStarter,Google.Maps.TileLoading.ITileProducer,Google.Maps.TileLoading.ITileDecoder{`0},Google.Maps.TileLoading.IUrlBuilder,Google.Maps.Util.IClock,Google.Maps.Coord.Coords,Google.Maps.TileLoading.IPersistentCache{`0},Google.Maps.Logging.ITileRequestLogger,System.Boolean)">
             <summary>
             Initializes the TileCache with a custom <see cref="T:Google.Maps.TileLoading.IPersistentCache`1" />.
             </summary>
@@ -7791,7 +8525,10 @@
             <param name="clock">Clock.</param>
             <param name="coords">Coordinate system.</param>
             <param name="persistentCache">Custom persistent cache.</param>
-            <param name="requestLogger">Request logger for caching stats.</param></member>
+            <param name="requestLogger">Request logger for caching stats.</param>
+            <param name="alwaysSendFirstNetworkRequest">
+            Whether to send the first network request unconditionally.
+            </param></member>
         <member name="M:Google.Maps.TileLoading.TileCache`1.LoadTile(Google.Maps.TileLoading.TileParameters,Google.Maps.TileLoading.TileCache{`0}.Result)">
             <summary>
             Asynchronously loads the tile with the given <see cref="T:Google.Maps.Coord.TileCoord" />.
@@ -7853,7 +8590,7 @@
             Evicts the Least Recently Used cache entries, to bring the size down to
             <see cref="F:Google.Maps.TileLoading.TileCache{`0}.MaxMemoryBlocks" />.
             </summary></member>
-        <member name="M:Google.Maps.TileLoading.TileCache`1.InitFloatingOrigin">
+        <member name="M:Google.Maps.TileLoading.TileCache`1.UpdateFloatingOrigin">
             <summary>
             Translates the origin of each cached tile in response to changing the floating origin.
             </summary></member>
@@ -7945,9 +8682,9 @@
             MapsService parameters, for ObjectCreationFrameBudget.
             </param>
             <param name="tileRequestOptions">Tile request options.</param></member>
-        <member name="M:Google.Maps.TileLoading.TileManager.Init">
+        <member name="M:Google.Maps.TileLoading.TileManager.Update">
             <summary>
-            Pumped every frame by <see cref="M:Google.Maps.MapsService.FrameInit" />.
+            Pumped every frame by <see cref="M:Google.Maps.MapsService.FrameUpdate" />.
             </summary></member>
         <member name="M:Google.Maps.TileLoading.TileManager.LoadTiles(System.Collections.Generic.IEnumerable{Google.Maps.Coord.TileCoord},Google.Maps.GameObjectOptions)">
             <summary>Loads a list of tiles.</summary>
@@ -8031,9 +8768,9 @@
             </summary></member>
         <member name="M:Google.Maps.TileLoading.TileManager.SetAllDirty">
             <summary>Marks all tiles as dirty (i.e. incompletely loaded).</summary></member>
-        <member name="M:Google.Maps.TileLoading.TileManager.InitCacheFloatingOrigin">
+        <member name="M:Google.Maps.TileLoading.TileManager.UpdateCacheFloatingOrigin">
             <summary>
-            Inits the floating origin of each cached tile.
+            Updates the floating origin of each cached tile.
             </summary></member>
         <member name="M:Google.Maps.TileLoading.TileManager.NumParallelTilesLoading">
             <summary>
@@ -8527,6 +9264,86 @@
             <param name="style">
             <see cref="T:Google.Maps.GameObjectStyle" /> to apply to the <see cref="T:UnityEngine.GameObject" />.
             </param></member>
+        <member name="T:Google.Maps.Unity.GameObjectFactory.IntersectionGameObjectFactory">
+            <summary>
+            Factory for creating GameObjects from <see cref="T:Google.Maps.Unity.Intersections.IntersectionFeature" />s.
+            </summary></member>
+        <member name="F:Google.Maps.Unity.GameObjectFactory.IntersectionGameObjectFactory.Events">
+            <summary>
+            Events to invoke during GameObject creation.
+            </summary></member>
+        <member name="F:Google.Maps.Unity.GameObjectFactory.IntersectionGameObjectFactory.StaticBatcher">
+            <summary>
+            Handles the static batching of all created GameObjects marked as static.
+            </summary></member>
+        <member name="F:Google.Maps.Unity.GameObjectFactory.IntersectionGameObjectFactory.MetadataManager">
+            <summary>
+            Used to add metadata to game objects.
+            </summary></member>
+        <member name="F:Google.Maps.Unity.GameObjectFactory.IntersectionGameObjectFactory.IntersectionFactory">
+            <summary>
+            Used to generate intersection meshes.
+            </summary></member>
+        <member name="F:Google.Maps.Unity.GameObjectFactory.IntersectionGameObjectFactory.GameObjectStyleApplicator">
+            <summary>
+            Used to apply properties of <see cref="T:Google.Maps.GameObjectStyle" />s to <see cref="T:UnityEngine.GameObject" />s.
+            </summary></member>
+        <member name="M:Google.Maps.Unity.GameObjectFactory.IntersectionGameObjectFactory.#ctor(Google.Maps.Event.IntersectionEvents,Google.Maps.Unity.StaticBatcher,Google.Maps.Unity.RenderOrderManager,Google.Maps.Unity.FinalizerRegister{UnityEngine.GameObject},Google.Maps.MetadataOptions)">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="events">IntersectionEvents to invoke during GameObject creation.</param>
+            <param name="staticBatcher">Manages the batching of GameObjects marked as static.</param>
+            <param name="renderOrderManager">
+            The render order manager to use for game objects created by this factory.
+            </param>
+            <param name="finalizerRegister">
+            Register for <see cref="T:UnityEngine.GameObject" /> finalizers.
+            </param>
+            <param name="metadataOptions">Metadata options.</param></member>
+        <member name="M:Google.Maps.Unity.GameObjectFactory.IntersectionGameObjectFactory.CreateGameObject(Google.Maps.Unity.Intersections.IntersectionFeature,Google.Maps.Feature.Style.SegmentStyle,System.Boolean,UnityEngine.GameObject,Google.Maps.Unity.Intersections.RoadLattice)">
+            <summary>
+            Creates a <see cref="T:UnityEngine.GameObject" /> from an <see cref="T:Google.Maps.Unity.Intersections.IntersectionFeature" /> object.
+            </summary>
+            <param name="feature">The feature used for construction.</param>
+            <param name="style">Style that supplies the road width used to build intersections.</param>
+            <param name="globalStaticBatchEnabled">
+            When true, will statically batch created GameObjects unless otherwise specified in the
+            corresponding WillCreate event args.
+            </param>
+            <param name="parent">
+            An object that is set as the parent of the created intersection GameObjects.
+            </param>
+            <param name="roadLattice">
+            The road lattice of the map tile <paramref name="feature" /> belongs to.
+            </param></member>
+        <member name="M:Google.Maps.Unity.GameObjectFactory.IntersectionGameObjectFactory.InsertArmsIntoRoadLattice(Google.Maps.Unity.Intersections.RoadLattice,Google.Maps.Unity.Intersections.RoadLatticeNode,System.Collections.Generic.IEnumerable{Google.Maps.Unity.Intersections.IntersectionMeshFactory.ArmShape},Google.Maps.Feature.Style.SegmentishStyle)">
+            <summary>
+            Inserts new nodes and edges in the given road lattice corresponding to the
+            beginning of the each intersection arm.
+            </summary>
+            <remarks>
+            Edges that begin at an arm and enter the intersection are flagged with
+            <see cref="F:Google.Maps.Unity.Intersections.RoadLatticeEdge.Flags.Intersection" />.
+            </remarks>
+            <param name="roadLattice">The road lattice to modify.</param>
+            <param name="root">The root node of the intersection.</param>
+            <param name="armShapes">The arms to insert.</param>
+            <param name="style">The intersection styling.</param></member>
+        <member name="M:Google.Maps.Unity.GameObjectFactory.IntersectionGameObjectFactory.InsertArmIntoRoadLattice(Google.Maps.Unity.Intersections.RoadLattice,Google.Maps.Unity.Intersections.RoadLatticeNode,Google.Maps.Unity.Intersections.RoadLatticeNode,System.Single)">
+            <summary>
+            Inserts a new node and edges into the given road lattice corresponding to the
+            beginning of the intersection arm.
+            </summary>
+            <remarks>
+            The edge that begins at the arm and enters the intersection is flagged with
+            <see cref="F:Google.Maps.Unity.Intersections.RoadLatticeEdge.Flags.Intersection" />. If a new node was inserted into the road
+            lattice for this arm, the edge flagged is one of the outgoing edges from that node.
+            </remarks>
+            <param name="roadLattice">The road lattice to modify.</param>
+            <param name="root">The root intersection node.</param>
+            <param name="armNode">The arm node with an edge to <paramref name="root" />.</param>
+            <param name="armLength">The length along the arm to insert an node at.</param></member>
         <member name="T:Google.Maps.Unity.GameObjectFactory.TerrainGameObjectFactory">
             <summary>
             Factory for creating Unity <see cref="T:UnityEngine.Terrain" /> tiles from
@@ -8535,6 +9352,13 @@
         <member name="F:Google.Maps.Unity.GameObjectFactory.TerrainGameObjectFactory.Events">
             <summary>
             Events to invoke during GameObject creation.
+            </summary></member>
+        <member name="F:Google.Maps.Unity.GameObjectFactory.TerrainGameObjectFactory.AltitudeSeparation">
+            <summary>
+            The height of the terrain bounding box must be an integer multiple of this value. This
+            causes most adjacent tiles to have the same terrain bounding box. Where adjacent tiles have
+            significantly different bounding boxes, Unity's rounding can cause gaps between tiles even
+            if they start matching altitudes at the boundary.
             </summary></member>
         <member name="F:Google.Maps.Unity.GameObjectFactory.TerrainGameObjectFactory.GameObjectManager">
             <summary>
@@ -8613,6 +9437,10 @@
             When true, a global road lattice will be maintained merging individual road lattices
             generated for each loaded tile.
             </summary></member>
+        <member name="F:Google.Maps.Unity.GameObjectLoader.IntersectionsEnabled">
+            <summary>
+            Whether extra geometry will be generated to display road intersections.
+            </summary></member>
         <member name="F:Google.Maps.Unity.GameObjectLoader.TerrainEnabled">
             <summary>
             Whether geometry will be generated to represent terrain.
@@ -8686,6 +9514,10 @@
             Register for <see cref="T:UnityEngine.GameObject" /> finalizers.
             </param>
             <param name="metadataOptions">Metadata options.</param></member>
+        <member name="M:Google.Maps.Unity.GameObjectLoader.Destroy">
+            <summary>
+            Clean up any resources created by thie class.
+            </summary></member>
         <member name="M:Google.Maps.Unity.GameObjectLoader.SpreadCreateGameObjectsForTile(Google.Maps.Feature.MapTile,Google.Maps.Terrain.TerrainTile,Google.Maps.GameObjectOptions,Google.Maps.Util.CoroutineResult{System.Exception})">
             <inheritdoc /></member>
         <member name="M:Google.Maps.Unity.GameObjectLoader.SpreadDestroyGameObjectsForTile(Google.Maps.Coord.TileCoord,Google.Maps.Util.CoroutineResult{System.Boolean})">
@@ -8792,9 +9624,9 @@
             <summary>
             Simulate the Unity *AssemblyReloadEvents.beforeAssemblyReload* event.
             </summary></member>
-        <member name="M:Google.Maps.Unity.HotLoadableMonoBehaviour.Init">
+        <member name="M:Google.Maps.Unity.HotLoadableMonoBehaviour.Update">
             <summary>
-            Handle Unity's *Init* event.
+            Handle Unity's *Update* event.
             </summary></member>
         <member name="M:Google.Maps.Unity.HotLoadableMonoBehaviour.TryStartup">
             <summary>
@@ -8851,13 +9683,74 @@
             it won't be called if the object is disabled. Finalization code should be placed into
             <see cref="M:Google.Maps.Unity.HotLoadableMonoBehaviour.Shutdown" />.
             </summary></member>
-        <member name="M:Google.Maps.Unity.HotLoadableMonoBehaviour.FrameInit">
+        <member name="M:Google.Maps.Unity.HotLoadableMonoBehaviour.FrameUpdate">
             <summary>
             Override with update logic. Won't run until initialization succeeds.
             </summary></member>
         <member name="M:Google.Maps.Unity.HotLoadableMonoBehaviour.StartCoroutine(System.Collections.IEnumerator)">
             <summary>Starts a coroutine.</summary>
             <param name="coroutine">Coroutine to start.</param></member>
+        <member name="T:Google.Maps.Unity.Intersections.Intersection">
+            <summary>
+            A representation of a road intersection that can have multiple in/outgoing roads.
+            </summary></member>
+        <member name="F:Google.Maps.Unity.Intersections.Intersection.Arms">
+            <summary>
+            The intersection arms.
+            </summary></member>
+        <member name="F:Google.Maps.Unity.Intersections.Intersection.Root">
+            <summary>
+            The root node of the intersection.
+            </summary>
+            <remarks>
+            The neighbors of this node given by <see cref="P:Google.Maps.Unity.Intersections.RoadLatticeNode.Neighbors" /> represent
+            the roads connected to this intersection. For example, three neighbors may indicate a
+            T-intersection.
+            </remarks></member>
+        <member name="M:Google.Maps.Unity.Intersections.Intersection.FromRootNode(Google.Maps.Unity.Intersections.RoadLatticeNode)">
+            <summary>
+            Constructs an intersection shape from the given root node.
+            </summary>
+            <param name="root">The root node of the intersection.</param>
+            <returns>The intersection feature created from the given node.</returns></member>
+        <member name="M:Google.Maps.Unity.Intersections.Intersection.GenerateLine(System.Collections.Generic.List{UnityEngine.Vector3},Google.Maps.Unity.Intersections.RoadLatticeNode,Google.Maps.Unity.Intersections.RoadLatticeNode,System.Single,Google.Maps.Unity.Intersections.RoadLatticeNode@,Google.Maps.Unity.Intersections.RoadLatticeNode@)">
+            <summary>
+            Generates a polyline by following the edges of the road lattice. Starting from startNode,
+            a vertex at the location of that node is appended to the polyline. The same is repeated for
+            neighborNode and then for its unvisited neighbor and so on until an intersection (a node
+            with more than two neighbors) is found or the maximum length is reached.
+            These polylines represent the centrelines of entire roads, and their extrusions are used to
+            find line intersections between outgoing roads of road intersections.
+            </summary>
+            <param name="line">The line to which to append vertices.</param>
+            <param name="startNode">
+            The node to start generating vertices from. All line vertices are relative to the position
+            of this node.
+            </param>
+            <param name="neighborNode">
+            The next node to generate a vertex after the start node. This node is assumed to share an
+            edge with the start node.
+            </param>
+            <param name="maxLength">The maximum length of the line to be generated.</param>
+            <param name="otherIntersection">
+            If another intersection is detected while generating the line, this is set to the node of
+            that intersection.
+            </param>
+            <param name="armLoopNode">
+            If the line generated loops back to <paramref name="startNode" />, this is set to the node
+            traversed immediately before looping back.
+            </param>
+            <returns>The length of the line generated.</returns></member>
+        <member name="M:Google.Maps.Unity.Intersections.Intersection.TranslateGeometry(UnityEngine.Vector2)">
+            <inheritdoc /></member>
+        <member name="M:Google.Maps.Unity.Intersections.Intersection.CalculateLocalBoundingBox">
+            <inheritdoc /></member>
+        <member name="M:Google.Maps.Unity.Intersections.Intersection.#ctor(Google.Maps.Unity.Intersections.RoadLatticeNode,System.Collections.Generic.IEnumerable{Google.Maps.Unity.Intersections.IntersectionArm})">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="root">The root node of the intersection.</param>
+            <param name="arms">The arms of the intersection.</param></member>
         <member name="T:Google.Maps.Unity.GameObjectFactory.GameObjectFactories">
             <summary>
             Container for <see cref="T:Google.Maps.Unity.GameObjectFactory.IGameObjectFactory" /> instances.
@@ -8885,6 +9778,10 @@
         <member name="F:Google.Maps.Unity.GameObjectFactory.GameObjectFactories.Segment">
             <summary>
             A factory for generating Unity GameObjects from a Segment.
+            </summary></member>
+        <member name="F:Google.Maps.Unity.GameObjectFactory.GameObjectFactories.Intersection">
+            <summary>
+            A factory for generating unity GameObjects from an Intersection.
             </summary></member>
         <member name="F:Google.Maps.Unity.GameObjectFactory.GameObjectFactories.Terrain">
             <summary>
@@ -9057,7 +9954,7 @@
             <summary>
             Notifies the SDK that a <see cref="T:UnityEngine.GameObject" /> was destroyed, or that
             a GameObject is scheduled to be destroyed at the end of the current
-            Init loop.
+            Update loop.
             </summary>
             <remarks>
             The SDK doesn't actually destroy the GameObject. You can do that via
@@ -9181,35 +10078,187 @@
             <summary>
             Gets the number of GameObjects managed by this class.
             </summary></member>
+        <member name="T:Google.Maps.Unity.Intersections.IntersectionFeature">
+            <summary>
+            A PseudoMapFeature representing an intersection overlay object.
+            Making intersection overlays pseudo features allows proper integration with the
+            GameObjectManager and floating origin systems.
+            </summary></member>
+        <member name="F:Google.Maps.Unity.Intersections.IntersectionFeature.Shape">
+            <summary>
+            The shape of this intersection feature.
+            </summary></member>
+        <member name="M:Google.Maps.Unity.Intersections.IntersectionFeature.#ctor(Google.Maps.Feature.MapFeatureMetadata,Google.Maps.Coord.TileCoord)">
+            <summary>Constructor.</summary></member>
+        <member name="M:Google.Maps.Unity.Intersections.IntersectionFeature.#ctor(Google.Maps.Coord.TileCoord,Google.Maps.Unity.Intersections.Intersection)">
+            <summary>
+            Constructor that takes a tile coordinate, and creates a new default metadata to associate
+            with this pseudofeature.
+            </summary></member>
+        <member name="P:Google.Maps.Unity.Intersections.IntersectionFeature.DefaultGameObjectName">
+            <inheritdoc /></member>
+        <member name="M:Google.Maps.Unity.Intersections.IntersectionFeature.GetShape">
+            <inheritdoc /></member>
+        <member name="T:Google.Maps.Unity.Intersections.IntersectionComponent">
+            <summary>
+            Metadata associated with a GameObject constructed for an intersection overlay pseudo feature.
+            </summary></member>
+        <member name="P:Google.Maps.Unity.Intersections.IntersectionComponent.MapFeature">
+            <summary>Intersection Pseudofeature associated with this GameObject.</summary></member>
+        <member name="M:Google.Maps.Unity.Intersections.IntersectionComponent.GetMapFeature">
+            <inheritdoc /></member>
         <member name="T:Google.Maps.Unity.Intersections.IntersectionArm">
             <summary>
             Represents an outgoing/incoming road from an intersection.
             </summary></member>
-        <member name="F:Google.Maps.Unity.Intersections.IntersectionArm.Extrusion">
+        <member name="P:Google.Maps.Unity.Intersections.IntersectionArm.Segment">
             <summary>
-            The extruded line of the road the arm sits on.
-            </summary></member>
-        <member name="F:Google.Maps.Unity.Intersections.IntersectionArm.IsTwoWay">
-            <summary>
-            True if the arm is two way.
+            The segment that this arm lies on.
             </summary>
             <remarks>
-            An arm is two-way if it connects with two intersections. In most cases, this would occur
-            if the arm would overlap with the arm of another intersection. A two-way arm is extended
-            to half the length of the road so that the arms of both intersections meet half way.
-            The UV2 coordinates of two-way arms are zeroed out.
+            A road may be composed of multiple segments. In cases where an arm lies on multiple
+            segments, this holds the first segment closest to the intersection center.
             </remarks></member>
-        <member name="M:Google.Maps.Unity.Intersections.IntersectionArm.FromLine(System.Collections.Generic.IList{UnityEngine.Vector3},System.Single,System.Boolean)">
+        <member name="P:Google.Maps.Unity.Intersections.IntersectionArm.Material">
+            <summary>
+            The material to apply to the arm submesh. If this is not set, the material defined in
+            <see cref="P:Google.Maps.Feature.Style.SegmentishStyle.IntersectionMaterial" /> is used by default.
+            </summary></member>
+        <member name="P:Google.Maps.Unity.Intersections.IntersectionArm.Inverse">
+            <summary>
+            The inverse of this arm, if it exists. Both this arm and its inverse represent the
+            opposite direction of a road that leaves and returns to the same intersection.
+            ___
+            /   \
+            / / \ \
+            A\ \ / /B
+            \ I /
+            | |C
+            | |
+            In the above example, A, B and C are arms of the intersection I. A and B are arms which
+            leave and return to I using the same path, and so are inverses of each other.
+            </summary></member>
+        <member name="F:Google.Maps.Unity.Intersections.IntersectionArm.Polyline">
+            <summary>
+            The arm shape.
+            </summary></member>
+        <member name="F:Google.Maps.Unity.Intersections.IntersectionArm.PolylineJoinsIntersections">
+            <summary>
+            Whether both endpoints of <see cref="F:Google.Maps.Unity.Intersections.IntersectionArm.Polyline" /> end at intersections.
+            </summary></member>
+        <member name="F:Google.Maps.Unity.Intersections.IntersectionArm.StartEdge">
+            <summary>
+            The edge that this arm starts frm.
+            </summary></member>
+        <member name="F:Google.Maps.Unity.Intersections.IntersectionArm.PolylineLength">
+            <summary>
+            The length of <see cref="F:Google.Maps.Unity.Intersections.IntersectionArm.Polyline" />.
+            </summary></member>
+        <member name="M:Google.Maps.Unity.Intersections.IntersectionArm.IsTwoWay(System.Single)">
+            <summary>
+            Returns true if this intersection arm is two-way with the given join length.
+            </summary>
+            <param name="joinLength">The join length to test.</param>
+            <returns>True if this intersection arm is two-way with the given join length.</returns></member>
+        <member name="T:Google.Maps.Unity.Intersections.IntersectionMeshFactory">
+            <summary>
+            Generates road intersection meshes from an <see cref="T:Google.Maps.Unity.Intersections.Intersection" />.
+            </summary></member>
+        <member name="F:Google.Maps.Unity.Intersections.IntersectionMeshFactory.IntersectionZOrder">
+            <summary>
+            Z-order to use for intersections.
+            </summary></member>
+        <member name="F:Google.Maps.Unity.Intersections.IntersectionMeshFactory.RenderOrderManager">
+            <summary>
+            The render order manager to use for game objects created by this factory.
+            </summary></member>
+        <member name="F:Google.Maps.Unity.Intersections.IntersectionMeshFactory.FinalizerRegister">
+            <summary>
+            Register for <see cref="T:UnityEngine.GameObject" /> finalizers.
+            </summary></member>
+        <member name="M:Google.Maps.Unity.Intersections.IntersectionMeshFactory.#ctor(Google.Maps.Unity.RenderOrderManager,Google.Maps.Unity.FinalizerRegister{UnityEngine.GameObject})">
+            <summary>Constructor.</summary>
+            <param name="renderOrderManager">Manager for sorting features.</param>
+            <param name="finalizerRegister">
+            Register for <see cref="T:UnityEngine.GameObject" /> finalizers.
+            </param></member>
+        <member name="T:Google.Maps.Unity.Intersections.IntersectionMeshFactory.ArmShape">
+            <summary>
+            Keeps track of parameters for generating a mesh from an <see cref="T:Google.Maps.Unity.Intersections.IntersectionArm" />.
+            </summary>
+            <remarks>
+            The sides of an arm refers to the sides seen when facing away from the intersection,
+            center, e.g.:
+            L |   | R
+            |   |
+            ( C )
+            R \   \ L
+            \   \
+            </remarks></member>
+        <member name="F:Google.Maps.Unity.Intersections.IntersectionMeshFactory.ArmShape.MeshData">
+            <summary>
+            The arm mesh data.
+            </summary></member>
+        <member name="F:Google.Maps.Unity.Intersections.IntersectionMeshFactory.ArmShape.LeftStart">
+            <summary>
+            The distance along the left side of the line extrusion to start the mesh from, measured
+            from the center of the intersection (i.e. index 0 of the left extrusion line).
+            </summary></member>
+        <member name="F:Google.Maps.Unity.Intersections.IntersectionMeshFactory.ArmShape.LeftLength">
+            <summary>
+            The length of the left side of the mesh.
+            </summary></member>
+        <member name="F:Google.Maps.Unity.Intersections.IntersectionMeshFactory.ArmShape.RightStart">
+            <summary>
+            The distance along the right side of the line extrusion to start the mesh from, measured
+            from the center of the intersection (i.e. index 0 of the right extrusion line).
+            </summary></member>
+        <member name="F:Google.Maps.Unity.Intersections.IntersectionMeshFactory.ArmShape.RightLength">
+            <summary>
+            The length of the right side of the mesh.
+            </summary></member>
+        <member name="F:Google.Maps.Unity.Intersections.IntersectionMeshFactory.ArmMeshData.Arm">
+            <summary>
+            The intersection arm this mesh data is associated with.
+            </summary></member>
+        <member name="F:Google.Maps.Unity.Intersections.IntersectionMeshFactory.ArmMeshData.Extrusion">
+            <summary>
+            The mesh extrusion of the intersection arm's polyline.
+            </summary></member>
+        <member name="M:Google.Maps.Unity.Intersections.IntersectionMeshFactory.ArmMeshData.FromArm(Google.Maps.Unity.Intersections.IntersectionArm,System.Single)">
             <summary>
             Creates a representation of an intersection arm from a polyline.
             </summary>
-            <param name="line">The non-extruded polyline of the road.</param>
+            <param name="arm">The intersection arm.</param>
             <param name="roadWidth">The width of the road</param>
-            <param name="isTwoWay">Whether the arm is two-way.</param>
             <returns>The intersection arm representing the given polyline.</returns></member>
-        <member name="M:Google.Maps.Unity.Intersections.IntersectionArm.AddToMesh(Google.Maps.Unity.MeshBuilder,System.Int32,System.Single,System.Single,System.Single,System.Single)">
+        <member name="M:Google.Maps.Unity.Intersections.IntersectionMeshFactory.ArmMeshData.#ctor(Google.Maps.Unity.Intersections.IntersectionArm,Google.Maps.Unity.LineGroupMeshFactory.LineExtrusion)">
             <summary>
-            Generates and adds the submesh of this intersection arm to the given
+            Constructor.
+            </summary>
+            <param name="arm">The intersection arm this mesh data is associated with.</param>
+            <param name="extrusion">The mesh extrusion of the intersection arm's polyline.</param></member>
+        <member name="M:Google.Maps.Unity.Intersections.IntersectionMeshFactory.BuildMeshForGameObject(UnityEngine.GameObject,Google.Maps.Unity.Intersections.Intersection,Google.Maps.Feature.Style.SegmentishStyle)">
+            <inheritdoc /></member>
+        <member name="M:Google.Maps.Unity.Intersections.IntersectionMeshFactory.BuildMeshForGameObject(UnityEngine.GameObject,System.Collections.Generic.IList{Google.Maps.Unity.Intersections.IntersectionMeshFactory.ArmShape},Google.Maps.Feature.Style.SegmentishStyle)">
+            <summary>
+            Builds the intersection mesh and attaches it to the given GameObject.
+            </summary>
+            <param name="gameObject">The GameObject to build the mesh for.</param>
+            <param name="armShapes">The intersection arm shapes.</param>
+            <param name="style">The intersection styling.</param></member>
+        <member name="M:Google.Maps.Unity.Intersections.IntersectionMeshFactory.BuildArmShapes(Google.Maps.Unity.Intersections.Intersection,Google.Maps.Feature.Style.SegmentishStyle)">
+            <summary>
+            Builds the intersection arm shapes used for building the intersection mesh.
+            </summary>
+            <param name="intersection">The intersection map feature.</param>
+            <param name="style">The intersection styling.</param>
+            <returns>
+            The intersection arm shapes corresponding to the arms in the given intersection.
+            </returns></member>
+        <member name="M:Google.Maps.Unity.Intersections.IntersectionMeshFactory.AddArmToMesh(Google.Maps.Unity.MeshBuilder,System.Int32,Google.Maps.Unity.Intersections.IntersectionMeshFactory.ArmShape,Google.Maps.Feature.Style.SegmentishStyle)">
+            <summary>
+            Generates and adds the submesh of the intersection arm to the given
             <see cref="T:Google.Maps.Unity.MeshBuilder" />.
             Intersection arms are added as individual submeshes so that different materials can be
             applied to each individual arm. Materials can use the UV2 coordinates to apply a decal,
@@ -9217,25 +10266,129 @@
             </summary>
             <param name="meshBuilder">The MeshBuilder to add the arm submesh to.</param>
             <param name="submeshIdx">The submesh index to use.</param>
-            <param name="leftStart">
-            The distance along the left side of the line extrusion to start the mesh from, measured
-            from the center of the intersection (i.e. index 0 of the left extrusion line).
-            </param>
-            <param name="leftLength">The length of the left side of the mesh.</param>
-            <param name="rightStart">
-            The distance along the right side of the line extrusion to start the mesh from, measured
-            from the center of the intersection (i.e. index 0 of the right extrusion line).
-            </param>
-            <param name="rightLength">The length of the right side of the mesh.</param></member>
-        <member name="M:Google.Maps.Unity.Intersections.IntersectionArm.#ctor(Google.Maps.Unity.LineGroupMeshFactory.LineExtrusion,System.Boolean)">
+            <param name="armShape">The arm to generate a submesh of.</param>
+            <param name="style">The intersection styling.</param></member>
+        <member name="M:Google.Maps.Unity.Intersections.IntersectionMeshFactory.MakeMesh(System.Collections.Generic.IList{Google.Maps.Unity.Intersections.IntersectionMeshFactory.ArmShape},Google.Maps.Feature.Style.SegmentishStyle)">
             <summary>
-            Constructor.
+            Constructs the mesh for this intersection.
             </summary>
-            <param name="extrusion">The extruded line of the road the arm sits on.</param>
-            <param name="isTwoWay">Whether the arm is two-way.</param></member>
-        <member name="M:Google.Maps.Unity.Intersections.IntersectionArm.AddUV2sToMesh(Google.Maps.Unity.MeshBuilder,System.Collections.Generic.IList{UnityEngine.Vector3},System.Single,System.Single,System.Single,System.Boolean)">
             <summary>
-            Adds UV2s for this arm to the supplied <see cref="T:Google.Maps.Unity.MeshBuilder" />.
+            A submesh is generated for each intersection arm and a single submesh is generated for the
+            inner intersection polygon, in that order.
+            </summary>
+            <param name="arms">The intersection arms.</param>
+            <param name="style">The intersection styling.</param>
+            <returns>The mesh of the intersection.</returns></member>
+        <member name="M:Google.Maps.Unity.Intersections.IntersectionMeshFactory.EnforceMinimumPolylineLength(Google.Maps.Unity.Intersections.IntersectionArm,System.Single)">
+            <summary>
+            Extends the given intersection arm's polyline if it is shorter than the given minimum
+            length and does not join two intersections.
+            </summary>
+            <param name="arm">The intersection arm.</param>
+            <param name="minLength">
+            The minimum length the arm's polyline should be. If the polyline is shorter, the final line
+            segment is extended by the remaining length.
+            </param></member>
+        <member name="M:Google.Maps.Unity.Intersections.IntersectionMeshFactory.GetIntersections(System.Collections.Generic.IList{Google.Maps.Unity.Intersections.IntersectionMeshFactory.ArmMeshData},System.Single)">
+            <summary>
+            Finds the furthest distance along each arm's left and right side where an intersection with
+            another arm occurs.
+            </summary>
+            <param name="arms">The arm extrusions to test.</param>
+            <param name="maxDistance">
+            The maximum distance along each arm where an intersection can occur and be recorded.
+            Intersections occurring further along this are ignored.
+            </param>
+            <returns>
+            The distances along each arm's left and right side where an intersection with another arm
+            was found. Indices i*2 and i*2+1 correspond to the distances along the left and right side
+            for arm i respectively.
+            </returns></member>
+        <member name="M:Google.Maps.Unity.Intersections.IntersectionMeshFactory.GetArms(System.Collections.Generic.IList{Google.Maps.Unity.Intersections.IntersectionMeshFactory.ArmMeshData},Google.Maps.Feature.Style.SegmentishStyle)">
+            <summary>
+            Returns a list of arm shapes that describe points along each arm's extruded lines. These
+            points give the start points of each arm where, ideally, there is no longer any overlap
+            between them.
+            </summary>
+            <param name="extrusions">The arm extrusions to find the start points of.</param>
+            <param name="style">The intersection styling.</param>
+            <returns>The arm shapes.</returns></member>
+        <member name="M:Google.Maps.Unity.Intersections.IntersectionMeshFactory.GenerateInnerMesh(Google.Maps.Unity.MeshBuilder,System.Collections.Generic.IList{Google.Maps.Unity.Intersections.IntersectionMeshFactory.ArmShape},System.Int32)">
+            <summary>
+            Generates the mesh covering the inner polygon area bordering the intersection arms.
+            </summary>
+            <param name="meshBuilder">The mesh builder to use.</param>
+            <param name="arms">The arms of the intersection.</param>
+            <param name="submeshIdx">The submesh index to use.</param></member>
+        <member name="M:Google.Maps.Unity.Intersections.IntersectionMeshFactory.GetFurthestPolylineIntersection(System.Collections.Generic.IList{UnityEngine.Vector3},System.Collections.Generic.IList{UnityEngine.Vector3},System.Single@,System.Single@,System.Boolean,System.Boolean,System.Single)">
+            <summary>
+            Finds the distance along two polylines where the furthest intersection between them occurs
+            and updates the given distance values if the distance found is greater.
+            </summary>
+            <remarks>
+            The distance along a polyline refers to the distance measured along successive line
+            segments, starting from index 0.
+            </remarks>
+            <param name="a">The first line to test.</param>
+            <param name="b">The second line to test.</param>
+            <param name="aDist">
+            The distance along line a where the furthest intersection was found.
+            </param>
+            <param name="bDist">
+            The distance along line b where the furthest intersection was found.
+            </param>
+            <param name="aIsLeftLine">
+            Whether <paramref name="a" /> corresponds to the left side of
+            <see cref="F:Google.Maps.Unity.Intersections.IntersectionMeshFactory.ArmMeshData.Extrusion" />
+            </param>
+            <param name="areInverses">
+            Whether <paramref name="a" /> is the inverse of <paramref name="b" />. If this is true,
+            intersections between the same and neighboring line segments are ignored.
+            </param>
+            <param name="maxDistance">
+            The maximum distance along each line where an intersection can occur and be recorded.
+            Intersections occurring further along this are ignored.
+            </param></member>
+        <member name="M:Google.Maps.Unity.Intersections.IntersectionMeshFactory.GetLineDirection(System.Collections.Generic.IList{UnityEngine.Vector3},System.Single)">
+            <summary>
+            Get the direction of the line segment (endIdx-1, endIdx) that contains the point along
+            the given line and distance.
+            </summary>
+            <param name="line">The line.</param>
+            <param name="dist">The distance along the line where the point lies.</param>
+            <returns>
+            The direction of the line segment (endIdx-1, endIdx) that contains the point along the
+            given line and distance.
+            </returns></member>
+        <member name="M:Google.Maps.Unity.Intersections.IntersectionMeshFactory.GetPerpendicularPoint(UnityEngine.Vector3,UnityEngine.Vector3,System.Boolean,System.Single)">
+            <summary>
+            Returns the point t of the line L=(<paramref name="point" />,t) with length
+            <paramref name="length" /> and where L is perpendicular to <paramref name="direction" />.
+            </summary>
+            <remarks>
+            The use of this method is demonstrated in the the example below.
+            ____________
+            /  ________  \
+            \  \   \  \\  \
+            \  \__/  k o-&gt;p
+            \______/ /  /
+            A\  \B
+            If we want to find p on line B from o on line A, we cannot simply use
+            <see cref="M:Google.Maps.Util.GeometryUtils.GetClosestPointOnLine(System.Collections.Generic.IList{UnityEngine.Vector3},UnityEngine.Vector3,System.Single@)" />. Notice that k is also further along on
+            line B, but is closer to o than p is and would be returned instead. Instead of finding
+            the closest point to o, we predict where p should be using this method and get the closest
+            point to that.
+            </remarks>
+            <param name="point">The point s of the line (s,t).</param>
+            <param name="direction">
+            The direction of the line that <paramref name="point" /> lies on.
+            </param>
+            <param name="isLeftPoint">Whether the point lies on the left line of an extrusion.</param>
+            <param name="length">The length of the line (<paramref name="point" />,t).</param>
+            <returns>The point t of the line (<paramref name="point" />,t).</returns></member>
+        <member name="M:Google.Maps.Unity.Intersections.IntersectionMeshFactory.AddArmUV2sToMesh(Google.Maps.Unity.MeshBuilder,System.Collections.Generic.IList{UnityEngine.Vector3},System.Single,System.Single,System.Single,System.Boolean)">
+            <summary>
+            Adds UV2s for the side of an arm to the supplied <see cref="T:Google.Maps.Unity.MeshBuilder" />.
             </summary>
             <remarks>
             Example: We want to produce the following ordered UV2s for a left and right extrusion:
@@ -9251,7 +10404,7 @@
             order.
             </remarks>
             <param name="mb">The <see cref="T:Google.Maps.Unity.MeshBuilder" /> to use.</param>
-            <param name="line">The line to add UV2s for.</param>
+            <param name="line">The line of an arm side to add UV2s for.</param>
             <param name="u">The u-value to use for the UV2 coordinates.</param>
             <param name="vStart">The v-value to start from for the UV2 coordinates.</param>
             <param name="vEnd">The v-value to end at for the UV2 coordinates.</param>
@@ -9289,6 +10442,10 @@
             <summary>Position of the end of this segment.</summary></member>
         <member name="M:Google.Maps.Unity.Intersections.RoadLattice.LineSegment2D.#ctor(UnityEngine.Vector2,UnityEngine.Vector2)">
             <summary>Contstuctor.</summary></member>
+        <member name="P:Google.Maps.Unity.Intersections.RoadLattice.Nodes">
+            <summary>
+            The nodes in this lattice.
+            </summary></member>
         <member name="F:Google.Maps.Unity.Intersections.RoadLattice.Lattice">
             <summary>
             The collection of nodes in this lattice, indexed by the integer locations of the nodes.
@@ -9365,6 +10522,7 @@
             <returns>List of positions of nodes of the supplied type.</returns></member>
         <member name="M:Google.Maps.Unity.Intersections.RoadLattice.GetNodes">
             <summary>
+            Deprecated. Please use <see cref="P:Google.Maps.Unity.Intersections.RoadLattice.Nodes" /> instead.
             Returns a list of all the nodes in this lattice.
             </summary>
             <returns>The list of nodes.</returns></member>
@@ -9525,12 +10683,29 @@
             <summary>
             The source <see cref="T:Google.Maps.Feature.Segment" /> map feature from which this lattice edge was generated.
             </summary></member>
-        <member name="M:Google.Maps.Unity.Intersections.RoadLatticeEdge.#ctor(Google.Maps.Unity.Intersections.RoadLatticeNode,Google.Maps.Feature.Segment)">
+        <member name="T:Google.Maps.Unity.Intersections.RoadLatticeEdge.Flags">
+            <summary>
+            The possible flags for an edge.
+            </summary></member>
+        <member name="F:Google.Maps.Unity.Intersections.RoadLatticeEdge.Flags.None">
+            <summary>
+            An ordinary edge.
+            </summary></member>
+        <member name="F:Google.Maps.Unity.Intersections.RoadLatticeEdge.Flags.Intersection">
+            <summary>
+            An edge entering an intersection.
+            </summary></member>
+        <member name="P:Google.Maps.Unity.Intersections.RoadLatticeEdge.EdgeFlags">
+            <summary>
+            The flags for this edge.
+            </summary></member>
+        <member name="M:Google.Maps.Unity.Intersections.RoadLatticeEdge.#ctor(Google.Maps.Unity.Intersections.RoadLatticeNode,Google.Maps.Feature.Segment,Google.Maps.Unity.Intersections.RoadLatticeEdge.Flags)">
             <summary>
             Constructor.
             </summary>
             <param name="target">The target node to which this edge joins.</param>
-            <param name="segment">The source map feature for this edge.</param></member>
+            <param name="segment">The source map feature for this edge.</param>
+            <param name="flags">The flags that apply to this edge.</param></member>
         <member name="M:Google.Maps.Unity.Intersections.RoadLatticeEdge.DuplicateWithNewTarget(Google.Maps.Unity.Intersections.RoadLatticeNode)">
             <summary>
             Creates a duplicate version of this edge with a new target, but all other properties
@@ -9823,6 +10998,11 @@
             </summary>
             <param name="segment">The source Segment.</param>
             <returns>An array of generated RoadLatticeSegment objects.</returns></member>
+        <member name="F:Google.Maps.Unity.Intersections.RoadLatticeTools.IntersectionQuadTree">
+            <summary>
+            Used by <see cref="M:Google.Maps.Unity.Intersections.RoadLatticeTools.CalculateRoadLatticeSegmentIntersections(System.Collections.Generic.List{Google.Maps.Unity.Intersections.RoadLatticeSegment},Google.Maps.Feature.MapTile)" /> for efficiently finding
+            nearby points. This is recycled to reduce garbage.
+            </summary></member>
         <member name="M:Google.Maps.Unity.Intersections.RoadLatticeTools.RoadLatticeSegmentsFromTile(Google.Maps.Feature.MapTile)">
             <summary>
             Returns a list of <see cref="T:Google.Maps.Unity.Intersections.RoadLatticeSegment" /> objects generated from the
@@ -9841,20 +11021,50 @@
             If true, an exhaustive search is performed for intersections that occur at positions that
             don't correspond to segment vertices.
             </param></member>
-        <member name="M:Google.Maps.Unity.Intersections.RoadLatticeTools.CalculateRoadLatticeSegmentIntersections(System.Collections.Generic.List{Google.Maps.Unity.Intersections.RoadLatticeSegment})">
+        <member name="M:Google.Maps.Unity.Intersections.RoadLatticeTools.GetPointAlongNodeChain(Google.Maps.Unity.Intersections.RoadLatticeNode,Google.Maps.Unity.Intersections.RoadLatticeNode,System.Single,Google.Maps.Unity.Intersections.RoadLatticeNode@,Google.Maps.Unity.Intersections.RoadLatticeNode@,Google.Maps.Unity.Intersections.RoadLatticeEdge.Flags)">
+            <summary>
+            Returns the coordinates found a given length along a node chain.
+            </summary>
+            <remarks>
+            A node chain is defined by a sequence of connected nodes n0..nk where all nodes n1..nk-1
+            have exactly two neighbors.
+            </remarks>
+            <param name="startNode">The node to start from.</param>
+            <param name="nextNode">The next node to traverse in the chain.</param>
+            <param name="length">The length along the node chain to return the coordinates of.</param>
+            <param name="fromNode">Node A in the edge A-&gt;B that the returned coordinates lie on.</param>
+            <param name="toNode">Node B in the edge A-&gt;B that the returned coordinates lie on.</param>
+            <param name="stoppingFlags">
+            Returns after encountering an edge with any of the given flags. <paramref name="fromNode" />
+            and <paramref name="toNode" /> are set to the nodes of that edge, and the coordinates of
+            <paramref name="fromNode" /> are returned.
+            </param>
+            <returns>The coordinates found.</returns></member>
+        <member name="M:Google.Maps.Unity.Intersections.RoadLatticeTools.InsertIntermediateNode(Google.Maps.Unity.Intersections.RoadLatticeNode,Google.Maps.Unity.Intersections.RoadLatticeNode,Google.Maps.Unity.Intersections.RoadLatticeNode)">
+            <summary>
+            Inserts a node between two connected nodes, removing existing edges between them.
+            </summary>
+            <param name="nodeA">The first node.</param>
+            <param name="nodeB">The second node.</param>
+            <param name="insertionNode">The insertion node.</param></member>
+        <member name="M:Google.Maps.Unity.Intersections.RoadLatticeTools.CalculateRoadLatticeSegmentIntersections(System.Collections.Generic.List{Google.Maps.Unity.Intersections.RoadLatticeSegment},Google.Maps.Feature.MapTile)">
             <summary>
             Brute force non-endpoint intersections between a collection of
             <see cref="T:Google.Maps.Unity.Intersections.RoadLatticeSegment" />s, adding new vertices to segments at the point of
             calculated intersections.
             </summary>
-            <param name="segments">The segments from which to calculate intersections.</param></member>
-        <member name="M:Google.Maps.Unity.Intersections.RoadLatticeTools.IntersectRoadLatticeSegments(Google.Maps.Unity.Intersections.RoadLatticeSegment,Google.Maps.Unity.Intersections.RoadLatticeSegment)">
+            <param name="segments">The segments from which to calculate intersections.</param>
+            <param name="tile">The source of the segments.</param></member>
+        <member name="M:Google.Maps.Unity.Intersections.RoadLatticeTools.IntersectRoadLatticeSegments(Google.Maps.Unity.Intersections.RoadLatticeSegment,Google.Maps.Unity.Intersections.RoadLatticeSegment,Google.Maps.Collections.Generic.IQuadTree{UnityEngine.Vector2Int,Google.Maps.Feature.Shape.GlobalCoordinate})">
             <summary>
             Calculate at most one intersection between the supplied segments, adding a new vertex to
             each segment where the intersection occurs.
             </summary>
             <param name="segmentA">First segment.</param>
-            <param name="segmentB">Second segment.</param></member>
+            <param name="segmentB">Second segment.</param>
+            <param name="quadTree">
+            The quadtree containing the coordinates of all segment vertices.
+            </param></member>
         <member name="T:Google.Maps.Unity.MeshBuilder">
             <summary>
             A builder that provides an easy interface for generating Unity Meshes.
@@ -10274,6 +11484,10 @@
             <summary>
             The z-ordering group for roads. Drawn above regions and road borders.
             </summary></member>
+        <member name="F:Google.Maps.Unity.RenderOrderManager.IntersectionZOrderingGroup">
+            <summary>
+            The z-ordering group for roads. Drawn above roads.
+            </summary></member>
         <member name="F:Google.Maps.Unity.RenderOrderManager.ZOrderingGroups">
             <summary>
             All of the z-ordering groups.
@@ -10318,6 +11532,14 @@
         <member name="M:Google.Maps.Unity.RenderOrderManager.RegisterRoadGameObject(UnityEngine.GameObject,System.Int32)">
             <summary>
             Register a game object representing a road.
+            </summary>
+            <param name="gameObject">The game object to register.</param>
+            <param name="zOrder">
+            The z-order value of the feature corresponding to the game object.
+            </param></member>
+        <member name="M:Google.Maps.Unity.RenderOrderManager.RegisterIntersectionGameObject(UnityEngine.GameObject,System.Int32)">
+            <summary>
+            Register a game object representing an intersection.
             </summary>
             <param name="gameObject">The game object to register.</param>
             <param name="zOrder">
@@ -11283,8 +12505,8 @@
             Ear clipper algorithm for triangulating polygons.
             </summary>
             <remarks>
-            This algorithm is inefficient for processing large polygons, and is not recommended in cases
-            for triangulating more than 1000 vertices.
+            This algorithm runs in O(n^2) time, where n is the size of the vertex list passed to
+            <see cref="M:Google.Maps.Util.Geometry.EarClipper.GetTriangles(System.Collections.Generic.IList{UnityEngine.Vector3},System.Int32)" />.
             </remarks></member>
         <member name="F:Google.Maps.Util.Geometry.EarClipper.Vertex.Position">
             <summary>
@@ -11297,6 +12519,18 @@
         <member name="F:Google.Maps.Util.Geometry.EarClipper.Vertex.Convex">
             <summary>
             Whether the vertex is convex.
+            </summary></member>
+        <member name="F:Google.Maps.Util.Geometry.EarClipper.Vertex.Next">
+            <summary>
+            The node containing the next clockwise-ordered vertex.
+            </summary></member>
+        <member name="F:Google.Maps.Util.Geometry.EarClipper.Vertex.Previous">
+            <summary>
+            The node containing the previous clockwise-ordered vertex.
+            </summary></member>
+        <member name="F:Google.Maps.Util.Geometry.EarClipper.Vertex.EarListNode">
+            <summary>
+            The ear node containing the node of this vertex, if it exists.
             </summary></member>
         <member name="M:Google.Maps.Util.Geometry.EarClipper.GetTriangles(System.Collections.Generic.IList{UnityEngine.Vector3},System.Int32)">
             <summary>
@@ -11315,25 +12549,48 @@
             <summary>
             Finds the ears that triangulate the given vertex list.
             </summary>
-            <param name="vertices">The vertex list.</param>
+            <param name="vertices">
+            The vertex list. All convex vertices must come before any concave vertex in the list.
+            </param>
             <param name="triangleIndexOffset">
             The offset to add to vertex indices in the triangles array.
             </param>
             <returns>The triangulation of the vertex list.</returns></member>
-        <member name="M:Google.Maps.Util.Geometry.EarClipper.IsAnyPointInTriangle(Google.Maps.Util.Geometry.EarClipper.Vertex,Google.Maps.Util.Geometry.EarClipper.Vertex,Google.Maps.Util.Geometry.EarClipper.Vertex,System.Collections.Generic.IEnumerable{Google.Maps.Util.Geometry.EarClipper.Vertex})">
+        <member name="M:Google.Maps.Util.Geometry.EarClipper.IsEar(System.Collections.Generic.LinkedListNode{Google.Maps.Util.Geometry.EarClipper.Vertex})">
+            <summary>
+            Returns true if the given vertex node is an ear.
+            </summary>
+            <param name="node">The node to test.</param>
+            <returns>True if the given vertex node is an ear.</returns></member>
+        <member name="M:Google.Maps.Util.Geometry.EarClipper.UpdateEarNodes(System.Collections.Generic.LinkedList{System.Collections.Generic.LinkedListNode{Google.Maps.Util.Geometry.EarClipper.Vertex}},System.Collections.Generic.LinkedListNode{Google.Maps.Util.Geometry.EarClipper.Vertex})">
+            <summary>
+            Updates a potential ear node, removing it from or adding it to <paramref name="earNodes" />
+            where appropriate.
+            </summary>
+            <param name="earNodes">The list of ear nodes.</param>
+            <param name="updateNode">The node to update.</param></member>
+        <member name="M:Google.Maps.Util.Geometry.EarClipper.UpdateConvexityAfterRemoval(System.Collections.Generic.LinkedListNode{Google.Maps.Util.Geometry.EarClipper.Vertex})">
+            <summary>
+            Updates a vertex's convexity after a removal operation in the vertex list, and re-inserts
+            it into the list if its convexity changed.
+            </summary>
+            <param name="vertexNode">The vertex to update.</param></member>
+        <member name="M:Google.Maps.Util.Geometry.EarClipper.IsAnyPointInTriangle(Google.Maps.Util.Geometry.EarClipper.Vertex,Google.Maps.Util.Geometry.EarClipper.Vertex,Google.Maps.Util.Geometry.EarClipper.Vertex,System.Collections.Generic.LinkedList{Google.Maps.Util.Geometry.EarClipper.Vertex})">
             <summary>
             Returns true if any concave point in the vertex list is in the triangle.
             </summary>
             <param name="a">The first point of the triangle.</param>
             <param name="b">The second point of the triangle.</param>
             <param name="c">The third point of the triangle.</param>
-            <param name="vertices">The vertex list to test against.</param>
+            <param name="vertices">
+            The vertex list to test against.  All convex vertices are assumed to come before any
+            concave vertex in the list.
+            </param>
             <returns>True if any vertex in the vertex list lies inside the triangle.</returns></member>
-        <member name="M:Google.Maps.Util.Geometry.EarClipper.IsConvex(System.Collections.Generic.LinkedList{Google.Maps.Util.Geometry.EarClipper.Vertex},System.Collections.Generic.LinkedListNode{Google.Maps.Util.Geometry.EarClipper.Vertex})">
+        <member name="M:Google.Maps.Util.Geometry.EarClipper.IsConvex(Google.Maps.Util.Geometry.EarClipper.Vertex)">
             <summary>
             Returns true if the vertex at the given index is convex.
             </summary>
-            <param name="vertices">The vertex collection.</param>
             <param name="vertex">The vertex in the collection to test.</param>
             <returns>True if the vertex is convex.</returns></member>
         <member name="M:Google.Maps.Util.Geometry.EarClipper.IsConvex(UnityEngine.Vector3,UnityEngine.Vector3,UnityEngine.Vector3)">
@@ -11379,7 +12636,7 @@
             <summary>
             Remove the specified delegate to a static method to beforeAssemblyReload.
             </summary></member>
-        <member name="M:Google.Maps.Util.IUnityEditorProxy.SetEditorInitEnabled(System.Boolean)">
+        <member name="M:Google.Maps.Util.IUnityEditorProxy.SetEditorUpdateEnabled(System.Boolean)">
             <summary>
             Enable or disable continuous player loop updates (applicable only to edit mode).
             </summary>
@@ -11766,6 +13023,15 @@
             <param name="v1">First vector</param>
             <param name="v2">Second vector</param>
             <returns>The area of the rhombus defined by the supplied vectors.</returns></member>
+        <member name="M:Google.Maps.Util.GeometryUtils.AreaDeterminantXZ(UnityEngine.Vector3,UnityEngine.Vector3)">
+            <summary>
+            Uses the determinant rule to calculate the area of the rhombus determined by the supplied
+            2D vectors. See, e.g., https://en.wikipedia.org/wiki/Exterior_algebra#Areas_in_the_plane.
+            </summary>
+            <remarks>The line segments are assumed to be on the XZ plane</remarks>
+            <param name="v1">First vector</param>
+            <param name="v2">Second vector</param>
+            <returns>The area of the rhombus defined by the supplied vectors.</returns></member>
         <member name="M:Google.Maps.Util.GeometryUtils.FindLineSegmentIntersection(UnityEngine.Vector2,UnityEngine.Vector2,UnityEngine.Vector2,UnityEngine.Vector2,UnityEngine.Vector2@)">
             <summary>
             Determines any intersection between two 2D line segments specified by their end points,
@@ -11792,13 +13058,41 @@
             intersection is found.
             </param>
             <returns>Whether the supplied line segments intersect</returns></member>
+        <member name="M:Google.Maps.Util.GeometryUtils.FindLineSegmentIntersectionXZ(UnityEngine.Vector3,UnityEngine.Vector3,UnityEngine.Vector3,UnityEngine.Vector3,UnityEngine.Vector3@)">
+            <summary>
+            Determines any intersection between two 2D line segments specified by their end points,
+            returning false if no intersection exists.
+            </summary>
+            <remarks>The line segments are assumed to be on the XZ plane</remarks>
+            <param name="p1">One end of first line segment</param>
+            <param name="p2">Other end of first line segment</param>
+            <param name="q1">One end of second line segment</param>
+            <param name="q2">Other end of second line segment</param>
+            <param name="intersection">Output parameter for location of intersection if found</param>
+            <returns>Whether the supplied line segments intersect</returns></member>
+        <member name="M:Google.Maps.Util.GeometryUtils.FindLineSegmentIntersectionXZ(UnityEngine.Vector3,UnityEngine.Vector3,UnityEngine.Vector3,UnityEngine.Vector3,UnityEngine.Vector3@,System.Single@)">
+            <summary>
+            Determines any intersection between two 2D line segments specified by their end points,
+            returning false if no intersection exists.
+            </summary>
+            <remarks>The line segments are assumed to be on the XZ plane</remarks>
+            <param name="p1">One end of first line segment</param>
+            <param name="p2">Other end of first line segment</param>
+            <param name="q1">One end of second line segment</param>
+            <param name="q2">Other end of second line segment</param>
+            <param name="intersection">Output parameter for location of intersection if found</param>
+            <param name="parametric">
+            Output parameter for the parametric distance of the intersection from p to q if an
+            intersection is found.
+            </param>
+            <returns>Whether the supplied line segments intersect</returns></member>
         <member name="M:Google.Maps.Util.GeometryUtils.GetVerticesFromBounds(UnityEngine.Bounds)">
             <summary>
             Returns the vertices that encapsulate a given bounds.
             </summary>
             <param name="bounds">The bounds to compute the vertices of.</param>
             <returns>The array of vertices encapsulating the given bounds.</returns></member>
-        <member name="M:Google.Maps.Util.GeometryUtils.ConstructBoundsFromVertices(UnityEngine.Vector3[])">
+        <member name="M:Google.Maps.Util.GeometryUtils.ConstructBoundsFromVertices(System.Collections.Generic.IEnumerable{UnityEngine.Vector3})">
             <summary>
             Constructs the smallest possible bounds to encapsulate a given vertex array.
             </summary>
@@ -11858,6 +13152,36 @@
             </summary>
             <param name="line">The line to calculate the length of.</param>
             <returns>The length of the given line.</returns></member>
+        <member name="M:Google.Maps.Util.GeometryUtils.MinMaxRect(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Returns a <see cref="T:UnityEngine.RectInt" /> with the given min and max points.
+            </summary>
+            <param name="xMin">The minimum point of the rect.</param>
+            <param name="yMin">The minimum point of the rect.</param>
+            <param name="xMax">The minimum point of the rect.</param>
+            <param name="yMax">The minimum point of the rect.</param>
+            <returns>The rectangle with the given min and max points.</returns></member>
+        <member name="M:Google.Maps.Util.GeometryUtils.Overlaps(UnityEngine.RectInt,UnityEngine.RectInt)">
+            <summary>
+            Returns true if the two rectangles overlap.
+            </summary>
+            <remarks>
+            This method also returns true if the two rectangles overlap only at their boundaries.
+            </remarks>
+            <param name="a">The first rectangle to test.</param>
+            <param name="b">The second rectangle to test.</param>
+            <returns>True if the two rectangles overlap.</returns></member>
+        <member name="M:Google.Maps.Util.GeometryUtils.Contains(UnityEngine.RectInt,UnityEngine.Vector2Int)">
+            <summary>
+            Returns true if the given rectangle contains the given point.
+            </summary>
+            <remarks>
+            This method also returns true if the point lies on the boundary of the rectangle. If you do
+            not want this behaviour, use <see cref="M:UnityEngine.RectInt.Contains(UnityEngine.Vector2Int)" />.
+            </remarks>
+            <param name="rect">The rectangle to test.</param>
+            <param name="point">The point to test.</param>
+            <returns>True if this rectangle contains the given point.</returns></member>
         <member name="T:Google.Maps.Util.Geometry.Edge`1">
             <summary>
             A directed pair of <typeparamref name="T" />.
@@ -12228,7 +13552,7 @@
             <returns>
             The triangulation of the difference between the initial and current triangulations.
             </returns></member>
-        <member name="M:Google.Maps.Util.Geometry.Insetting.TriangulationInsetter.ComputeAndInitNextEvent(Google.Maps.Util.Geometry.Insetting.Triangle)">
+        <member name="M:Google.Maps.Util.Geometry.Insetting.TriangulationInsetter.ComputeAndUpdateNextEvent(Google.Maps.Util.Geometry.Insetting.Triangle)">
             <summary>
             Computes the next event for a given triangle and updates the relevant data structures.
             </summary>
@@ -12323,7 +13647,7 @@
             Helper method to remove a triangle from the triangulation and clear its event.
             </summary>
             <param name="triangle">The triangle to remove.</param></member>
-        <member name="M:Google.Maps.Util.Geometry.Insetting.TriangulationInsetter.InitTriangleVertex(Google.Maps.Util.Geometry.Insetting.OrientedTriangle,Google.Maps.Util.Geometry.Insetting.Triangle.Orientation,Google.Maps.Util.Geometry.Insetting.WavefrontVertex)">
+        <member name="M:Google.Maps.Util.Geometry.Insetting.TriangulationInsetter.UpdateTriangleVertex(Google.Maps.Util.Geometry.Insetting.OrientedTriangle,Google.Maps.Util.Geometry.Insetting.Triangle.Orientation,Google.Maps.Util.Geometry.Insetting.WavefrontVertex)">
             <summary>
             Helper function to update a vertex of a triangle while maintaining <see cref="F:Google.Maps.Util.Geometry.Insetting.TriangulationInsetter.Owners" />.
             </summary>
@@ -12571,6 +13895,14 @@
             <param name="v3">The third point of the triangle.</param>
             <param name="test">The point to test.</param>
             <returns>True if the test point lies inside the triangle.</returns></member>
+        <member name="M:Google.Maps.Util.Geometry.TriangleUtils.AreaDeterminant(UnityEngine.Vector3,UnityEngine.Vector3,UnityEngine.Vector3)">
+            <summary>
+            Computes the signed area determinant of the triangle described by the given vertices.
+            </summary>
+            <param name="a">The first vertex.</param>
+            <param name="b">The second vertex.</param>
+            <param name="c">The third vertex.</param>
+            <returns>The signed area determinant of the triangle.</returns></member>
         <member name="T:Google.Maps.Util.Geometry.Triangulation2">
             <summary>
             An indexed triangulation into a list of vertices.
@@ -12963,6 +14295,10 @@
         <member name="T:Google.Maps.Util.FakeRequestFactory">
             <summary>
             Fake request factory for use in testing.
+            </summary></member>
+        <member name="F:Google.Maps.Util.FakeRequestFactory.CreatedRequests">
+            <summary>
+            All requests created by this factory.
             </summary></member>
         <member name="M:Google.Maps.Util.FakeRequestFactory.createPostRequest(System.String,System.Byte[],System.Collections.Generic.Dictionary{System.String,System.String},System.Int32)">
             <summary>
@@ -14337,16 +15673,90 @@
             </param>
             <param name="minResolution">The minimum allowed resolution.</param>
             <param name="maxResolution">The maximum allowed resolution.</param></member>
-        <member name="M:Google.Maps.Util.TerrainUtils.AlignAltitudesWithNeighbors(System.Single[0:,0:],Google.Maps.Unity.UnityTerrainState,Google.Maps.Unity.UnityTerrainState,Google.Maps.Unity.UnityTerrainState,Google.Maps.Unity.UnityTerrainState)">
+        <member name="T:Google.Maps.Util.TerrainUtils.AdjacentDirection">
             <summary>
-            Aligns the altitudes in the provided array with the altitudes in the neighbouring
+            Used to indicate which side a neighboring tile adjoins.
+            </summary></member>
+        <member name="T:Google.Maps.Util.TerrainUtils.DiagonalDirection">
+            <summary>
+            Used to indicate which corner a diagonally neighboring tile adjoins.
+            </summary></member>
+        <member name="M:Google.Maps.Util.TerrainUtils.AlignSideToNeighbor(System.Single[0:,0:],Google.Maps.Util.TerrainUtils.AdjacentDirection,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Single[])">
+            <summary>
+            Aligns a single side of a terrain tile to the specified neighbor.
+            </summary>
+            <param name="altitudes">The altitudes to align.</param>
+            <param name="direction">Which direction to align to.</param>
+            <param name="blendAltitudeCount">How many pixels into altitudes should be blended.tu</param>
+            <param name="resolution">The resolution of the altitude raster.</param>
+            <param name="startX">The starting x position of the rectangle to blend.</param>
+            <param name="endX">The ending x position of the rectangle to blend.</param>
+            <param name="startY">The starting y position of the rectangle to blend.</param>
+            <param name="endY">The ending y position of the rectangle to blend.</param>
+            <param name="edgeCoordinate">
+            The coordinate of the edge which is being blended (x coordinate when blending the left and
+            right edges; y coordinate when blending the top or bottom edge.)
+            </param>
+            <param name="neighborEdgeAltitudes">
+            The altitudes of the neighboring tile which we want to match.
+            </param></member>
+        <member name="M:Google.Maps.Util.TerrainUtils.AlignCornerToTwoNeighbors(System.Single[0:,0:],Google.Maps.Util.TerrainUtils.DiagonalDirection,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Single[],System.Single[])">
+            <summary>
+            Align the corner of a tile to two adjacent neighbors at once.
+            </summary>
+            <param name="altitudes">The altitudes to align.</param>
+            <param name="direction">Which direction to align to.</param>
+            <param name="blendAltitudeCount">How many pixels into altitudes should be blended.</param>
+            <param name="resolution">The resolution of the altitude raster.</param>
+            <param name="startX">The starting x position of the rectangle to blend.</param>
+            <param name="endX">The ending x position of the rectangle to blend.</param>
+            <param name="startY">The starting y position of the rectangle to blend.</param>
+            <param name="endY">The ending y position of the rectangle to blend.</param>
+            <param name="horizontalBoundary">
+            The x coordinate of the horizontal boundary of this corner.
+            </param>
+            <param name="verticalBoundary">
+            The y coordinate of the vertical boundary of this corner.
+            </param>
+            <param name="horizontalNeighborEdgeAltitudes">
+            The altitudes of the horizontally neighboring tile which we want to match.
+            </param>
+            <param name="verticalNeighborEdgeAltitudes">
+            The altitudes of the vertically neighboring tile which we want to match.
+            </param></member>
+        <member name="M:Google.Maps.Util.TerrainUtils.AlignCornerToDiagonalNeighbor(System.Single[0:,0:],System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Single)">
+            <summary>
+            Align the corner of a tile to a single diagonal neighbor.
+            </summary>
+            <param name="altitudes">The altitudes to align.</param>
+            <param name="blendAltitudeCount">How many pixels into altitudes should be blended.</param>
+            <param name="startX">The starting x position of the rectangle to blend.</param>
+            <param name="endX">The ending x position of the rectangle to blend.</param>
+            <param name="startY">The starting y position of the rectangle to blend.</param>
+            <param name="endY">The ending y position of the rectangle to blend.</param>
+            <param name="horizontalBoundary">
+            The x coordinate of the horizontal boundary of this corner.
+            </param>
+            <param name="verticalBoundary">
+            The y coordinate of the vertical boundary of this corner.
+            </param>
+            <param name="diagonalAltitude">
+            The altitude of the adjoining corner of the diagonally adjacent tile.
+            </param></member>
+        <member name="M:Google.Maps.Util.TerrainUtils.AlignAltitudesWithNeighbors(System.Single[0:,0:],Google.Maps.Unity.UnityTerrainState,Google.Maps.Unity.UnityTerrainState,Google.Maps.Unity.UnityTerrainState,Google.Maps.Unity.UnityTerrainState,Google.Maps.Unity.UnityTerrainState,Google.Maps.Unity.UnityTerrainState,Google.Maps.Unity.UnityTerrainState,Google.Maps.Unity.UnityTerrainState)">
+            <summary>
+            Aligns the altitudes in the provided array with the altitudes in the neighboring
             <see cref="T:UnityEngine.Terrain" /> tiles.
             </summary>
             <param name="altitudes">The altitudes to align.</param>
             <param name="leftNeighbor">The left (west) Terrain neighbor.</param>
+            <param name="topLeftNeighbor">The top left (northwest) Terrain neighbor.</param>
             <param name="topNeighbor">The top (north) Terrain neighbor.</param>
+            <param name="topRightNeighbor">The top right (northeast) Terrain neighbor.</param>
             <param name="rightNeighbor">The right (east) Terrain neighbor.</param>
-            <param name="bottomNeighbor">The bottom (south) Terrain neighbor.</param></member>
+            <param name="bottomRightNeighbor">The bottom right (sounteast) Terrain neighbor.</param>
+            <param name="bottomNeighbor">The bottom (south) Terrain neighbor.</param>
+            <param name="bottomLeftNeighbor">The bottom left (southwest) Terrain neighbor.</param></member>
         <member name="M:Google.Maps.Util.TerrainUtils.PlaceGameObjectOnTerrain(UnityEngine.GameObject,UnityEngine.Terrain)">
             <summary>
             Adjusts the y-position of the specified <see cref="T:UnityEngine.GameObject" /> so that its transform
@@ -14390,7 +15800,7 @@
             <inheritdoc /></member>
         <member name="M:Google.Maps.Util.UnityEditorProxyStub.RemoveFromBeforeAssemblyReload(System.Delegate)">
             <inheritdoc /></member>
-        <member name="M:Google.Maps.Util.UnityEditorProxyStub.SetEditorInitEnabled(System.Boolean)">
+        <member name="M:Google.Maps.Util.UnityEditorProxyStub.SetEditorUpdateEnabled(System.Boolean)">
             <inheritdoc /></member>
         <member name="T:Google.Maps.Util.UnityInfo">
             <summary>
@@ -14418,7 +15828,10 @@
             <summary>
             Wrap a value so that it can be passed by reference.
             </summary>
-            <typeparam name="T">Type of value to wrap.</typeparam></member>
+            <typeparam name="T">Type of value to wrap.</typeparam>
+            <remarks>
+            This allows passing by reference to coroutines, since they can't have ref parameters.
+            </remarks></member>
         <member name="F:Google.Maps.Util.ValueWrapper`1.Value">
             <summary>
             Wrapped value.

@@ -90,7 +90,7 @@ namespace Google.Maps.Examples {
       // Clear objects
       ClearNames();
 
-      // Init the map
+      // Update the map
       BaseMapLoader.ClearMap();
       BaseMapLoader.LoadMap();
     }

@@ -83,7 +83,7 @@ namespace Google.Maps.Examples {
 
     public void OnApplyStyle() {
       // Clear and reload map
-      if (BaseMapLoader != null) {
+      if (BaseMapLoader != null && !BaseMapLoader.IsLoading) {
         Debug.Log("Apply " + useMetaDataAsFilters.isOn);
 
         if (!useMetaDataAsFilters.isOn) {

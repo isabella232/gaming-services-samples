@@ -91,7 +91,7 @@ namespace Google.Maps.Examples {
     /// </summary>
     void Update() {
       if (IsReady) {
-        // Init maps service values as they change.
+        // Update maps service values as they change.
         latValue.text = BaseMapLoader.LatLng.Lat.ToString("N5");
         lngValue.text = BaseMapLoader.LatLng.Lng.ToString("N5");
       }

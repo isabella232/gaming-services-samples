@@ -56,9 +56,9 @@ namespace Google.Maps.Demos.Zoinkies
             location = WorldService.GetInstance().GetSpawnLocation(LocationId);
 
             // Check pre-requisites
-            if (location.key_type_id == GameConstants.DIAMOND_KEY
+            if (location.keyTypeId == GameConstants.DIAMOND_KEY
                 && PlayerService.GetInstance().GetNumberOfDiamondKeys() >=
-                location.number_of_keys_to_activate)
+                location.numberOfKeysToActivate)
             {
                 // All good. Let's request our rewards
                 try
@@ -77,7 +77,7 @@ namespace Google.Maps.Demos.Zoinkies
             else
             {
                 UIManager.OnShowMessageDialog("You need "
-                                              + location.number_of_keys_to_activate
+                                              + location.numberOfKeysToActivate
                                               + " Diamond Keys. \n You have "
                                               + PlayerService.GetInstance().GetNumberOfDiamondKeys()
                                               + " of them!");
@@ -108,7 +108,7 @@ namespace Google.Maps.Demos.Zoinkies
             }
 
             // We've unlocked this location
-            location.number_of_keys_to_activate = 0;
+            location.numberOfKeysToActivate = 0;
 
             // Start Battle!
             UIManager.OnShowBattleView(data, OnBattleEnds);

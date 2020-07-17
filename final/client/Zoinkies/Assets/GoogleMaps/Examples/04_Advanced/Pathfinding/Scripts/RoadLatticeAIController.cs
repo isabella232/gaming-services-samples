@@ -2,7 +2,6 @@
 using Unity.Collections;
 using UnityEngine;
 using Google.Maps.Unity.Intersections;
-using RoadLatticeTools = Google.Maps.Examples.Shared.RoadLatticeTools;
 
 namespace Google.Maps.Examples {
   /// Note: Road Lattice support is a beta feature subject to performance considerations and future

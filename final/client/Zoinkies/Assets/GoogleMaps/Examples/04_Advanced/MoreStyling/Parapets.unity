@@ -630,7 +630,6 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   ApiKey:
-  SemanticTileApiAddress: vectortile.googleapis.com
   NetworkPoolSize: 100
   NetworkTimeoutSeconds: 10
   EnableDiagnostics: 1

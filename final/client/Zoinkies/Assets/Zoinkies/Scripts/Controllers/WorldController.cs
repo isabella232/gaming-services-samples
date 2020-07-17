@@ -18,7 +18,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Google.Maps.Coord;
-using Google.Maps.Examples.Shared;
 using Google.Maps.Feature.Style;
 using Unity.Collections;
 using UnityEngine;
@@ -469,11 +468,11 @@ namespace Google.Maps.Demos.Zoinkies
         /// </summary>
         protected override void InitStylingOptions()
         {
-            _zoinkiesStylesOptions = ExampleDefaults.DefaultGameObjectOptions;
+            _zoinkiesStylesOptions = DefaultStyles.DefaultGameObjectOptions;
 
             // The default maps shader has a glossy property that allows the sky to reflect on it.
             Material waterMaterial =
-                ExampleDefaults.DefaultGameObjectOptions.RegionStyle.FillMaterial;
+                DefaultStyles.DefaultGameObjectOptions.RegionStyle.FillMaterial;
             waterMaterial.color = new Color(0.4274509804f, 0.7725490196f, 0.8941176471f);
 
             _zoinkiesStylesOptions.ModeledStructureStyle = new ModeledStructureStyle.Builder

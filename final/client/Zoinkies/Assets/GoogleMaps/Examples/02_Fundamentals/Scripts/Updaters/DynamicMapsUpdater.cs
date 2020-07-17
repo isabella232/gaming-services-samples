@@ -84,7 +84,7 @@ namespace Google.Maps.Examples {
       // Verify all required parameters are defined and correctly setup, skipping any further setup
       // if any parameter is missing or invalid.
       if (!VerifyParameters()) {
-        // Disable this script to prevent error spamming (where Init will producing one or more
+        // Disable this script to prevent error spamming (where Update will producing one or more
         // errors every frame because one or more parameters are undefined).
         enabled = false;
       }
@@ -116,7 +116,7 @@ namespace Google.Maps.Examples {
       }
 
       if (NeedsLoading) {
-        Ground.transform.position = new Vector3(cameraPosition.x, Ground.transform.position.y, cameraPosition.z);
+        Ground.transform.position = new Vector3(cameraPosition.x, 0f, cameraPosition.z);
         if (BaseMapLoader != null) {
           BaseMapLoader.LoadMap();
         }

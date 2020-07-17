@@ -123,7 +123,7 @@ Shader "Google/Maps/Shaders/Wall (9 Sliced)" {
       #include "AutoLight.cginc" // Shadow functions and macros.
 
       // 9 slicing functions.
-      #include "Assets/GoogleMaps/Materials/GoogleMapsShaderLib.cginc"
+      #include "Assets/GoogleMaps/Resources/GoogleMapsShaderLib.cginc"
 
       // User defined values.
       sampler2D _MainTex, _SpecMap, _EmitMap;

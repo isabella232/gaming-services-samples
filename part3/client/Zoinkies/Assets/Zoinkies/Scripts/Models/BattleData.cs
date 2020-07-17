@@ -25,7 +25,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         /// Unique identifier for the location where the battle takes place.
         /// </summary>
-        public string id { get; set; }
+        public string deviceId { get; set; }
         /// <summary>
         /// Opponent type
         /// </summary>
@@ -53,7 +53,7 @@ namespace Google.Maps.Demos.Zoinkies
 
         public override string ToString()
         {
-            return "{Id: " + id +
+            return "{Id: " + deviceId +
                    " OpponentTypeId: " + opponentTypeId +
                    " PlayerStarts: " + playerStarts +
                    " MaxAttackScoreBonus: " + maxAttackScoreBonus +

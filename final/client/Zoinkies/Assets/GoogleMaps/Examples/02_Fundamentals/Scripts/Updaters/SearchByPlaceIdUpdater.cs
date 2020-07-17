@@ -39,6 +39,7 @@ namespace Google.Maps.Examples {
           OnExtrudedStructureCreated);
       BaseMapLoader.MapsService.Events.ModeledStructureEvents.DidCreate.AddListener(
           OnModeledStructureCreated);
+      BaseMapLoader.MapsService.Events.MapEvents.Loaded.AddListener(OnMapLoaded);
     }
 
     /// <summary>
@@ -49,8 +50,6 @@ namespace Google.Maps.Examples {
     /// these objects.
     /// </summary>
     public void OnMapLoaded(MapLoadedArgs args) {
-      Debug.Log("Clearing cache");
-
       // Adjust the content of our dictionary with all GameObjects actually in the scene.
       List<string> toRemove = PlaceIdToGameObjectDict.Where(pair => pair.Value == null)
                                   .Select(pair => pair.Key)

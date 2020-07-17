@@ -51,6 +51,11 @@ namespace Google.Maps.Examples {
     public bool IsAISearchActive = true;
 
     /// <summary>
+    /// The maximum distance from the avatar that AI agents will start from.
+    /// </summary>
+    public float MaxAIStartDistanceFromAvatar = 100;
+
+    /// <summary>
     /// Indicates if the path between the AI Agent and their target should be revealed
     /// </summary>
     public bool IsDebugPathOn = false; // buggy - needs work
@@ -103,6 +108,18 @@ namespace Google.Maps.Examples {
             aic.Target = avatarGO;
             aic.enabled = true;
             NPCs.Add(aic);
+
+            if (cc != null) {
+              // Move distant NPCs closer to the avatar so that they don't take too long to reach
+              // their target.
+              Vector3 diff = aic.transform.position - cc.transform.position;
+              Vector3 desiredPosition = Vector3.MoveTowards(cc.transform.position,
+                  aic.transform.position, Mathf.Min(diff.magnitude, MaxAIStartDistanceFromAvatar));
+
+              RoadLatticeNode node =
+                  BaseMapLoader.MapsService.RoadLattice.SnapToNode(desiredPosition);
+              aic.transform.position = new Vector3(node.Location.x, 0, node.Location.y);
+            }
           }
         }
       }
@@ -155,13 +172,14 @@ namespace Google.Maps.Examples {
     private GameObject GetRandomCharacter(GameObject prefab) {
       GameObject character = Instantiate(prefab, CharactersContainer, false);
 
-      List<RoadLatticeNode> nodes = BaseMapLoader.MapsService.RoadLattice.GetNodes();
+      List<RoadLatticeNode> nodes =
+          new List<RoadLatticeNode>(BaseMapLoader.MapsService.RoadLattice.Nodes);
 
       if (nodes.Count == 0) {
-        Debug.LogError("Oops something went wrong");
+        Debug.LogError("Could not find any nodes to spawn a character at.");
       } else {
         RoadLatticeNode firstRandomNode = nodes.ElementAt(Random.Range(0, nodes.Count));
-        Debug.Log(" " + firstRandomNode.Location.x + " " + firstRandomNode.Location.y);
+        Debug.LogFormat("Character spawned at {0}", firstRandomNode.Location);
 
         Vector3 newPosition =
             new Vector3(firstRandomNode.Location.x, 0f, firstRandomNode.Location.y);

@@ -66,11 +66,6 @@ namespace Google.Maps.Examples {
     [Tooltip("When enabled, notifies the map sdk to show water lines.")]
     public bool ShowLineWater = true;
 
-    /// <summary>
-    /// Whether the application is currently quitting.
-    /// </summary>
-    private bool Quitting;
-
     private void Awake() {
       // Verify that we have a base map loader available
 
@@ -195,14 +190,7 @@ namespace Google.Maps.Examples {
       BaseMapLoader.MapsService.Events.AreaWaterEvents.DidCreate.RemoveListener(OnAreaWaterCreated);
       BaseMapLoader.MapsService.Events.LineWaterEvents.DidCreate.RemoveListener(OnLineWaterCreated);
 
-      // Reload the map if application isn't quitting
-      if (!Quitting) {
-        ClearAndReload();
-      }
-    }
-
-    void OnApplicationQuit() {
-      Quitting = true;
+      ClearAndReload();
     }
 
     /// <summary>
@@ -360,7 +348,7 @@ namespace Google.Maps.Examples {
     /// In this case, we remove all roads and buildings gizmos if any.
     /// </summary>
     private void ClearAndReload() {
-      // Init the map
+      // Update the map
       BaseMapLoader.ClearMap();
       BaseMapLoader.LoadMap();
     }

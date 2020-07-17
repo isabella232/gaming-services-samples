@@ -95,12 +95,12 @@ namespace Google.Maps.Demos.Zoinkies
             {
                 ReferenceItem refItem = ReferenceService.GetInstance()
                     .GetItem(PlayerService.GetInstance().AvatarType);
-                if (refItem != null && refItem.id != AvatarType && AvatarImage != null)
+                if (refItem != null && refItem.itemId != AvatarType && AvatarImage != null)
                 {
                     Texture2D t = (Texture2D) Resources.Load("Icon" + refItem.prefab);
                     Sprite s = Sprite.Create(t, AvatarImage.sprite.rect, AvatarImage.sprite.pivot);
                     AvatarImage.sprite = s;
-                    AvatarType = refItem.id;
+                    AvatarType = refItem.itemId;
                 }
             }
 

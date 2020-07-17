@@ -1,4 +1,5 @@
 using Google.Maps.Coord;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -92,7 +93,7 @@ namespace Google.Maps.Examples.Shared {
       // Verify all required parameters are defined and correctly setup, skipping any further setup
       // if any parameter is missing or invalid.
       if (!VerifyParameters()) {
-        // Disable this script to prevent error spamming (where Init will producing one or more
+        // Disable this script to prevent error spamming (where Update will producing one or more
         // errors every frame because one or more parameters are undefined).
         enabled = false;
 
@@ -138,7 +139,7 @@ namespace Google.Maps.Examples.Shared {
 
       // Now load map around the camera.
       MapsService.MakeMapLoadRegion()
-          .AddCircle(Camera.main.transform.position, MaxDistance)
+          .AddCircle(new Vector3(CameraPosition.x, 0f, CameraPosition.z), MaxDistance)
           .Load(RenderingStyles);
 
       StartCoroutines();
@@ -239,12 +240,17 @@ namespace Google.Maps.Examples.Shared {
       // Store the rotation of the camera, so we can check next frame if the main Camera has
       // rotated, and thus if the visible world should be refreshed again.
       CameraRotation = Camera.main.transform.rotation;
+      float height = Camera.main.transform.position.y;
 
       // Flag that we are now loading geometry.
       Loading = true;
 
-      // Load the visible map region.
-      MapsService.MakeMapLoadRegion().AddViewport(Camera.main, MaxDistance).Load(RenderingStyles);
+      // Load the visible map region. The range is increased based on the height of the camera
+      // to ensure we have a circle of radius MaxDistance on the ground.
+      float maxDistance = (float) Math.Sqrt(Math.Pow(height, 2) + Math.Pow(MaxDistance, 2));
+      MapsService.MakeMapLoadRegion()
+          .AddViewport(Camera.main, maxDistance)
+          .Load(RenderingStyles);
     }
 
     /// <summary>Periodically remove unneeded areas of the map.</summary>
@@ -255,7 +261,7 @@ namespace Google.Maps.Examples.Shared {
         // right on the edge of the view).
         MapsService.MakeMapLoadRegion()
             .AddViewport(Camera.main, MaxDistance)
-            .AddCircle(Camera.main.transform.position, MaxDistance)
+            .AddCircle(new Vector3(CameraPosition.x, 0f, CameraPosition.z), MaxDistance)
             .UnloadOutside();
 
         // Wait for a preset interval before seeing if new geometry needs to be unloaded.

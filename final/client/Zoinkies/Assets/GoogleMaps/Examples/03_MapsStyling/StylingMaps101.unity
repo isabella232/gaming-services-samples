@@ -620,8 +620,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ApiKey: 
-  VectorTileApiAddress: vectortile.googleapis.com
-  UseHttpForVectorTileRequests: 0
   NetworkPoolSize: 100
   NetworkTimeoutSeconds: 10
   EnableDiagnostics: 1

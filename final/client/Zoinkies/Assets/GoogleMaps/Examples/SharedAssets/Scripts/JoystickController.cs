@@ -63,7 +63,7 @@ namespace Google.Maps.Demos.Utilities {
       gameObject.transform.parent.gameObject.SetActive(false);
 
       // If the example isn't run on mobile devices, hide the joystick
-      //#if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
+      #if (UNITY_IOS || UNITY_ANDROID) && !UNITY_EDITOR
         gameObject.transform.parent.gameObject.SetActive(true);
         // Initialize the camera container's position
         Camera = CameraRig.GetComponentInChildren<Camera>();
@@ -74,7 +74,7 @@ namespace Google.Maps.Demos.Utilities {
             Camera.transform.position.z);
           Camera.transform.localPosition = Vector3.zero;
         }
-      //#endif
+      #endif
     }
 
     /// <summary>
