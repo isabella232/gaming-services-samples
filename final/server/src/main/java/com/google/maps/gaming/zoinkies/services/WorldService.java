@@ -95,7 +95,6 @@ public class WorldService {
       throws ExecutionException, InterruptedException {
     ApiFuture<DocumentSnapshot> documentSnapshotApiFuture =
         this.firestore.document("worlds/" + deviceId).get();
-    //DocumentSnapshot document = ;
     if (documentSnapshotApiFuture.get().exists()) {
       this.firestore.document("worlds/" + deviceId).set(worldData).get();
     }
@@ -188,7 +187,6 @@ public class WorldService {
    */
   public void removeWorldData(String Id) {
     CollectionReference users = this.firestore.collection("worlds");
-    //Iterable<DocumentReference> documentReferences = ;
     users.listDocuments().forEach(documentReference -> {
       if (documentReference.getId().equals(Id)) {
         try {

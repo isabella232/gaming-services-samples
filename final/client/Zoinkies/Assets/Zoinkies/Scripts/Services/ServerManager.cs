@@ -31,12 +31,12 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         /// The  server url used when testing locally
         /// </summary>
-        private const string SERVER_URL = "http://localhost:8080";
+        //private const string SERVER_URL = "http://localhost:8080";
 
         /// <summary>
         /// The url used to access the remote server
         /// </summary>
-        //private const string SERVER_URL = "https://musk-samples.wl.r.appspot.com";
+        private const string SERVER_URL = "https://musk-samples.wl.r.appspot.com";
 
         /// <summary>
         ///     Sends battle results to the server.

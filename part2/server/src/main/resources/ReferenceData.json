@@ -2,7 +2,7 @@
 {"references":[
   {
     "name":"War Chest",
-    "id":"CHEST",
+    "itemId":"CHEST",
     "type": "GEO_PROP",
     "description":"A War Chest brought from Zoinkies outer space",
     "attackScore":0,
@@ -13,7 +13,7 @@
   },
   {
     "name":"Tower",
-    "id":"TOWER",
+    "itemId":"TOWER",
     "type": "GEO_PROP",
     "description":"A Tower holding a local leader. Open the tower, defeat the guardian, free the prisoner.",
     "attackScore":0,
@@ -24,7 +24,7 @@
   },
   {
     "name":"Gold Key",
-    "id":"GOLD_KEY",
+    "itemId":"GOLD_KEY",
     "type": "QUEST_ITEM",
     "description":"A Gold key to open a war chest (you may need more than one).",
     "attackScore":0,
@@ -35,7 +35,7 @@
   },
   {
     "name":"Diamond Key",
-    "id":"DIAMOND_KEY",
+    "itemId":"DIAMOND_KEY",
     "type": "QUEST_ITEM",
     "description":"A Diamond key to open a Tower (you may need more than one).",
     "attackScore":0,
@@ -46,7 +46,7 @@
   },
   {
     "name":"Zoinkies Minion",
-    "id":"MINION",
+    "itemId":"MINION",
     "type": "NPC",
     "description":"Zoinkies minions are as strong as they are nasty. Don't underestimate them!",
     "attackScore":5,
@@ -57,7 +57,7 @@
   },
   {
     "name":"Zoinkies General",
-    "id":"GENERAL",
+    "itemId":"GENERAL",
     "type": "NPC",
     "description":"Zoinkies generals are formidable foes. They won't give up easily. Come prepared!",
     "attackScore":10,
@@ -68,7 +68,7 @@
   },
   {
     "name":"Energy Station",
-    "id":"ENERGY_STATION",
+    "itemId":"ENERGY_STATION",
     "type": "GEO_PROP",
     "description":"A place to restore your energy when you feel down.",
     "attackScore":0,
@@ -79,7 +79,7 @@
   },
   {
     "name":"Terran",
-    "id":"CHARACTER_TYPE_1",
+    "itemId":"CHARACTER_TYPE_1",
     "type": "AVATAR",
     "description":"Those terrans are weak but, oh boy, they are tenacious!",
     "attackScore":0,
@@ -90,7 +90,7 @@
   },
   {
     "name":"Martian Elfe",
-    "id":"CHARACTER_TYPE_2",
+    "itemId":"CHARACTER_TYPE_2",
     "type": "AVATAR",
     "description":"Martian Elves are fast but weak.",
     "attackScore":0,
@@ -101,7 +101,7 @@
   },
   {
     "name":"Aurorean",
-    "id":"CHARACTER_TYPE_3",
+    "itemId":"CHARACTER_TYPE_3",
     "type": "AVATAR",
     "description":"Growing on a high g planet makes Auroreans strong.",
     "attackScore":0,
@@ -112,7 +112,7 @@
   },
   {
     "name":"Robot",
-    "id":"CHARACTER_TYPE_4",
+    "itemId":"CHARACTER_TYPE_4",
     "type": "AVATAR",
     "description":"Robots are strong and ready for all tasks.",
     "attackScore":0,
@@ -123,7 +123,7 @@
   },
   {
     "name":"BODY_ARMOR_TYPE_1",
-    "id":"BODY_ARMOR_TYPE_1",
+    "itemId":"BODY_ARMOR_TYPE_1",
     "type": "BODY_ARMOR",
     "description":"BODY_ARMOR_TYPE_1",
     "attackScore":0,
@@ -134,7 +134,7 @@
   },
   {
     "name":"BODY_ARMOR_TYPE_2",
-    "id":"BODY_ARMOR_TYPE_2",
+    "itemId":"BODY_ARMOR_TYPE_2",
     "type": "BODY_ARMOR",
     "description":"BODY_ARMOR_TYPE_2",
     "attackScore":0,
@@ -145,7 +145,7 @@
   },
   {
     "name":"BODY_ARMOR_TYPE_3",
-    "id":"BODY_ARMOR_TYPE_3",
+    "itemId":"BODY_ARMOR_TYPE_3",
     "type": "BODY_ARMOR",
     "description":"BODY_ARMOR_TYPE_3",
     "attackScore":0,
@@ -156,7 +156,7 @@
   },
   {
     "name":"HELMET_TYPE_1",
-    "id":"HELMET_TYPE_1",
+    "itemId":"HELMET_TYPE_1",
     "type": "HELMET",
     "description":"HELMET_TYPE_1",
     "attackScore":0,
@@ -167,7 +167,7 @@
   },
   {
     "name":"HELMET_TYPE_2",
-    "id":"HELMET_TYPE_2",
+    "itemId":"HELMET_TYPE_2",
     "type": "HELMET",
     "description":"HELMET_TYPE_2",
     "attackScore":0,
@@ -178,7 +178,7 @@
   },
   {
     "name":"HELMET_TYPE_3",
-    "id":"HELMET_TYPE_3",
+    "itemId":"HELMET_TYPE_3",
     "type": "HELMET",
     "description":"HELMET_TYPE_3",
     "attackScore":0,
@@ -189,7 +189,7 @@
   },
   {
     "name":"SHIELD_TYPE_1",
-    "id":"SHIELD_TYPE_1",
+    "itemId":"SHIELD_TYPE_1",
     "type": "SHIELD",
     "description":"SHIELD_TYPE_1",
     "attackScore":0,
@@ -200,7 +200,7 @@
   },
   {
     "name":"SHIELD_TYPE_2",
-    "id":"SHIELD_TYPE_2",
+    "itemId":"SHIELD_TYPE_2",
     "type": "SHIELD",
     "description":"SHIELD_TYPE_2",
     "attackScore":0,
@@ -211,7 +211,7 @@
   },
   {
     "name":"SHIELD_TYPE_3",
-    "id":"SHIELD_TYPE_3",
+    "itemId":"SHIELD_TYPE_3",
     "type": "SHIELD",
     "description":"SHIELD_TYPE_3",
     "attackScore":0,
@@ -222,7 +222,7 @@
   },
   {
     "name":"WEAPON_TYPE_1",
-    "id":"WEAPON_TYPE_1",
+    "itemId":"WEAPON_TYPE_1",
     "type": "WEAPON",
     "description":"WEAPON_TYPE_1",
     "attackScore":7,
@@ -233,7 +233,7 @@
   },
   {
     "name":"WEAPON_TYPE_2",
-    "id":"WEAPON_TYPE_2",
+    "itemId":"WEAPON_TYPE_2",
     "type": "WEAPON",
     "description":"WEAPON_TYPE_2",
     "attackScore":15,
@@ -244,7 +244,7 @@
   },
   {
     "name":"WEAPON_TYPE_3",
-    "id":"WEAPON_TYPE_3",
+    "itemId":"WEAPON_TYPE_3",
     "type": "WEAPON",
     "description":"WEAPON_TYPE_3",
     "attackScore":20,

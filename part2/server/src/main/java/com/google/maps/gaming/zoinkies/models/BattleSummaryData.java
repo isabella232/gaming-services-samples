@@ -23,37 +23,62 @@ public class BattleSummaryData {
   /**
    * Indicates who won. True-Player, False-NPC
    */
-  private Boolean winner;
+  private boolean winner;
+
+  /**
+   * Getter for winner
+   * @return
+   */
+  public boolean getWinner() {
+    return winner;
+  }
+
+  /**
+   * Setter for winner
+   * @param winner
+   */
+  public void setWinner(boolean winner) {
+    this.winner = winner;
+  }
+
   /**
    * Provides a list of the rewards (or losses) that the player gets for winning/losing the battle.
    */
   private RewardsData rewards;
+
   /**
-   * Indicates if the player has won the game (aka met the winning conditions).
+   * Getter for rewards
+   * @return
    */
-  private Boolean wonTheGame;
-
-  public Boolean getWinner() {
-    return winner;
-  }
-
-  public void setWinner(Boolean winner) {
-    this.winner = winner;
-  }
-
   public RewardsData getRewards() {
     return rewards;
   }
 
+  /**
+   * Setter for rewards
+   * @param rewards
+   */
   public void setRewards(RewardsData rewards) {
     this.rewards = rewards;
   }
+  /**
+   * Indicates if the player has won the game (aka met the winning conditions).
+   */
+  private boolean wonTheGame;
 
-  public Boolean getWonTheGame() {
+  /**
+   * Getter for wonTheGame
+   * @return
+   */
+  public boolean getWonTheGame() {
     return wonTheGame;
   }
 
-  public void setWonTheGame(Boolean wonTheGame) {
+  /**
+   * Setter for wonTheGame
+   * @param wonTheGame
+   */
+  public void setWonTheGame(boolean wonTheGame) {
     this.wonTheGame = wonTheGame;
   }
 }

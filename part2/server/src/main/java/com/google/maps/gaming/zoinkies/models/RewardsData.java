@@ -22,34 +22,63 @@ import java.util.List;
  * A POJO class used to keep track of the player's rewards or losses.
  */
 public class RewardsData {
-
   /**
    * Unique location identifier
    */
-  private String Id;
+  private String locationId;
+
+  /**
+   * Getter for Id
+   * @return
+   */
+  public String getLocationId() {
+    return locationId;
+  }
+
+  /**
+   * Setter for Id
+   * @param locationId
+   */
+  public void setLocationId(String locationId) {
+    this.locationId = locationId;
+  }
   /**
    * List of items found or lost at this location (negative quantity indicate losses)
    */
-  private List<Item> Items;
+  private List<Item> items;
 
-  public RewardsData() {
-    Items = new ArrayList<>();
-  }
-
-  public String getId() {
-    return Id;
-  }
-
-  public void setId(String id) {
-    Id = id;
-  }
-
+  /**
+   * Getter for Items
+   * @return
+   */
   public List<Item> getItems() {
-    return Items;
+    return items;
   }
 
+  /**
+   * Setter for Items
+   * @param items
+   */
   public void setItems(List<Item> items) {
-    Items = items;
+    this.items = items;
   }
 
+  /**
+   * Default constructor - instantiates an empty items list.
+   */
+  public RewardsData() {
+    items = new ArrayList<>();
+  }
+
+  /**
+   * ToString override, mostly for testing purposes.
+   * @return
+   */
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("Id: " + locationId);
+    sb.append("Items: " + items);
+    return sb.toString();
+  }
 }

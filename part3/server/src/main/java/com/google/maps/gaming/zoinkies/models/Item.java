@@ -15,44 +15,69 @@
  */
 package com.google.maps.gaming.zoinkies.models;
 
+import com.google.maps.gaming.zoinkies.ITEMS;
+
 /**
  * This class models a (generic) game item. It is mostly used for the player's inventory.
  */
 public class Item {
 
   /**
-   * Type of object - the key must matched a value in the reference table.
+   * The id of the object as defined in the reference data file.
    */
-  private String ObjectType;
+  private ITEMS itemId;
+
+  /**
+   * Getter for id
+   * @return
+   */
+  public ITEMS getItemId() {
+    return itemId;
+  }
+
+  /**
+   * Setter for id
+   * @param itemId
+   */
+  public void setItemId(ITEMS itemId) {
+    this.itemId = itemId;
+  }
   /**
    * Quantity owned.
    */
-  private int Quantity;
+  private int quantity;
+
+  /**
+   * Getter for quantity
+   * @return
+   */
+  public int getQuantity() {
+    return quantity;
+  }
+
+  /**
+   * Setter for quantity
+   * @param Quantity
+   */
+  public void setQuantity(int Quantity) {
+    this.quantity = Quantity;
+  }
 
   public Item() {
   }
 
-  public Item(String ObjectType, int Quantity) {
-    this.ObjectType = ObjectType;
-    this.Quantity = Quantity;
+  /**
+   * A constructor that takes an id and a quantity as parameters
+   * @param itemId
+   * @param Quantity
+   */
+  public Item(ITEMS itemId, int Quantity) {
+    this.itemId = itemId;
+    this.quantity = Quantity;
   }
 
-  // region Getters/Setters
-  public String getId() {
-    return ObjectType;
-  }
-  public void setId(String ObjectType) {
-    this.ObjectType = ObjectType;
-  }
-  public int getQuantity() {
-    return Quantity;
-  }
-  public void setQuantity(int Quantity) {
-    this.Quantity = Quantity;
-  }
-  // endregion
   @Override
   public String toString() {
-    return "{Type: " + ObjectType + " Quantity: " + Quantity + "}";
+    return "{Type: " + itemId + " Quantity: " + quantity + "}";
   }
 }

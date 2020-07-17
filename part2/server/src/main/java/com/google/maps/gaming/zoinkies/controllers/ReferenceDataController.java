@@ -29,16 +29,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ReferenceDataController {
 
+  /**
+   * A reference to the game service
+   */
   @Autowired
-  private GameService GameService;
+  private GameService gameService;
 
   /**
    * Returns the references described under resources
-   * @return
+   * @return an updated reference data record
    */
   @GetMapping("/references")
-  public ResponseEntity<ReferenceData> GetReferences() {
-    ReferenceData data = GameService.getReferenceData();
+  public ResponseEntity<ReferenceData> getReferences() {
+    ReferenceData data = gameService.getReferenceData();
     if (data == null) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }

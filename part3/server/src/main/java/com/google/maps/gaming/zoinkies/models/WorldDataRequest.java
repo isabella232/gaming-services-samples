@@ -15,7 +15,7 @@
  */
 package com.google.maps.gaming.zoinkies.models;
 
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLLatLng;
+import com.google.maps.gaming.zoinkies.models.playablelocations.LatLng;
 
 /**
  * A POJO class used to keep track of the client's world request.
@@ -23,22 +23,58 @@ import com.google.maps.gaming.zoinkies.models.playablelocations.PLLatLng;
  * within the overlapping S2 cells.
  */
 public class WorldDataRequest {
-  private PLLatLng northeast;
-  private PLLatLng southwest;
 
-  public PLLatLng getNortheast() {
+  /**
+   * The North East corner of the Lat Lng rectangle
+   */
+  private LatLng northeast;
+
+  /**
+   * Getter for northeast
+   * @return
+   */
+  public LatLng getNortheast() {
     return northeast;
   }
 
-  public void setNortheast(PLLatLng northeast) {
+  /**
+   * Setter for northeast
+   * @param northeast
+   */
+  public void setNortheast(LatLng northeast) {
     this.northeast = northeast;
   }
 
-  public PLLatLng getSouthwest() {
+  /**
+   * The South West corner of the Lat Lng rectangle
+   */
+  private LatLng southwest;
+
+  /**
+   * Getter for southwest
+   * @return
+   */
+  public LatLng getSouthwest() {
     return southwest;
   }
 
-  public void setSouthwest(PLLatLng southwest) {
+  /**
+   * Setter for southwest
+   * @param southwest
+   */
+  public void setSouthwest(LatLng southwest) {
     this.southwest = southwest;
+  }
+
+  /**
+   * ToString override, mostly for testing purposes.
+   * @return
+   */
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("North East corner: " + northeast);
+    sb.append("South West corner: " + southwest);
+    return sb.toString();
   }
 }

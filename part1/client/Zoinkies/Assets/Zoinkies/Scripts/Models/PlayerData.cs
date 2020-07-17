@@ -27,7 +27,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         /// Generated device Id provided by user
         /// </summary>
-        public long id { get; set; }
+        public long deviceId { get; set; }
 
         /// <summary>
         /// Player's avatar name
@@ -79,7 +79,7 @@ namespace Google.Maps.Demos.Zoinkies
         }
 
         public PlayerData(
-            long id,
+            long deviceId,
             string name,
             string characterType,
             int energyLevel,
@@ -90,7 +90,7 @@ namespace Google.Maps.Demos.Zoinkies
             string equippedShield,
             List<Item> inventory)
         {
-            this.id = id;
+            this.deviceId = deviceId;
             this.name = name;
             this.characterType = characterType;
             this.energyLevel = energyLevel;
@@ -105,7 +105,7 @@ namespace Google.Maps.Demos.Zoinkies
         public PlayerData Clone()
         {
             return new PlayerData(
-                id,
+                deviceId,
                 name,
                 characterType,
                 energyLevel,

@@ -88,12 +88,12 @@ public class PlayableLocationsService {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.add("x-goog-api-key", API_KEY);
 
-    Request req = new Request();
-    req.setAreaFilter(new AreaFilter());
+    Request request = new Request();
+    request.setAreaFilter(new AreaFilter());
     if (criteria == null) {
-      req.setCriteria(getDefaultCriteria());
+      request.setCriteria(getDefaultCriteria());
     } else {
-      req.setCriteria(criteria);
+      request.setCriteria(criteria);
     }
 
     // Configure a region coverer, which will help us get all overlapping S2 cells on the
@@ -137,22 +137,42 @@ public class PlayableLocationsService {
       // The code below handles cells that haven't been processed yet as they are missing
       // from our cache.
       // All playable locations returned within that cell are tagged with a cell id.
-      req.getAreaFilter().setS2CellId(cellIdString);
+      request.getAreaFilter().setS2CellId(cellIdString);
 
-      String reqJson = objectMapper.writeValueAsString(req);
-      HttpEntity<String> request = new HttpEntity<String>(reqJson, headers);
+      String reqJson = objectMapper.writeValueAsString(request);
+      HttpEntity<String> httpEntity = new HttpEntity<String>(reqJson, headers);
 
-      String playableLocationsResponse = restTemplate.postForObject(PLAYABLE_LOCATION_URL, request,
-          String.class);
+      String playableLocationsResponse = restTemplate.postForObject(PLAYABLE_LOCATION_URL,
+          httpEntity, String.class);
       if (playableLocationsResponse == null) {
         throw new Exception("Received an invalid playableLocationsResponse! (null)");
       }
 
       Response response = objectMapper.readValue(playableLocationsResponse, Response.class);
+
+      if (response == null) {
+        throw new Exception("Error while deserializing playable locations response.");
+      }
+
+      if (response.getLocationsPerGameObjectType() == null) {
+        throw new Exception("Error: could not find a valid locations per gameobject type.");
+      }
+
+      if (response.getLocationsPerGameObjectType().get(objectType) == null) {
+        throw new Exception("Error: no valid locations data for playable locations object type:"
+            + objectType);
+      }
+
+      if (response.getLocationsPerGameObjectType().get(objectType).getLocations() == null) {
+        throw new Exception("Error: found no locations for current request.");
+      }
+
       combinedResponse.setTtl(response.getTtl());
 
-      for (Location loc: response.getLocationsPerGameObjectType().get(objectType).getLocations()){
-        loc.setS2CellId(req.getAreaFilter().getS2CellId());
+      for (Location location: response.getLocationsPerGameObjectType().get(objectType).getLocations()){
+        if (location != null) {
+          location.setS2CellId(request.getAreaFilter().getS2CellId());
+        }
       }
 
       combinedLocations.addAll(Arrays.asList(
@@ -160,9 +180,9 @@ public class PlayableLocationsService {
 
       // Update the cache
       if (PlayableLocationsCache != null && !PlayableLocationsCache.containsKey(
-          req.getAreaFilter().getS2CellId())
+          request.getAreaFilter().getS2CellId())
           && response.getTtl() != null && !response.getTtl().isEmpty()) {
-        PlayableLocationsCache.put(req.getAreaFilter().getS2CellId(),"PT" + response.getTtl());
+        PlayableLocationsCache.put(request.getAreaFilter().getS2CellId(),"PT" + response.getTtl());
       }
     }
 

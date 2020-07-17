@@ -20,21 +20,21 @@ import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.WriteResult;
 import com.google.maps.gaming.zoinkies.models.WorldDataRequest;
 import com.google.maps.gaming.zoinkies.models.SpawnLocation;
 import com.google.maps.gaming.zoinkies.models.WorldData;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLCriteria;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLFieldMask;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLFilter;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLLocation;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLResponse;
+import com.google.maps.gaming.zoinkies.models.playablelocations.Criteria;
+import com.google.maps.gaming.zoinkies.models.playablelocations.FieldMask;
+import com.google.maps.gaming.zoinkies.models.playablelocations.Filter;
+import com.google.maps.gaming.zoinkies.models.playablelocations.Location;
+import com.google.maps.gaming.zoinkies.models.playablelocations.Response;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.concurrent.ExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -55,26 +55,27 @@ public class WorldService {
    * A reference to the game service
    */
   @Autowired
-  GameService GameService;
+  GameService gameService;
 
   /**
    * A reference to the playable locations service
    */
   @Autowired
-  PlayableLocationsService PlayableLocationsService;
+  PlayableLocationsService playableLocationsService;
 
   /**
    * If it doesn't exist, create one
    * Otherwise return the current user data in the response
    *
-   * @param Id The User Id
+   * @param deviceId The User Id
    * @return A World Data record
    * @throws ExecutionException
    * @throws InterruptedException
    */
-  public WorldData GetWorldData(String Id) throws ExecutionException, InterruptedException {
+  @Nullable
+  public WorldData getWorldData(String deviceId) throws ExecutionException, InterruptedException {
     ApiFuture<DocumentSnapshot> documentSnapshotApiFuture =
-        this.firestore.document("worlds/" + Id).get();
+        this.firestore.document("worlds/" + deviceId).get();
     WorldData data = null;
     DocumentSnapshot document = documentSnapshotApiFuture.get();
     if (document.exists()) {
@@ -85,18 +86,17 @@ public class WorldService {
 
   /**
    * This class updates the database with an entirely new world data.
-   * @param Id The User Id
+   * @param deviceId The User Id
    * @param worldData The World Data to update
    * @throws ExecutionException
    * @throws InterruptedException
    */
-  public void SetWorldData(String Id, WorldData worldData)
+  public void setWorldData(String deviceId, WorldData worldData)
       throws ExecutionException, InterruptedException {
     ApiFuture<DocumentSnapshot> documentSnapshotApiFuture =
-        this.firestore.document("worlds/" + Id).get();
-    DocumentSnapshot document = documentSnapshotApiFuture.get();
-    if (document.exists()) {
-      this.firestore.document("worlds/" + Id).set(worldData).get();
+        this.firestore.document("worlds/" + deviceId).get();
+    if (documentSnapshotApiFuture.get().exists()) {
+      this.firestore.document("worlds/" + deviceId).set(worldData).get();
     }
   }
 
@@ -108,41 +108,41 @@ public class WorldService {
    * @return WorldData The updated collection of spawn locations.
    * @throws Exception
    */
-  public WorldData GetSpawnLocations(String Id, WorldDataRequest WorldDataRequest)
+  public WorldData getSpawnLocations(String Id, WorldDataRequest WorldDataRequest)
       throws Exception {
 
-    Boolean updateNeeded = false;
+    boolean updateNeeded = false;
 
-    WorldData data = GetWorldData(Id);
+    WorldData data = getWorldData(Id);
     if (data == null) {
       data = new WorldData();
     }
 
     // Query playable locations for the given zone - and only when the overlapping cell
     // isn't in our cache.
-    PLResponse response = PlayableLocationsService.RequestPlayableLocations(
+    Response response = playableLocationsService.requestPlayableLocations(
         WorldDataRequest.getSouthwest(),
         WorldDataRequest.getNortheast(),
-        GetPLDefaultCriteria(),
+        getDefaultCriteria(),
         data.getS2CellsTTL()
     );
 
-    for (PLLocation plloc:response.getLocationsPerGameObjectType().get("0").getLocations()) {
+    for (Location plloc:response.getLocationsPerGameObjectType().get("0").getLocations()) {
       // Generate a location key.
       // We use the playable location name as it is unique and always available
       // whether the playable location is generated or not.
       String locationId = plloc.getName().replace("/", "_");
 
-      // If we don't  have this location in the database, generate a new one
+      // If we don't have this location in the database, generate a new one.
+      // otherwise we check the time to live field.
+      // If the TTL has expired, we create a new spawn location.
       if (!data.getLocations().containsKey(locationId)) {
-        // spawn a new location
-        SpawnLocation sl = GameService.CreateRandomSpawnLocation(plloc);
+        SpawnLocation sl = gameService.createRandomSpawnLocation(plloc);
         sl.setS2CellId(plloc.getS2CellId());
         data.getLocations().put(locationId, sl);
         updateNeeded = true;
       }
       else {
-        // Check the TTL
         String S2CellId = data.getLocations().get(locationId).getS2CellId();
         if (S2CellId != null
             && !S2CellId.isEmpty()
@@ -150,8 +150,7 @@ public class WorldService {
 
           Duration duration = Duration.parse(data.getS2CellsTTL().get(S2CellId));
           if (duration.getSeconds() <= 0) {
-            // Update this location from the world as it has expired
-            SpawnLocation sl = GameService.CreateRandomSpawnLocation(plloc);
+            SpawnLocation sl = gameService.createRandomSpawnLocation(plloc);
             sl.setS2CellId(plloc.getS2CellId());
             data.getLocations().put(locationId, sl);
             updateNeeded = true;
@@ -160,23 +159,22 @@ public class WorldService {
       }
     }
 
-    // Check if any respawning locations need to be unlocked
+    // Check if any respawning locations need to be unlocked.
     for (SpawnLocation location:data.getLocations().values()) {
-      // Check timestamp progress
-      if (location.getRespawn_time() != null) {
-        Instant t = Instant.parse(location.getRespawn_time());
+      // Check timestamp progress.
+      if (location.getRespawnTime() != null) {
+        Instant t = Instant.parse(location.getRespawnTime());
         if (t.compareTo(Instant.now()) <= 0) {
-          location.setRespawn_time(null);
+          location.setRespawnTime(null);
           location.setActive(true);
           updateNeeded = true;
         }
       }
     }
 
-    // Create/Update the world document
+    // Create or Update the world document.
     if (updateNeeded) {
-      WriteResult writeResult = this.firestore.document("worlds/" + Id).set(data).get();
-      System.out.println("Update time: " + writeResult.getUpdateTime());
+      this.firestore.document("worlds/" + Id).set(data).get();
     }
 
     // Return the final set
@@ -187,10 +185,9 @@ public class WorldService {
    * Deletes the world locations associated to the player's game.
    * @param Id The User Id
    */
-  public void RemoveWorldData(String Id) {
+  public void removeWorldData(String Id) {
     CollectionReference users = this.firestore.collection("worlds");
-    Iterable<DocumentReference> documentReferences = users.listDocuments();
-    documentReferences.forEach(documentReference -> {
+    users.listDocuments().forEach(documentReference -> {
       if (documentReference.getId().equals(Id)) {
         try {
           documentReference.delete().get();
@@ -206,13 +203,13 @@ public class WorldService {
    *
    * @return a List of Criteria for the query to Playable Locations API
    */
-  private PLCriteria[] GetPLDefaultCriteria() {
-    PLCriteria[] plc = new PLCriteria[1];
-    plc[0] = new PLCriteria();
+  private Criteria[] getDefaultCriteria() {
+    Criteria[] plc = new Criteria[1];
+    plc[0] = new Criteria();
     plc[0].setGame_object_type(0);
-    plc[0].setFilter(new PLFilter());
+    plc[0].setFilter(new Filter());
     plc[0].getFilter().setMax_location_count(50);
-    plc[0].setFields_to_return(new PLFieldMask());
+    plc[0].setFields_to_return(new FieldMask());
     plc[0].getFields_to_return().setPaths(new String[]{"snapped_point", "place_id", "types"});
     return plc;
   }

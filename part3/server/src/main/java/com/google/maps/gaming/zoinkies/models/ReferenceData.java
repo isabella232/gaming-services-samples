@@ -15,6 +15,7 @@
  */
 package com.google.maps.gaming.zoinkies.models;
 
+import com.google.maps.gaming.zoinkies.ITEMS;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,36 +33,53 @@ public class ReferenceData {
    * Lists to all references for this game. Every game object has a reference in this list.
    * The list is reconciled between client and server.
    */
-  private List<ReferenceItem> References;
+  private List<ReferenceItem> references;
+
+  /**
+   * Getter for references
+   * @return
+   */
+  public List<ReferenceItem> getReferences() {
+    return references;
+  }
+
+  /**
+   * Setter for references
+   * @param references
+   */
+  public void setReferences(List<ReferenceItem> references) {
+    this.references = references;
+  }
 
   public ReferenceData() {
-    References = new ArrayList<>();
+    references = new ArrayList<>();
   }
 
-  public List<ReferenceItem> getReferences() {
-    return References;
-  }
-
-  public void setReferences(List<ReferenceItem> references) {
-    References = references;
-  }
-
-  public ReferenceItem getReferenceItem(String id) {
-    if (id == null || id.isEmpty()) {
+  /**
+   * Returns the reference item identified by the given id
+   * @param id the unique identifier for this item
+   * @return a ReferenceItem
+   */
+  public ReferenceItem getReferenceItem(ITEMS id) {
+    if (id == null) {
       return null;
     }
     for(ReferenceItem ri:getReferences()) {
-      if (ri.getId().equals(id)) {
+      if (ri.getItemId().equals(id)) {
         return ri;
       }
     }
     return null;
   }
 
+  /**
+   * Outputs all reference data
+   * @return
+   */
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    for (ReferenceItem ri : References ) {
+    for (ReferenceItem ri : references) {
       sb.append(ri.toString());
       sb.append("\n");
     }

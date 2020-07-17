@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System.Collections;
 using UnityEngine;
 
 namespace Google.Maps.Demos.Zoinkies
@@ -59,18 +58,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// </summary>
         public void OnGameReady()
         {
-            StartCoroutine(DelayedStart());
-        }
-
-        /// <summary>
-        /// Allows the player into the experience after a few seconds.
-        /// </summary>
-        /// <returns>An enumerator</returns>
-        private IEnumerator DelayedStart()
-        {
-            yield return new WaitForSeconds(2);
-
-            // Close the view after a few seconds to allow the rendering of all map features
+            // Close the view
             OnClose?.Invoke();
         }
     }

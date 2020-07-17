@@ -48,16 +48,6 @@ namespace Google.Maps.Demos.Zoinkies
         public MapHUDView MapHudView;
 
         /// <summary>
-        ///     Reference to the loading glass panel.
-        /// </summary>
-        public LoadingDialog LoadingDialog;
-
-        /// <summary>
-        ///     Reference to the message dialog.
-        /// </summary>
-        public MessageDialog MessageDialog;
-
-        /// <summary>
         ///     Reference to the splash screen.
         /// </summary>
         public SplashView SplashView;
@@ -92,7 +82,7 @@ namespace Google.Maps.Demos.Zoinkies
         /// <summary>
         ///     Initializes callbacks and initializes the splash screen.
         /// </summary>
-        void Awake()
+        void Start()
         {
             // When the debug flag is enabled, we run the FTUE at each start.
             if (EnableFTUE && PlayerPrefs.HasKey(GameConstants.FTUE_COMPLETE))
@@ -105,8 +95,6 @@ namespace Google.Maps.Demos.Zoinkies
             _views.Add(HowToPlayDialog);
             _views.Add(MapHudView);
             _views.Add(SplashView);
-            _views.Add(LoadingDialog);
-            _views.Add(MessageDialog);
 
             // Initializes all callbacks
             InitCallbacks();
@@ -131,36 +119,6 @@ namespace Google.Maps.Demos.Zoinkies
                 }
             }
 
-        }
-
-        /// <summary>
-        ///     Shows the Message dialog
-        /// </summary>
-        /// <param name="message">The message to display</param>
-        public void OnShowMessageDialog(string message)
-        {
-            MessageDialog.Init(message);
-            MessageDialog.gameObject.SetActive(true);
-        }
-
-        /// <summary>
-        ///     Shows the Message dialog (Timer option)
-        /// </summary>
-        /// <param name="message">The message to display</param>
-        /// <param name="timeLeft">The time left on a timer</param>
-        public void OnShowMessageDialog(string message, TimeSpan timeLeft)
-        {
-            MessageDialog.Init(message, timeLeft);
-            MessageDialog.gameObject.SetActive(true);
-        }
-
-        /// <summary>
-        ///     Activates the loading screen. This screen behaves like a modal dialog.
-        /// </summary>
-        /// <param name="bool">A boolean to show or hide a view</param>
-        public void OnShowLoadingView(bool show)
-        {
-            LoadingDialog.gameObject.SetActive(show);
         }
 
         /// <summary>

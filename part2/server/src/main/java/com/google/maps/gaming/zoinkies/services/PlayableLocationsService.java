@@ -15,23 +15,22 @@
  */
 package com.google.maps.gaming.zoinkies.services;
 
-import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.geometry.S2CellId;
 import com.google.common.geometry.S2CellUnion;
 import com.google.common.geometry.S2LatLng;
 import com.google.common.geometry.S2LatLngRect;
 import com.google.common.geometry.S2RegionCoverer;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLAreaFilter;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLCriteria;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLFieldMask;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLFilter;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLLatLng;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLLocation;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLLocations;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLRequest;
-import com.google.maps.gaming.zoinkies.models.playablelocations.PLResponse;
+import com.google.maps.gaming.zoinkies.models.playablelocations.AreaFilter;
+import com.google.maps.gaming.zoinkies.models.playablelocations.Criteria;
+import com.google.maps.gaming.zoinkies.models.playablelocations.FieldMask;
+import com.google.maps.gaming.zoinkies.models.playablelocations.Filter;
+import com.google.maps.gaming.zoinkies.models.playablelocations.LatLng;
+import com.google.maps.gaming.zoinkies.models.playablelocations.Location;
+import com.google.maps.gaming.zoinkies.models.playablelocations.Locations;
+import com.google.maps.gaming.zoinkies.models.playablelocations.Request;
+import com.google.maps.gaming.zoinkies.models.playablelocations.Response;
+import com.sun.tools.javac.util.Convert;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,7 +67,7 @@ public class PlayableLocationsService {
   /**
    * API key providing access to PlayableLocation API
    */
-  private final String API_KEY = "YOUR API KEY HERE";
+  private final String API_KEY = "AIzaSyAZc7i2gq-bv-xYy2Ou2eNDPDUxf5bIQEo";
   /**
    * Default parameters for object type when querying playable locations API
    */
@@ -81,94 +80,114 @@ public class PlayableLocationsService {
    *
    * @return A Playable Location Response
    */
-  public PLResponse RequestPlayableLocations(PLLatLng loLatLng, PLLatLng hiLatLng,
-      PLCriteria[] criteria, HashMap<String, String> PLCache) throws Exception {
+  public Response requestPlayableLocations(LatLng loLatLng, LatLng hiLatLng,
+      Criteria[] criteria, HashMap<String, String> PlayableLocationsCache) throws Exception {
 
     RestTemplate restTemplate = new RestTemplate();
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.add("x-goog-api-key", API_KEY);
 
-    // Build query
-    PLRequest req = new PLRequest();
-    req.setAreaFilter(new PLAreaFilter());
+    Request request = new Request();
+    request.setAreaFilter(new AreaFilter());
     if (criteria == null) {
-      req.setCriteria(GetPLDefaultCriteria());
+      request.setCriteria(getDefaultCriteria());
     } else {
-      req.setCriteria(criteria);
+      request.setCriteria(criteria);
     }
 
     // Configure a region coverer, which will help us get all overlapping S2 cells on the
     // given Lat Lng rectangle
-    S2RegionCoverer rc = new S2RegionCoverer();
-    rc.setMinLevel(this.S2_CELL_LEVEL);
-    rc.setMaxLevel(this.S2_CELL_MAX_LEVEL);
+    S2RegionCoverer regionCoverer = new S2RegionCoverer();
+    regionCoverer.setMinLevel(this.S2_CELL_LEVEL);
+    regionCoverer.setMaxLevel(this.S2_CELL_MAX_LEVEL);
 
     // Get the two opposite corners in degrees.
     S2LatLng lo = S2LatLng.fromDegrees(loLatLng.getLatitude(),loLatLng.getLongitude());
     S2LatLng hi = S2LatLng.fromDegrees(hiLatLng.getLatitude(),hiLatLng.getLongitude());
 
     // Define the Lat Lng Rectangle
-    S2LatLngRect r = new S2LatLngRect(lo,hi);
+    S2LatLngRect latLngRect = new S2LatLngRect(lo,hi);
 
     // Get all cells that are covering the provided area
-    S2CellUnion cu = rc.getCovering(r);
+    S2CellUnion cellUnion = regionCoverer.getCovering(latLngRect);
 
-    PLResponse combinedResponse = new PLResponse();
+    Response combinedResponse = new Response();
     String objectType = Integer.toString(GAME_OBJECT_TYPE_SPAWN_LOCATIONS);
-    combinedResponse.setLocationsPerGameObjectType(new HashMap<String, PLLocations>());
-    combinedResponse.getLocationsPerGameObjectType().put(objectType,new PLLocations());
+    combinedResponse.setLocationsPerGameObjectType(new HashMap<String, Locations>());
+    combinedResponse.getLocationsPerGameObjectType().put(objectType,new Locations());
 
-    List<PLLocation> combinedLocations = new ArrayList<>();
+    List<Location> combinedLocations = new ArrayList<>();
     ObjectMapper objectMapper = new ObjectMapper();
 
     // For each overlapping cell, query playable locations API and merge results into
     // a combined response.
-    for (S2CellId id:cu.cellIds()){
-
-      // Have we already queried this cell?
-      if (PLCache != null && PLCache.containsKey(id)) {
-        // Check TTL
-        Duration duration = Duration.parse(PLCache.get(id));
+    // If we've already queried a cell, check its TTL.
+    // If the TTL is still valid, skip that cell as we've already handled the playable locations
+    // within.
+    for (S2CellId id:cellUnion.cellIds()){
+      String cellIdString = Long.toUnsignedString(id.id());
+      if (PlayableLocationsCache != null && PlayableLocationsCache.containsKey(cellIdString)) {
+        Duration duration = Duration.parse(PlayableLocationsCache.get(cellIdString));
         if (duration.getSeconds() > 0) {
-          // Yes and the playable locations in that cell haven't expired yet
-          // Move to next cell.
           continue;
         }
       }
 
+      // The code below handles cells that haven't been processed yet as they are missing
+      // from our cache.
+      // All playable locations returned within that cell are tagged with a cell id.
+      request.getAreaFilter().setS2CellId(cellIdString);
 
-      req.getAreaFilter().setS2CellId(Long.toUnsignedString(id.id()));
+      String reqJson = objectMapper.writeValueAsString(request);
+      HttpEntity<String> httpEntity = new HttpEntity<String>(reqJson, headers);
 
-      String reqJson = objectMapper.writeValueAsString(req);
-      System.out.println(reqJson);
-
-      HttpEntity<String> request = new HttpEntity<String>(reqJson, headers);
-      String plResponse = restTemplate.postForObject(PLAYABLE_LOCATION_URL, request, String.class);
-      assertNotNull(plResponse);
-
-      PLResponse response = objectMapper.readValue(plResponse,PLResponse.class);
-      combinedResponse.setTtl(response.getTtl());
-
-      // Tag all locations with the initial S2Cell Id
-      for (PLLocation loc: response.getLocationsPerGameObjectType().get(objectType).getLocations()){
-        loc.setS2CellId(req.getAreaFilter().getS2CellId());
+      String playableLocationsResponse = restTemplate.postForObject(PLAYABLE_LOCATION_URL,
+          httpEntity, String.class);
+      if (playableLocationsResponse == null) {
+        throw new Exception("Received an invalid playableLocationsResponse! (null)");
       }
 
-      List locations = Arrays.asList(
-          response.getLocationsPerGameObjectType().get(objectType).getLocations());
+      Response response = objectMapper.readValue(playableLocationsResponse, Response.class);
 
-      combinedLocations.addAll(locations);
+      if (response == null) {
+        throw new Exception("Error while deserializing playable locations response.");
+      }
+
+      if (response.getLocationsPerGameObjectType() == null) {
+        throw new Exception("Error: could not find a valid locations per gameobject type.");
+      }
+
+      if (response.getLocationsPerGameObjectType().get(objectType) == null) {
+        throw new Exception("Error: no valid locations data for playable locations object type:"
+            + objectType);
+      }
+
+      if (response.getLocationsPerGameObjectType().get(objectType).getLocations() == null) {
+        throw new Exception("Error: found no locations for current request.");
+      }
+
+      combinedResponse.setTtl(response.getTtl());
+
+      for (Location location: response.getLocationsPerGameObjectType().get(objectType).getLocations()){
+        if (location != null) {
+          location.setS2CellId(request.getAreaFilter().getS2CellId());
+        }
+      }
+
+      combinedLocations.addAll(Arrays.asList(
+          response.getLocationsPerGameObjectType().get(objectType).getLocations()));
 
       // Update the cache
-      if (PLCache != null && !PLCache.containsKey(req.getAreaFilter().getS2CellId())
+      if (PlayableLocationsCache != null && !PlayableLocationsCache.containsKey(
+          request.getAreaFilter().getS2CellId())
           && response.getTtl() != null && !response.getTtl().isEmpty()) {
-        PLCache.put(req.getAreaFilter().getS2CellId(),"PT" + response.getTtl());
+        PlayableLocationsCache.put(request.getAreaFilter().getS2CellId(),"PT" + response.getTtl());
       }
     }
 
     combinedResponse.getLocationsPerGameObjectType().get(objectType).setLocations(
-        combinedLocations.toArray(new PLLocation[0]));
+        combinedLocations.toArray(new Location[0]));
     return combinedResponse;
   }
 
@@ -177,13 +196,13 @@ public class PlayableLocationsService {
    *
    * @return an array of Playable Location Criteria
    */
-  private PLCriteria[] GetPLDefaultCriteria() {
-    PLCriteria[] plc = new PLCriteria[1];
-    plc[0] = new PLCriteria();
+  private Criteria[] getDefaultCriteria() {
+    Criteria[] plc = new Criteria[1];
+    plc[0] = new Criteria();
     plc[0].setGame_object_type(GAME_OBJECT_TYPE_SPAWN_LOCATIONS);
-    plc[0].setFilter( new PLFilter());
+    plc[0].setFilter( new Filter());
     plc[0].getFilter().setMax_location_count(2);
-    plc[0].setFields_to_return( new PLFieldMask());
+    plc[0].setFields_to_return( new FieldMask());
     plc[0].getFields_to_return().setPaths( new String[]{"snapped_point", "place_id", "types"});
     return plc;
   }

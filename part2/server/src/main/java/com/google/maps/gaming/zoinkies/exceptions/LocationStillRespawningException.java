@@ -17,6 +17,7 @@ package com.google.maps.gaming.zoinkies.exceptions;
 
 /**
  * Specific Exception used when locations are still respawning.
+ * This runtime exception is mapped to http statuses in data controllers.
  */
 public class LocationStillRespawningException  extends RuntimeException {
   public LocationStillRespawningException(String errorMessage) {
