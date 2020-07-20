@@ -44,8 +44,8 @@ The client code requires an API Key to run.
 The Key should be set on the MapsService component attached to the WorldContainer gameobject parented to GameWorld object in the main scene.
 
 Part 1/client is a client only project.
-Part 3/client relies on Part3/server running locally
-Part 4/client relies on Part4/server running remotely, and is ready for mobile deployment
+Part 3/client relies on Part3/server running locally.
+Part 4/client relies on Part4/server running remotely, and is ready for mobile deployment.
 
 
 ## Building and running the server code locally

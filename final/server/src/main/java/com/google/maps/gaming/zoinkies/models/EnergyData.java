@@ -61,4 +61,16 @@ public class EnergyData {
   public void setAmountRestored(int amountRestored) {
     this.amountRestored = amountRestored;
   }
+
+  /**
+   * Implementation of ToString for testing purposes.
+   * @return a string that describes this energy data instance.
+   */
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("EnergyData{" + "Id='").append(this.locationId).append('\'').append(", ")
+        .append("amountRestored:").append(this.amountRestored);
+    return sb.toString();
+  }
 }
