@@ -49,7 +49,37 @@ Part 4/client relies on Part4/server running remotely, and is ready for mobile d
 
 
 ## Building and running the server code locally
-The server requires an API Key to query Playable Locations API. This API Key is set in the PlayableLocationsService class.
+1. The game server is written in Java and uses the Spring Boot framework.
+It uses Gradle (https://gradle.org/install/) as a build configuration system
+and relies on a few starter modules that do all the heavy lifting for us.
+
+These modules are:
+Spring-boot-starter-web for REST support,
+Spring-cloud-gcp-starter for the auto-configuration of GCP core components
+and
+Spring-cloud-gcp-starter-firestore for GCP Cloud Firestore support.
+
+The game server app was set up using spring initializr (https://spring.io/guides/gs/spring-boot/)
+and integrates with Firestore for database persistence.
+The following url explains how to get started with Cloud Firestore: https://firebase.google.com/docs/firestore/quickstart
+There are plenty of excellent tutorials in the community that explain how to bootstrap a web app with Spring Boot.
+
+1. You must be authenticated locally to access the services in the GCP Project, including Firestore.
+This can be done by following the instructions on this page:
+https://cloud.google.com/docs/authentication/getting-started
+
+The simplest option would be to:
+- Create a Service Account on the GCP Project
+- Export the json describing the account
+- Create a new environment variable called: GOOGLE_APPLICATION_CREDENTIALS
+
+The gcp modules used in the project will automatically recognize the variable
+and connect to the gcp project described in the json file. 
+
+Installing gcloud locally can also be useful to setup the active project and local user.
+https://cloud.google.com/source-repositories/docs/authentication#authenticate-using-the-cloud-sdk
+
+Also, the server requires an API Key to query Playable Locations API. This API Key is set in the PlayableLocationsService class.
 
 Under the server root folder of modules 2, 3 or final:
 
@@ -69,13 +99,6 @@ appengine {  // App Engine tasks configuration
     }
 }
 ```
-
-1. You must be authenticated locally to access the services in the GCP Project.
-This can be done by following the instructions on this page:
-https://cloud.google.com/docs/authentication/getting-started
-
-Installing gcloud locally can also be useful to setup the active project and local user.
-https://cloud.google.com/source-repositories/docs/authentication#authenticate-using-the-cloud-sdk
 
 1. Run the following commands from the CLI:
 ``` shell
