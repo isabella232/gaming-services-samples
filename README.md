@@ -129,6 +129,7 @@ appengine {  // App Engine tasks configuration
         version = '1'
     }
 }
+```
 1. Run the following commands from the CLI:
 - Clean the build directory:
 ``` shell
