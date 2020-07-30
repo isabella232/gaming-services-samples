@@ -4,6 +4,7 @@
 *.csproj
 *.sln
 bin/
+NOTICE
 
 /final/client/Zoinkies/.idea/
 /final/client/Zoinkies/Assets/Plugins.meta
