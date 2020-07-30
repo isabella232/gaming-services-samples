@@ -52,6 +52,10 @@ import org.springframework.web.client.RestTemplate;
 public class PlayableLocationsService {
 
   /**
+   * API key providing access to PlayableLocation API
+   */
+  private final String API_KEY = "<YOUR API KEY HERE>";
+  /**
    * The url to the playable location API
    */
   private final String PLAYABLE_LOCATION_URL =
@@ -64,10 +68,6 @@ public class PlayableLocationsService {
    * Max S2Cell level required when processing cells covering the lat lng rectangle
    */
   private final int S2_CELL_MAX_LEVEL = 14;
-  /**
-   * API key providing access to PlayableLocation API
-   */
-  private final String API_KEY = "<YOUR API KEY HERE>";
   /**
    * Default parameters for object type when querying playable locations API
    */
