@@ -177,7 +177,7 @@ To set your API key, do the following in the Unity editor:
 
 Calls to the Playable Locations API and the Firestore database from the Unity client are proxied through the game server. To enable this, do the following:
 
-1. In `/client/Zoinkies/Assets/Scripts/Services`, open `ServerManager.cs`
+1. In `/client/Zoinkies/Assets/Zoinkies/Scripts/Services`, open `ServerManager.cs`
 1. Set the appropriate target URL in the `SERVER_URL` constant.
 - Localhost
 ``` shell
