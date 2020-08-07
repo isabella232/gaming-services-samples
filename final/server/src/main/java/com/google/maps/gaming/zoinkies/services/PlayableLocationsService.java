@@ -30,7 +30,6 @@ import com.google.maps.gaming.zoinkies.models.playablelocations.Location;
 import com.google.maps.gaming.zoinkies.models.playablelocations.Locations;
 import com.google.maps.gaming.zoinkies.models.playablelocations.Request;
 import com.google.maps.gaming.zoinkies.models.playablelocations.Response;
-import com.sun.tools.javac.util.Convert;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,7 +44,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * The playable location service provides logic to persist and manipulate world data.
+ * The playable location service provides logic to persist and manipulate world
+ * data.
  */
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
@@ -58,14 +58,15 @@ public class PlayableLocationsService {
   /**
    * The url to the playable location API
    */
-  private final String PLAYABLE_LOCATION_URL =
-      "https://playablelocations.googleapis.com/v3:samplePlayableLocations";
+  private final String PLAYABLE_LOCATION_URL = "https://playablelocations.googleapis.com/v3:samplePlayableLocations";
   /**
-   * Min S2Cell level required when processing cells covering the lat lng rectangle
+   * Min S2Cell level required when processing cells covering the lat lng
+   * rectangle
    */
   private final int S2_CELL_LEVEL = 11;
   /**
-   * Max S2Cell level required when processing cells covering the lat lng rectangle
+   * Max S2Cell level required when processing cells covering the lat lng
+   * rectangle
    */
   private final int S2_CELL_MAX_LEVEL = 14;
   /**
@@ -74,14 +75,14 @@ public class PlayableLocationsService {
   private final int GAME_OBJECT_TYPE_SPAWN_LOCATIONS = 0;
 
   /**
-   * Loads all playable locations within the S2 cells overlapping with the rectangle area
-   * identified by the given north east and south west corners.
-   * The search area is potentially way larger from the queried area.
+   * Loads all playable locations within the S2 cells overlapping with the
+   * rectangle area identified by the given north east and south west corners. The
+   * search area is potentially way larger from the queried area.
    *
    * @return A Playable Location Response
    */
-  public Response requestPlayableLocations(LatLng loLatLng, LatLng hiLatLng,
-      Criteria[] criteria, HashMap<String, String> PlayableLocationsCache) throws Exception {
+  public Response requestPlayableLocations(LatLng loLatLng, LatLng hiLatLng, Criteria[] criteria,
+      HashMap<String, String> PlayableLocationsCache) throws Exception {
 
     RestTemplate restTemplate = new RestTemplate();
     HttpHeaders headers = new HttpHeaders();
@@ -96,18 +97,19 @@ public class PlayableLocationsService {
       request.setCriteria(criteria);
     }
 
-    // Configure a region coverer, which will help us get all overlapping S2 cells on the
+    // Configure a region coverer, which will help us get all overlapping S2 cells
+    // on the
     // given Lat Lng rectangle
     S2RegionCoverer regionCoverer = new S2RegionCoverer();
     regionCoverer.setMinLevel(this.S2_CELL_LEVEL);
     regionCoverer.setMaxLevel(this.S2_CELL_MAX_LEVEL);
 
     // Get the two opposite corners in degrees.
-    S2LatLng lo = S2LatLng.fromDegrees(loLatLng.getLatitude(),loLatLng.getLongitude());
-    S2LatLng hi = S2LatLng.fromDegrees(hiLatLng.getLatitude(),hiLatLng.getLongitude());
+    S2LatLng lo = S2LatLng.fromDegrees(loLatLng.getLatitude(), loLatLng.getLongitude());
+    S2LatLng hi = S2LatLng.fromDegrees(hiLatLng.getLatitude(), hiLatLng.getLongitude());
 
     // Define the Lat Lng Rectangle
-    S2LatLngRect latLngRect = new S2LatLngRect(lo,hi);
+    S2LatLngRect latLngRect = new S2LatLngRect(lo, hi);
 
     // Get all cells that are covering the provided area
     S2CellUnion cellUnion = regionCoverer.getCovering(latLngRect);
@@ -115,17 +117,19 @@ public class PlayableLocationsService {
     Response combinedResponse = new Response();
     String objectType = Integer.toString(GAME_OBJECT_TYPE_SPAWN_LOCATIONS);
     combinedResponse.setLocationsPerGameObjectType(new HashMap<String, Locations>());
-    combinedResponse.getLocationsPerGameObjectType().put(objectType,new Locations());
+    combinedResponse.getLocationsPerGameObjectType().put(objectType, new Locations());
 
     List<Location> combinedLocations = new ArrayList<>();
     ObjectMapper objectMapper = new ObjectMapper();
 
-    // For each overlapping cell, query playable locations API and merge results into
+    // For each overlapping cell, query playable locations API and merge results
+    // into
     // a combined response.
     // If we've already queried a cell, check its TTL.
-    // If the TTL is still valid, skip that cell as we've already handled the playable locations
+    // If the TTL is still valid, skip that cell as we've already handled the
+    // playable locations
     // within.
-    for (S2CellId id:cellUnion.cellIds()){
+    for (S2CellId id : cellUnion.cellIds()) {
       String cellIdString = Long.toUnsignedString(id.id());
       if (PlayableLocationsCache != null && PlayableLocationsCache.containsKey(cellIdString)) {
         Duration duration = Duration.parse(PlayableLocationsCache.get(cellIdString));
@@ -134,7 +138,8 @@ public class PlayableLocationsService {
         }
       }
 
-      // The code below handles cells that haven't been processed yet as they are missing
+      // The code below handles cells that haven't been processed yet as they are
+      // missing
       // from our cache.
       // All playable locations returned within that cell are tagged with a cell id.
       request.getAreaFilter().setS2CellId(cellIdString);
@@ -142,8 +147,7 @@ public class PlayableLocationsService {
       String reqJson = objectMapper.writeValueAsString(request);
       HttpEntity<String> httpEntity = new HttpEntity<String>(reqJson, headers);
 
-      String playableLocationsResponse = restTemplate.postForObject(PLAYABLE_LOCATION_URL,
-          httpEntity, String.class);
+      String playableLocationsResponse = restTemplate.postForObject(PLAYABLE_LOCATION_URL, httpEntity, String.class);
       if (playableLocationsResponse == null) {
         throw new Exception("Received an invalid playableLocationsResponse! (null)");
       }
@@ -159,8 +163,7 @@ public class PlayableLocationsService {
       }
 
       if (response.getLocationsPerGameObjectType().get(objectType) == null) {
-        throw new Exception("Error: no valid locations data for playable locations object type:"
-            + objectType);
+        throw new Exception("Error: no valid locations data for playable locations object type:" + objectType);
       }
 
       if (response.getLocationsPerGameObjectType().get(objectType).getLocations() == null) {
@@ -169,25 +172,23 @@ public class PlayableLocationsService {
 
       combinedResponse.setTtl(response.getTtl());
 
-      for (Location location: response.getLocationsPerGameObjectType().get(objectType).getLocations()){
+      for (Location location : response.getLocationsPerGameObjectType().get(objectType).getLocations()) {
         if (location != null) {
           location.setS2CellId(request.getAreaFilter().getS2CellId());
         }
       }
 
-      combinedLocations.addAll(Arrays.asList(
-          response.getLocationsPerGameObjectType().get(objectType).getLocations()));
+      combinedLocations.addAll(Arrays.asList(response.getLocationsPerGameObjectType().get(objectType).getLocations()));
 
       // Update the cache
-      if (PlayableLocationsCache != null && !PlayableLocationsCache.containsKey(
-          request.getAreaFilter().getS2CellId())
+      if (PlayableLocationsCache != null && !PlayableLocationsCache.containsKey(request.getAreaFilter().getS2CellId())
           && response.getTtl() != null && !response.getTtl().isEmpty()) {
-        PlayableLocationsCache.put(request.getAreaFilter().getS2CellId(),"PT" + response.getTtl());
+        PlayableLocationsCache.put(request.getAreaFilter().getS2CellId(), "PT" + response.getTtl());
       }
     }
 
-    combinedResponse.getLocationsPerGameObjectType().get(objectType).setLocations(
-        combinedLocations.toArray(new Location[0]));
+    combinedResponse.getLocationsPerGameObjectType().get(objectType)
+        .setLocations(combinedLocations.toArray(new Location[0]));
     return combinedResponse;
   }
 
@@ -200,10 +201,10 @@ public class PlayableLocationsService {
     Criteria[] plc = new Criteria[1];
     plc[0] = new Criteria();
     plc[0].setGame_object_type(GAME_OBJECT_TYPE_SPAWN_LOCATIONS);
-    plc[0].setFilter( new Filter());
+    plc[0].setFilter(new Filter());
     plc[0].getFilter().setMax_location_count(2);
-    plc[0].setFields_to_return( new FieldMask());
-    plc[0].getFields_to_return().setPaths( new String[]{"snapped_point", "place_id", "types"});
+    plc[0].setFields_to_return(new FieldMask());
+    plc[0].getFields_to_return().setPaths(new String[] { "snapped_point", "place_id", "types" });
     return plc;
   }
 }
