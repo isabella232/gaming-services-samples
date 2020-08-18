@@ -2,6 +2,8 @@
 
 This repository contains the source code of a simple front-to-back third person mobile game that uses Google Maps Platform gaming services to create interesting gameplay.
 
+<p align="center"><img src="https://github.com/googlemaps/gaming-services-sample/raw/master/img/screenshot.png" /></p>
+
 This repo is meant to be used alongside the [Geocasts for Gaming]() video series available on the Google Maps Platform YouTube Channel.
 
 The video tutorials can be accessed here:
