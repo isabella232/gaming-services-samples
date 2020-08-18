@@ -1,11 +1,3 @@
-*.DS_Store
-*.DotSettings.user
-*.userprefs
-*.csproj
-*.sln
-bin/
-NOTICE
-
 /final/client/Zoinkies/.idea/
 /final/client/Zoinkies/Assets/Plugins.meta
 /final/client/Zoinkies/Assets/Plugins/
